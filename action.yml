@@ -1,16 +1,19 @@
-name: 'Node 12 Template Action'
-description: 'Get started with Node actions'
-author: 'GitHub'
-inputs: 
+name: "CLA Assistant GitHub Actions"
+description: "An action to handle the Contributor License Agreement"
+author: "Akshay Iyyadurai Balasundaram"
+inputs:
   path-to-signatures:
-    description: 'Give a path for storing CLAs in a json file '
-    default: './signatures/cla.json'
+    description: "Give a path for storing CLAs in a json file "
+    default: "./signatures/cla.json"
   branch:
-    description: 'select a branch where all the CLAs are stored'
-    default: 'master'
+    description: "select a branch where all the CLAs are stored"
+    default: "master"
   blockchain-storage-flag:
-    description: 'Optional functionality to store all the blockchain signatures in the ethirium blockchain as a smart contract'
+    description: "Optional functionality to store all the blockchain signatures in the ethirium blockchain as a smart contract"
+    default: false
+  label:
+    description: "Optional functionality to add the label CLA Signed or not signed"
     default: false
 runs:
-  using: 'node12'
-  main: 'lib/main.js'
+  using: "node12"
+  main: "lib/main.js"
