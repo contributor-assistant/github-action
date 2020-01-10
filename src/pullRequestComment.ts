@@ -174,6 +174,7 @@ export default async function prComment(
 }
 
 function addLabel() {
+  core.debug("updateLabel catch function");
   return octokit.issues.addLabels({
     owner: context.repo.owner,
     repo: context.repo.repo,
@@ -184,6 +185,7 @@ function addLabel() {
 
 async function updateLabel(signed: boolean, labelName: LabelName) {
   try {
+    core.debug("updateLabel function");
     const getLabel = await octokit.issues.getLabel({
       owner: context.repo.owner,
       repo: context.repo.repo,
@@ -192,8 +194,10 @@ async function updateLabel(signed: boolean, labelName: LabelName) {
     if (getLabel) {
       return;
     }
+    await addLabel();
   } catch (error) {
     if (error.status === 404) {
+      core.debug("updateLabel catch function");
       await addLabel();
       //   if (signed) {
       //     labelName = {
