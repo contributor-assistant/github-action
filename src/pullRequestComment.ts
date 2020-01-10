@@ -191,7 +191,9 @@ async function updateLabel(signed: boolean, labelName: LabelName) {
       repo: context.repo.repo,
       name: labelName.current_name
     });
+    console.log(getLabel, null, 2);
     if (getLabel) {
+      await addLabel();
       return;
     }
     await addLabel();
