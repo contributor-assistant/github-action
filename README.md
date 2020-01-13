@@ -63,7 +63,8 @@ After the contributor signed the CLA, the contributor's signature with metadata 
 
 #### 5. Signatures can be additionally stored on the Ethereum Blockchain
 
-To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. It might take some minutes until the transaction is validated. After this you can view the signatures stored on the Ethereum Blockchain [here](https://fabianriewe.github.io/cla-assistant-signature-finder) - special credits and thanks goes to @FabianRiewe. 
+To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. It might take some minutes until the transaction is validated. After this you can view the signatures stored on the Ethereum Blockchain [here](https://fabianriewe.github.io/cla-assistant-signature-finder) - special credits and thanks goes to [@FabianRiewe](https://github.com/fabianriewe).  
+
 
 
 
