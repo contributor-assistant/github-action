@@ -1,7 +1,5 @@
 # Handling CLAs with GitHub Actions
 
-## CLA GitHub Action
-
 We are excited to announce that we developed a CLA Assistant Github Action (a light version of CLA Assistant). With this GitHub Action we get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the repository's file system plus optionally on the Ethereum Blockchain**
 
 Feel free to test this GitHub Action and give us the feedback. 
