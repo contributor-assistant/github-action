@@ -162,22 +162,9 @@ export async function getclas(pullRequestNo: number) {
           branch,
           pullRequestNo
         )
-        if (context.eventName === "issue_comment") {
-          //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
-          if (
-            reactedCommitters.newSigned.some(
-              contributor =>
-                contributor.id === context.payload.comment.user.login
-            )
-          ) {
-            core.debug("Adding empty commit for the signee")
-            await addEmptyCommit()
-          }
-        }
 
-        core.info(
-          `successfully added empty commit with the contributor's signature name who has signed the CLA`
-        )
+
+        core.info( `successfully added empty commit with the contributor's signature name who has signed the CLA`)
       }
       if (reactedCommitters.allSignedFlag) {
         core.info("All committers have signed the CLA")

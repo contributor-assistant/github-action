@@ -3,6 +3,7 @@ import { context } from '@actions/github'
 import { CommitterMap, CommittersDetails, CommentedCommitterMap } from './interfaces'
 const fetch = require("node-fetch");
 import * as core from '@actions/core'
+import { addEmptyCommit } from "./addEmptyCommit"
 
 async function webhookSmartContract(newSignedCommitters: CommittersDetails[]) {
     const blockchainURL = core.getInput('blockchain-webhook-endpoint') || 'https://u9afh6n36g.execute-api.eu-central-1.amazonaws.com/dev/webhook'
@@ -68,6 +69,14 @@ export default async function signatureWithPRComment(commentId, committerMap: Co
     }
     // //checking if the reacted committers are not the signed committers(not in the storage file) and filtering only the unsigned committers
     commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
+    if (context.eventName === "issue_comment") {
+        //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
+        core.debug("issue_comment")
+            if ( commentedCommitterMap.newSigned.some(contributor => contributor.id === context.payload.comment.user.login.id)) {
+                core.debug("Adding empty commit for the signee")
+                await addEmptyCommit()
+              }
+    }
 
     core.debug("the new commented committers(signed) are :" + JSON.stringify(commentedCommitterMap.newSigned, null, 3))
     if (blockchainFlag == 'true' && commentedCommitterMap.newSigned) {
