@@ -2,15 +2,17 @@
 
 ## CLA GitHub Action
 
-We are excited to announce that we are  in development of CLA Assistant Github Action (a light version of CLA Assistant). With this Action, we can get rid of the need of a centrally managed database and rather storing all the contributors data in the repository's file system itself.  This action won't be able to provide all the feature-sets  of the current `CLA Assistant OAuth App`, However, this will work just fine If you want to configure CLA Assistant for a repo and store all the contributors data inside the repository. Feel free to test this GitHub Action and give us the feedback. 
+We are excited to announce that we developed a CLA Assistant Github Action (a light version of CLA Assistant). With this GitHub Action we get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the repository's file system plus optionally on the Ethereum Blockchain**
+
+Feel free to test this GitHub Action and give us the feedback. 
 
 ### Features
 1. decentralized data storage
 1. fully integrated with github environment 
 1. no UI  required
 1. no need for permission/scope handling
-1. contributors can sign the CLA by just posting a Pull Request Comment
-1. Signatures will be stored in a file inside the repository 
+1. contributors can sign the CLA by just posting a Pull Request comment
+1. signatures will be stored in a file inside the repository plus optionally on the Ethereum Blockchain
 
 ## Configure Contributor License Agreement within two minutes 
 
@@ -37,11 +39,12 @@ jobs:
         path-to-signatures: 'signatures/version1/cla.json'
         path-To-cladocument: 'https://github.com/ibakshay/test-action-workflow/blob/master/cla.md'
         branch: 'master'
+        blockchain-storage-flag: false
 ```
 
 #### 2. Pull Request event triggers CLA Workflow
 
-CLA action  Workflow will be  triggered on all Pull Request `opened, synchronize`
+CLA action workflow will be triggered on all Pull Request `opened, synchronize`
 <br/>
 
 #### 3. Signing the CLA
