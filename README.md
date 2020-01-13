@@ -48,8 +48,8 @@ CLA action workflow will be triggered on all Pull Request `opened, synchronize`
 <br/>
 
 #### 3. Signing the CLA
-CLA workflow  creates a comment on Pull Request asking all the contributors who has not signed the CLA to sign and also  fails the pull request status check with an `failure`. The contributors can sign the CLA within the pull request  by just copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
-If the contributors has already signed the CLA then the PR status will pass with `success`. <br/> By default, the GitHub Action bot will also do a empty commit with message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA.
+CLA workflow  creates a comment on Pull Request asking contributors who have not signed the CLA to sign and also fails the pull request status check with a `failure`. The contributors are asked to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
+If the contributor has already signed the CLA then the PR status will pass with `success`. <br/> By default, the GitHub Action workflow will also create an empty commit with message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA.
 
 ![Screenshot 2020-01-08 at 14 16 37](https://user-images.githubusercontent.com/33329946/71981019-c219c600-3221-11ea-874b-bb12107e77a9.png)
 
@@ -57,9 +57,14 @@ If the contributors has already signed the CLA then the PR status will pass with
 
 #### 4. Signatures stored in a JSON file
 
-After the contributor signed the CLA, the contributor's signature with metadata will be stored in a json file inside the repository like below screenshot and you can specify the custom path to this file  with `path-to-signatures` input in the workflow . <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`
+After the contributor signed the CLA, the contributor's signature with metadata will be stored in a json file inside the repository like below screenshot and you can specify the custom path to this file with `path-to-signatures` input in the workflow . <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`
 
 ![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
+
+#### 5. Signatures can be additionally stored on the Ethereum Blockchain
+
+To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. It might take some minutes until the transaction is validated. After this you can view the signatures stored on the Ethereum Blockchain [here](https://fabianriewe.github.io/cla-assistant-signature-finder) - special credits and thanks goes to @FabianRiewe. 
+
 
 
 ### Environmental Variables :
