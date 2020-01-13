@@ -1,4 +1,4 @@
-# WORK IN PROGRESS
+# Handling CLAs with GitHub Actions
 
 ## CLA GitHub Action
 
