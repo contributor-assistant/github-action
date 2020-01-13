@@ -71,7 +71,7 @@ export default async function signatureWithPRComment(commentId, committerMap: Co
     commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
     if (context.eventName === "issue_comment") {
         //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
-        core.debug("issue_comment")
+            core.debug(JSON.stringify(context.payload.comment.user.login.id))
             if ( commentedCommitterMap.newSigned.some(contributor => contributor.id === context.payload.comment.user.login.id)) {
                 core.debug("Adding empty commit for the signee")
                 await addEmptyCommit()
