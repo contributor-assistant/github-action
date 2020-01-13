@@ -80,6 +80,7 @@ To make the whole process more fraud resistant we grant the option to additional
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
 | `path-To-cladocument`     | _required_ |  provide full URL `https://<clafile>` to the Contributor License Agreement (CLA) to which the Contributor can read  before signing the CLA. It can be a file inside the repository or it can be a gist |
+| `blockchain-storage-flag`     | _required_ |  provide the boolean `true` or `false` to optionally store the Controbutor's signature data in the Ethereum blockchain |
 | `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. Default path is  "./signatures/cla.json". |
 | `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`  |
 
