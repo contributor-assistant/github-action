@@ -30,6 +30,7 @@ jobs:
     steps:
     - name: "CLA Assistant"
       if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request'
+      # Test Release
       uses: cla-assistant/github-action@v1.0.0
       env: 
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
