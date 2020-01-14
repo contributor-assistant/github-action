@@ -164,7 +164,6 @@ export async function getclas(pullRequestNo: number) {
         )
 
 
-        core.info( `successfully added empty commit with the contributor's signature name who has signed the CLA`)
       }
       if (reactedCommitters.allSignedFlag) {
         core.info("All committers have signed the CLA")

@@ -30,14 +30,14 @@ async function getComment() {
 }
 
 function commentContent(signed: boolean, committerMap: CommitterMap): string {
-  const labelName = {} as LabelName;
+  //const labelName = {} as LabelName;
   if (signed) {
-    labelName.current_name = "CLA signed :smiley:";
-    updateLabel(signed, labelName);
+   // labelName.current_name = "CLA signed :smiley:";
+   // updateLabel(signed, labelName);
     return `**CLA Assistant Lite** All committers have signed the CLA. :smiley:`;
   }
   /* TODO: Unhandled Promise Rejection  */
-  labelName.current_name = "CLA Not Signed :worried:";
+ // labelName.current_name = "CLA Not Signed :worried:";
   //updateLabel(signed, labelName)
   let committersCount = 1;
   if (committerMap && committerMap.signed && committerMap.notSigned) {
@@ -173,53 +173,53 @@ export default async function prComment(
   }
 }
 
-function addLabel() {
-  core.debug("updateLabel catch function");
-  return octokit.issues.addLabels({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    issue_number: context.issue.number,
-    labels: ["CLA  Signed"]
-  });
-}
+// function addLabel() {
+//   core.debug("updateLabel catch function");
+//   return octokit.issues.addLabels({
+//     owner: context.repo.owner,
+//     repo: context.repo.repo,
+//     issue_number: context.issue.number,
+//     labels: ["CLA  Signed"]
+//   });
+// }
 
-async function updateLabel(signed: boolean, labelName: LabelName) {
-  try {
-    core.debug("updateLabel function");
-    const getLabel = await octokit.issues.getLabel({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      name: labelName.current_name
-    });
-    console.log(getLabel, null, 2);
-    if (getLabel) {
-      await addLabel();
-      return;
-    }
-    await addLabel();
-  } catch (error) {
-    if (error.status === 404) {
-      core.debug("updateLabel catch function");
-      await addLabel();
-      //   if (signed) {
-      //     labelName = {
-      //       current_name: "CLA Not Signed",
-      //       name: "CLA signed"
-      //     };
-      //   } else {
-      //     labelName = {
-      //       current_name: "CLA signed :smiley:",
-      //       name: "CLA Not Signed :worried:"
-      //     };
-      //   }
-      //   return octokit.issues.updateLabel({
-      //     owner: context.repo.owner,
-      //     repo: context.repo.repo,
-      //     current_name: labelName.current_name,
-      //     name: labelName.name
-      //   });
-      // }
-      core.setFailed("error when creating a label :" + error);
-    }
-  }
-}
+// async function updateLabel(signed: boolean, labelName: LabelName) {
+//   try {
+//     core.debug("updateLabel function");
+//     const getLabel = await octokit.issues.getLabel({
+//       owner: context.repo.owner,
+//       repo: context.repo.repo,
+//       name: labelName.current_name
+//     });
+//     console.log(getLabel, null, 2);
+//     if (getLabel) {
+//       await addLabel();
+//       return;
+//     }
+//     await addLabel();
+//   } catch (error) {
+//     if (error.status === 404) {
+//       core.debug("updateLabel catch function");
+//       await addLabel();
+//       //   if (signed) {
+//       //     labelName = {
+//       //       current_name: "CLA Not Signed",
+//       //       name: "CLA signed"
+//       //     };
+//       //   } else {
+//       //     labelName = {
+//       //       current_name: "CLA signed :smiley:",
+//       //       name: "CLA Not Signed :worried:"
+//       //     };
+//       //   }
+//       //   return octokit.issues.updateLabel({
+//       //     owner: context.repo.owner,
+//       //     repo: context.repo.repo,
+//       //     current_name: labelName.current_name,
+//       //     name: labelName.name
+//       //   });
+//       // }
+//       core.setFailed("error when creating a label :" + error);
+//     }
+//   }
+// }
