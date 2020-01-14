@@ -34,7 +34,7 @@
     "typescript": "^3.5.1"
   },
   "author": "ibakshay",
-  "license": "GPL-3.0-or-later",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/cla-assistant/github-action/issues"
   },
