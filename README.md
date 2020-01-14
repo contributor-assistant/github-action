@@ -81,6 +81,7 @@ To make the whole process more fraud resistant we grant the option to additional
 | `blockchain-storage-flag`     | _required_ |  provide the boolean `true` or `false` to optionally store the Controbutor's signature data in the Ethereum blockchain |
 | `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. Default path is  "./signatures/cla.json". |
 | `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`  |
+| `empty-commit-flag`   | _optional_ |  provide the boolean `true` or `false` so that GitHub Actions will add empty commit whenever the user signs the CLA. Default is `true`  |
 
 This action won't work for Pull Request coming from the forks as the [GitHub Action Token](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token) does not have write access for the forks, However, the GitHub team assured in one of the [discussion](https://github.community/t5/GitHub-Actions/Github-Workflow-not-running-from-pull-request-from-forked/m-p/32979#M1325) that they will ship this feature to enable read/write access for the PRs coming from the forks. 
 
