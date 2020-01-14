@@ -8,7 +8,9 @@ import blockChainWebhook from "./blockChainWebhook"
 
 
 export default async function signatureWithPRComment(commentId, committerMap: CommitterMap, committers, pullRequestNo: number) {
-    let blockchainFlag = core.getInput('blockchain-storage-flag')
+    const blockchainFlag = core.getInput('blockchain-storage-flag')
+    const emptyCommitFlag = core.getInput('empty-commit-flag')
+
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
     let prResponse = await octokit.issues.listComments({
@@ -45,11 +47,14 @@ export default async function signatureWithPRComment(commentId, committerMap: Co
     commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
     if (context.eventName === "issue_comment") {
         //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
+        if(emptyCommitFlag == 'true')
+        {
             core.debug(JSON.stringify(context.payload.comment.user.id))
             if ( commentedCommitterMap.newSigned.some(contributor => contributor.id === context.payload.comment.user.id)) {
                 core.debug("Adding empty commit for the signee")
                 await addEmptyCommit()
               }
+        }
     }
 
     core.debug("the new commented committers(signed) are :" + JSON.stringify(commentedCommitterMap.newSigned, null, 3))

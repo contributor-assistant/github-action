@@ -3,7 +3,6 @@ import octokit from "./octokit"
 import * as core from "@actions/core"
 import { context } from "@actions/github"
 import prComment from "./pullRequestComment"
-import { addEmptyCommit } from "./addEmptyCommit"
 import {
   CommitterMap,
   CommittersDetails,

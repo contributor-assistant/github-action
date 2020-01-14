@@ -14,6 +14,9 @@ inputs:
   label:
     description: "Optional functionality to add the label CLA Signed or not signed"
     default: false
+  empty-commit-flag:
+    description: "GitHub Actions will add empty commit whenever the user signs the CLA (optional)"
+    default: true
 runs:
   using: "node12"
   main: "lib/main.js"
