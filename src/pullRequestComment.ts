@@ -131,12 +131,7 @@ export default async function prComment(
           body: commentContent(signed, committerMap)
         });
       }
-      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment(
-        prComment.id,
-        committerMap,
-        committers,
-        pullRequestNo
-      )) as ReactedCommitterMap;
+      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment( prComment.id, committerMap,  committers, pullRequestNo )) as ReactedCommitterMap;
       if (reactedCommitters) {
         if (reactedCommitters.onlyCommitters) {
           reactedCommitters.allSignedFlag = prepareAllSignedCommitters(
