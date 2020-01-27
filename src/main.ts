@@ -4,11 +4,14 @@ const io = require("@actions/io")
 import { getclas } from "./checkcla"
 import { lockPullRequest } from "./pullRequestLock"
 
-export async function run() {
+export async function run()
+{
   try {
     const pullRequestNo: number = context.issue.number
     core.info("CLA Assistant GitHub Action has started")
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
+    const defaultUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`
+    core.debug('the checksuite url is ' + defaultUrl)
     if (context.payload.action === "closed") {
       return lockPullRequest(pullRequestNo)
     } else {
