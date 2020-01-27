@@ -10,7 +10,7 @@ export async function run()
     const pullRequestNo: number = context.issue.number
     core.info("CLA Assistant GitHub Action has started")
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
-    core.debug("printing the context" + context)
+    core.debug("printing the context" + JSON.stringify(context, null, 2))
     const defaultUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`
     core.debug('the checksuite url is ' + defaultUrl)
     if (context.payload.action === "closed") {
