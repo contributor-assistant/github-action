@@ -3,14 +3,16 @@ import * as core from "@actions/core";
 import { pathToCLADocument } from "./url";
 import { context } from "@actions/github";
 import signatureWithPRComment from "./signatureComment";
-import {
+import
+{
   CommitterMap,
   ReactedCommitterMap,
   LabelName,
   CommittersDetails
 } from "./interfaces";
 
-async function getComment() {
+async function getComment()
+{
   try {
     const response = await octokit.issues.listComments({
       owner: context.repo.owner,
@@ -24,21 +26,23 @@ async function getComment() {
   } catch (e) {
     core.setFailed(
       "Error occured when getting  all the comments of the pull request: " +
-        e.message
+      e.message
     );
   }
 }
 
-function commentContent(signed: boolean, committerMap: CommitterMap): string {
-  //const labelName = {} as LabelName;
+function commentContent(signed: boolean, committerMap: CommitterMap): string
+{
+  const labelName = {} as LabelName;
   if (signed) {
-   // labelName.current_name = "CLA signed :smiley:";
-   // updateLabel(signed, labelName);
+    core.debug("all signed flag inside commentContent is" + signed)
+    labelName.current_name = "CLA signed :smiley:";
+    // updateLabel(signed, labelName);
     return `**CLA Assistant Lite** All committers have signed the CLA. :smiley:`;
   }
   /* TODO: Unhandled Promise Rejection  */
- // labelName.current_name = "CLA Not Signed :worried:";
-  //updateLabel(signed, labelName)
+  labelName.current_name = "CLA Not Signed :worried:";
+  // updateLabel(signed, labelName)
   let committersCount = 1;
   if (committerMap && committerMap.signed && committerMap.notSigned) {
     committersCount =
@@ -56,10 +60,12 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
     text += `**${committerMap.signed.length}** out of **${committerMap.signed
       .length +
       committerMap.notSigned.length}** committers have signed the CLA.`;
-    committerMap.signed.forEach(signedCommitter => {
+    committerMap.signed.forEach(signedCommitter =>
+    {
       text += `<br/>:white_check_mark: @${signedCommitter.name}`;
     });
-    committerMap.notSigned.forEach(unsignedCommitter => {
+    committerMap.notSigned.forEach(unsignedCommitter =>
+    {
       text += `<br/>:x: @${unsignedCommitter.name}`;
     });
     text += "<br/>";
@@ -79,7 +85,8 @@ function prepareAllSignedCommitters(
   committerMap: CommitterMap,
   signedInPrCommitters: CommittersDetails[],
   committers: CommittersDetails[]
-): boolean {
+): boolean
+{
   let allSignedCommitters = [] as CommittersDetails[];
   /*
     Reference: https://stackoverflow.com/questions/54134156/javascript-merge-two-arrays-of-objects-only-if-not-duplicate-based-on-specifi
@@ -94,7 +101,7 @@ function prepareAllSignedCommitters(
   ];
   core.debug(
     "all signed committers after merging " +
-      JSON.stringify(allSignedCommitters, null, 2)
+    JSON.stringify(allSignedCommitters, null, 2)
   );
 
   //checking if all the unsigned committers have reacted to the PR comment (this is needed for changing the content of the PR comment to "All committers have signed the CLA")
@@ -111,7 +118,8 @@ export default async function prComment(
   committerMap: CommitterMap,
   committers: CommittersDetails[],
   pullRequestNo: number
-) {
+)
+{
   try {
     const prComment = await getComment();
     if (!prComment) {
@@ -131,7 +139,7 @@ export default async function prComment(
           body: commentContent(signed, committerMap)
         });
       }
-      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment( prComment.id, committerMap,  committers, pullRequestNo )) as ReactedCommitterMap;
+      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment(prComment.id, committerMap, committers, pullRequestNo)) as ReactedCommitterMap;
       if (reactedCommitters) {
         if (reactedCommitters.onlyCommitters) {
           reactedCommitters.allSignedFlag = prepareAllSignedCommitters(
@@ -163,58 +171,60 @@ export default async function prComment(
   } catch (e) {
     core.setFailed(
       "Error occured when creating or editing the comments of the pull request: " +
-        e.message
+      e.message
     );
   }
 }
 
-// function addLabel() {
-//   core.debug("updateLabel catch function");
-//   return octokit.issues.addLabels({
-//     owner: context.repo.owner,
-//     repo: context.repo.repo,
-//     issue_number: context.issue.number,
-//     labels: ["CLA  Signed"]
-//   });
-// }
+function addLabel()
+{
+  core.debug("updateLabel catch function");
+  return octokit.issues.addLabels({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    issue_number: context.issue.number,
+    labels: ["CLA  Signed"]
+  });
+}
 
-// async function updateLabel(signed: boolean, labelName: LabelName) {
-//   try {
-//     core.debug("updateLabel function");
-//     const getLabel = await octokit.issues.getLabel({
-//       owner: context.repo.owner,
-//       repo: context.repo.repo,
-//       name: labelName.current_name
-//     });
-//     console.log(getLabel, null, 2);
-//     if (getLabel) {
-//       await addLabel();
-//       return;
-//     }
-//     await addLabel();
-//   } catch (error) {
-//     if (error.status === 404) {
-//       core.debug("updateLabel catch function");
-//       await addLabel();
-//       //   if (signed) {
-//       //     labelName = {
-//       //       current_name: "CLA Not Signed",
-//       //       name: "CLA signed"
-//       //     };
-//       //   } else {
-//       //     labelName = {
-//       //       current_name: "CLA signed :smiley:",
-//       //       name: "CLA Not Signed :worried:"
-//       //     };
-//       //   }
-//       //   return octokit.issues.updateLabel({
-//       //     owner: context.repo.owner,
-//       //     repo: context.repo.repo,
-//       //     current_name: labelName.current_name,
-//       //     name: labelName.name
-//       //   });
-//       // }
-//       core.setFailed("error when creating a label :" + error);
-//     }
-//   }
-// }
+async function updateLabel(signed: boolean, labelName: LabelName)
+{
+  try {
+    core.debug("updateLabel function");
+    const getLabel = await octokit.issues.getLabel({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      name: labelName.current_name
+    });
+    console.log(getLabel, null, 2);
+    if (getLabel) {
+      await addLabel();
+      return;
+    }
+    await addLabel();
+  } catch (error) {
+    if (error.status === 404) {
+      core.debug("updateLabel catch function");
+      await addLabel();
+      //   if (signed) {
+      //     labelName = {
+      //       current_name: "CLA Not Signed",
+      //       name: "CLA signed"
+      //     };
+      //   } else {
+      //     labelName = {
+      //       current_name: "CLA signed :smiley:",
+      //       name: "CLA Not Signed :worried:"
+      //     };
+      //   }
+      //   return octokit.issues.updateLabel({
+      //     owner: context.repo.owner,
+      //     repo: context.repo.repo,
+      //     current_name: labelName.current_name,
+      //     name: labelName.name
+      //   });
+      // }
+      core.setFailed("error when creating a label :" + error);
+    }
+  }
+}
