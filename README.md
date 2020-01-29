@@ -44,7 +44,7 @@ jobs:
 #### 2. Pull Request event triggers CLA Workflow
 
 CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed(optional) `. 
-<br/> When the CLA workflow is triggered on `closed` event, it will lock the Pull Request conversation after the Pull Request merge,  so that the contributors cannot modify or delete the signatures (Pull Request comment) later. This feature is optional. 
+<br/> When the CLA workflow is triggered on pull request `closed` event, it will lock the Pull Request conversation after the Pull Request merge,  so that the contributors cannot modify or delete the signatures (Pull Request comment) later. This feature is optional. 
 
 #### 3. Signing the CLA
 CLA workflow  creates a comment on Pull Request asking contributors who have not signed the CLA to sign and also fails the pull request status check with a `failure`. The contributors are asked to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
