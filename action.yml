@@ -1,6 +1,9 @@
 name: "CLA Assistant GitHub Actions"
 description: "An action to handle the Contributor License Agreement"
 author: "Akshay Iyyadurai Balasundaram"
+branding:
+  icon: "award"
+  color: blue
 inputs:
   path-to-signatures:
     description: "Give a path for storing CLAs in a json file "
