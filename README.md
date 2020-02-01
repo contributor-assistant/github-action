@@ -14,7 +14,7 @@ Feel free to test this GitHub Action and give us the feedback.
 
 ## Configure Contributor License Agreement within two minutes 
 
-#### 1. Add the following Workflow File to your repository in this path`.github/workflow/cla.yml`
+#### 1. Add the following Workflow File to your repository in this path`.github/workflows/cla.yml`
 
 ```yml
 name: "CLA Assistant"
