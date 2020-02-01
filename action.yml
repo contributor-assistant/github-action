@@ -1,6 +1,6 @@
 name: "CLA Assistant GitHub Actions"
 description: "An action to handle the Contributor License Agreement"
-author: "Akshay Iyyadurai Balasundaram"
+author: "SAP"
 branding:
   icon: "award"
   color: blue

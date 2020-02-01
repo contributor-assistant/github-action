@@ -14,7 +14,7 @@ Feel free to test this GitHub Action and give us the feedback.
 
 ## Configure Contributor License Agreement within two minutes 
 
-#### 1. Add the following Workflow File to your repository in this path`.github/workflow/cla.yml`
+#### 1. Add the following Workflow File to your repository in this path`.github/workflows/cla.yml`
 
 ```yml
 name: "CLA Assistant"
@@ -43,12 +43,12 @@ jobs:
 
 #### 2. Pull Request event triggers CLA Workflow
 
-CLA action workflow will be triggered on all Pull Request `opened, synchronize`
-<br/>
+CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed(optional) `. 
+<br/> When the CLA workflow is triggered on pull request `closed` event, it will lock the Pull Request conversation after the Pull Request merge,  so that the contributors cannot modify or delete the signatures (Pull Request comment) later. This feature is optional. 
 
 #### 3. Signing the CLA
 CLA workflow  creates a comment on Pull Request asking contributors who have not signed the CLA to sign and also fails the pull request status check with a `failure`. The contributors are asked to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
-If the contributor has already signed the CLA then the PR status will pass with `success`. <br/> By default, the GitHub Action workflow will also create an empty commit with message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA.
+If the contributor has already signed the CLA then the PR status will pass with `success`. <br/> By default, the GitHub Action workflow will also create an empty commit with message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA. 
 
 ![Screenshot 2020-01-08 at 14 16 37](https://user-images.githubusercontent.com/33329946/71981019-c219c600-3221-11ea-874b-bb12107e77a9.png)
 
@@ -62,7 +62,7 @@ After the contributor signed the CLA, the contributor's signature with metadata 
 
 #### 5. Signatures can be additionally stored on the Ethereum Blockchain
 
-To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. It might take some minutes until the transaction is validated. After this you can view the signatures stored on the Ethereum Blockchain [here](https://fabianriewe.github.io/cla-assistant-signature-finder) - special credits and thanks goes to [@FabianRiewe](https://github.com/fabianriewe).  
+To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. A detailed description on integrating with the Ethereum Blockchain can be found [here](https://github.com/cla-assistant/blockchain-services) - special credits and thanks goes to [@FabianRiewe](https://github.com/fabianriewe).  
 
 
 
