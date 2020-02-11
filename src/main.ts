@@ -4,21 +4,11 @@ const io = require("@actions/io")
 import { getclas } from "./checkcla"
 import { lockPullRequest } from "./pullRequestLock"
 
-export async function run()
-{
+export async function run() {
   try {
     const pullRequestNo: number = context.issue.number
     core.info("CLA Assistant GitHub Action has started")
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
-    const whitelistedUsers: string = core.getInput("whitelist")
-    const whitelistArray: string[] = whitelistedUsers.split(',')
-    whitelistArray.forEach(function (whitelistElement)
-    {
-      core.info(whitelistElement)
-    });
-
-    core.info(`the whitelisted users are  ${whitelistArray[0]} ${whitelistArray[1]}`)
-    core.info
     if (context.payload.action === "closed") {
       return lockPullRequest(pullRequestNo)
     } else {
