@@ -12,7 +12,7 @@ export async function run()
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
     const whitelistedUsers: string = core.getInput("whitelist")
     const whitelistArray: string[] = whitelistedUsers.split(',')
-    core.info(`the whitelisted users are  ${whitelistArray}`)
+    core.info(`the whitelisted users are  ${whitelistArray[0]} ${whitelistArray[1]}`)
     core.info
     if (context.payload.action === "closed") {
       return lockPullRequest(pullRequestNo)
