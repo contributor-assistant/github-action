@@ -10,9 +10,10 @@ export async function run()
     const pullRequestNo: number = context.issue.number
     core.info("CLA Assistant GitHub Action has started")
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
-    core.debug("printing the context" + JSON.stringify(context, null, 2))
-    const defaultUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/commit/${context.sha}/checks`
-    core.debug('the checksuite url is ' + defaultUrl)
+    const whitelistedUsers: string = core.getInput("whitelist")
+    const whitelistArray: string[] = whitelistedUsers.split(',')
+    core.info(`the whitelisted users are  ${whitelistArray}`)
+    core.info
     if (context.payload.action === "closed") {
       return lockPullRequest(pullRequestNo)
     } else {
