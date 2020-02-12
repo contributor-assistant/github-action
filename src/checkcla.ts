@@ -4,14 +4,37 @@ import * as core from "@actions/core"
 import { context } from "@actions/github"
 import prComment from "./pullRequestComment"
 import { CommitterMap, CommittersDetails, ReactedCommitterMap } from "./interfaces"
+const _ = require('lodash')
 
-function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
-  const whitelistedUsers: string = core.getInput("whitelist")
-  const whitelistArray: string[] = whitelistedUsers.split(',')
-  whitelistArray.forEach(function (whitelistElement) {
+function isUserWhitelisted(committer) {
+
+  const whitelistedItem: string = core.getInput("whitelist")
+  const whitelistPatterns: string[] = whitelistedItem.split(',')
+  //to be removed
+  whitelistPatterns.forEach(function (whitelistElement) {
     core.info(whitelistElement)
   })
+
+  return whitelistPatterns.filter(function (pattern) {
+    pattern = pattern.trim()
+    if (pattern.includes('*')) {
+      const regex = _.escapeRegExp(pattern).split('\\*').join('.*')
+
+      return new RegExp(regex).test(committer)
+    }
+
+    return pattern === committer
+  }).length > 0
+}
+
+function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
+
   let committerMap: CommitterMap = {}
+
+  const committersAfterWhiteListCheck = committers.filter(committer =>
+    committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
+  core.info("committersAfterWhiteListCheck " + committersAfterWhiteListCheck)
+
   committerMap.notSigned = committers.filter(
     committer => !clas.signedContributors.some(cla => committer.id === cla.id)
   )
