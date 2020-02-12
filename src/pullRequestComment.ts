@@ -22,14 +22,14 @@ async function getComment() {
 }
 
 function commentContent(signed: boolean, committerMap: CommitterMap): string {
-  const labelName = {} as LabelName;
+  // const labelName = {} as LabelName;
   if (signed) {
     core.debug("all signed flag inside commentContent is" + signed)
-    labelName.current_name = "CLA signed :smiley:";
+    // labelName.current_name = "CLA signed :smiley:";
     // updateLabel(signed, labelName);
-    return `**CLA Assistant Lite** All committers have signed the CLA. :smiley:`;
+    return `**CLA Assistant Lite** All contributors  have signed the CLA. :smiley:`;
   }
-  labelName.current_name = "CLA Not Signed :worried:";
+  //labelName.current_name = "CLA Not Signed :worried:";
   // updateLabel(signed, labelName)
   let committersCount = 1;
   if (committerMap && committerMap.signed && committerMap.notSigned) {
