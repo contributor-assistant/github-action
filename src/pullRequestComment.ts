@@ -40,7 +40,8 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   let text = `**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that ${you} sign our [Contributor License Agreement](${pathToCLADocument()}) before we can accept your contribution. You can sign the CLA by just  posting a Pull Request Comment same as the below format.
   - - -
   ***I have read the CLA Document and I hereby sign the CLA***
-  - - - `
+  - - - 
+  `
   if (committersCount > 1 && committerMap && committerMap.signed && committerMap.notSigned) {
     text += `**${committerMap.signed.length}** out of **${committerMap.signed.length + committerMap.notSigned.length}** committers have signed the CLA.`;
     committerMap.signed.forEach(signedCommitter => { text += `<br/>:white_check_mark: @${signedCommitter.name}` })
