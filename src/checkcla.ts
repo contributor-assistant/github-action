@@ -30,6 +30,7 @@ function isUserWhitelisted(committer) {
 
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
 
+  core.info("committers akshay are " + JSON.stringify(committers, null, 3))
   let committerMap: CommitterMap = {}
 
   const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
