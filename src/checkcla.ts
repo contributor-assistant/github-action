@@ -4,35 +4,31 @@ import * as core from "@actions/core"
 import { context } from "@actions/github"
 import prComment from "./pullRequestComment"
 import { CommitterMap, CommittersDetails, ReactedCommitterMap } from "./interfaces"
+import { checkWhitelist } from "./checkWhiteList"
 const _ = require('lodash')
 
-function isUserWhitelisted(committer) {
+// function isUserWhitelisted(committer) {
 
-  const whitelistedItem: string = core.getInput("whitelist")
-  const whitelistPatterns: string[] = whitelistedItem.split(',')
-  //to be removed
-  whitelistPatterns.forEach(function (whitelistElement) {
-    core.info(whitelistElement)
-  })
+//   const whitelistedItem: string = core.getInput("whitelist")
+//   const whitelistPatterns: string[] = whitelistedItem.split(',')
+//   return whitelistPatterns.filter(function (pattern) {
+//     pattern = pattern.trim()
+//     if (pattern.includes('*')) {
+//       const regex = _.escapeRegExp(pattern).split('\\*').join('.*')
 
-  return whitelistPatterns.filter(function (pattern) {
-    pattern = pattern.trim()
-    if (pattern.includes('*')) {
-      const regex = _.escapeRegExp(pattern).split('\\*').join('.*')
+//       return new RegExp(regex).test(committer)
+//     }
+//     core.info("pattern is " + pattern)
+//     core.info("committer is " + committer)
+//     return pattern === committer
+//   }).length > 0
+// }
 
-      return new RegExp(regex).test(committer)
-    }
-    core.info("pattern is " + pattern)
-    core.info("committer is " + committer)
-    return pattern === committer
-  }).length > 0
-}
-
-function checkWhitelist(committers: CommittersDetails[]) {
-  const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
-  console.log("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
-  return committersAfterWhiteListCheck
-}
+// function checkWhitelist(committers: CommittersDetails[]) {
+//   const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
+//   console.log("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
+//   return committersAfterWhiteListCheck
+// }
 
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
 
@@ -91,8 +87,9 @@ export async function getclas(pullRequestNo: number) {
     branch = "master"
   }
   let result, clas, sha
-  const committers = (await getCommitters()) as CommittersDetails[]
-  checkWhitelist(committers)
+  let committers = (await getCommitters()) as CommittersDetails[]
+  //TODO code in more readable and efficient way
+  committers = checkWhitelist(committers)
   try {
     result = await octokit.repos.getContents({
       owner: context.repo.owner,
