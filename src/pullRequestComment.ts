@@ -57,7 +57,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
     )}** ${seem} not to be a GitHub user.`
     text += " You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>"
   }
-  text += `<sub>You can retrigger the CLA Action check by commenting **recheckcla** in this Pull Request</sub>`
+  text += `<sub>You can retrigger the CLA Action by commenting **recheckcla** in this Pull Request</sub>`
   return text
 }
 
