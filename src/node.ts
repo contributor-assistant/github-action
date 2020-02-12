@@ -1,7 +1,10 @@
 const _ = require('lodash')
-function isUserWhitelisted(committer) {
+import * as core from "@actions/core"
 
-    const whitelistPatterns = ['ibakshay', 'testuser61', 'bot*']
+function isUserWhitelisted(committer) {
+    const whitelistedItem: string = core.getInput("whitelist")
+    const whitelistPatterns: string[] = whitelistedItem.split(',')
+    //const whitelistPatterns = ['ibakshay', 'testuser61', 'bot*']
 
     return whitelistPatterns.filter(function (pattern) {
         pattern = pattern.trim()
@@ -16,18 +19,25 @@ function isUserWhitelisted(committer) {
     }).length > 0
 }
 
-function prepareCommiterMap() {
+export function prepareCommiterMap() {
 
-    const committers = [{
-        name: "ibakshay",
-        id: 1234
-    }, {
-        name: "testuser61",
-        id: 1234
-    }, {
-        name: "akshayib",
-        id: 1234
-    }]
+    const committers = [
+        {
+            name: "ibakshay",
+            id: 33329946,
+            pullRequestNo: 284
+        },
+        {
+            name: "becky",
+            id: 33329946,
+            pullRequestNo: 284
+        },
+        {
+            name: "testuser",
+            id: 33329946,
+            pullRequestNo: 284
+        }
+    ]
 
     //const committersAfterWhiteListCheck = committers.filter(committer => { isUserWhitelisted(committer.name) })
     const committersAfterWhiteListCheck = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))

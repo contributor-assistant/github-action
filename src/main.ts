@@ -3,12 +3,14 @@ import { context } from "@actions/github"
 const io = require("@actions/io")
 import { getclas } from "./checkcla"
 import { lockPullRequest } from "./pullRequestLock"
+import { prepareCommiterMap } from "./node"
 
 export async function run() {
   try {
     const pullRequestNo: number = context.issue.number
     core.info("CLA Assistant GitHub Action has started")
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
+    prepareCommiterMap()
     if (context.payload.action === "closed") {
       return lockPullRequest(pullRequestNo)
     } else {
