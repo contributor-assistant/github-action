@@ -13,14 +13,12 @@ function isUserWhitelisted(committer) {
 
             return new RegExp(regex).test(committer)
         }
-        core.info("pattern is " + pattern)
-        core.info("committer is " + committer)
         return pattern === committer
     }).length > 0
 }
 
 export function checkWhitelist(committers: CommittersDetails[]) {
     const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
-    console.log("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
+    console.debug("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
     return committersAfterWhiteListCheck
 }

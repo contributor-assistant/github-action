@@ -7,29 +7,6 @@ import { CommitterMap, CommittersDetails, ReactedCommitterMap } from "./interfac
 import { checkWhitelist } from "./checkWhiteList"
 const _ = require('lodash')
 
-// function isUserWhitelisted(committer) {
-
-//   const whitelistedItem: string = core.getInput("whitelist")
-//   const whitelistPatterns: string[] = whitelistedItem.split(',')
-//   return whitelistPatterns.filter(function (pattern) {
-//     pattern = pattern.trim()
-//     if (pattern.includes('*')) {
-//       const regex = _.escapeRegExp(pattern).split('\\*').join('.*')
-
-//       return new RegExp(regex).test(committer)
-//     }
-//     core.info("pattern is " + pattern)
-//     core.info("committer is " + committer)
-//     return pattern === committer
-//   }).length > 0
-// }
-
-// function checkWhitelist(committers: CommittersDetails[]) {
-//   const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
-//   console.log("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
-//   return committersAfterWhiteListCheck
-// }
-
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
 
   let committerMap: CommitterMap = {}
@@ -54,7 +31,7 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
     repo: context.repo.repo,
     path: pathToClaSignatures,
     sha: sha,
-    message: `**CLA ASSISTANT ACTION** Updating file for storing signatures from Pull Request ${pullRequestNo}`,
+    message: `**CLA Assistant Action** Updating file for storing signatures from Pull Request ${pullRequestNo}`,
     content: contentBinary,
     branch: branch
   })
@@ -67,7 +44,7 @@ async function createFile(pathToClaSignatures, contentBinary, branch): Promise<o
     repo: context.repo.repo,
     path: pathToClaSignatures,
     message:
-      "**CLA ASSISTANT ACTION** Creating file for storing CLA Signatures",
+      "**CLA Assistant Action** Creating file for storing CLA Signatures",
     content: contentBinary,
     branch: branch
   })
@@ -130,30 +107,25 @@ export async function getclas(pullRequestNo: number) {
   core.debug("signed contributors are: " + JSON.stringify(committerMap.signed, null, 2))
   //DO NULL CHECK FOR below
   if (committerMap) {
-    if (committerMap.notSigned!.length === 0) {
-      core.debug("null check")
-      signed = true
+    if (committerMap.notSigned) {
+      if (committerMap.notSigned.length === 0) {
+        core.debug("null check")
+        signed = true
+      }
     }
   }
   try {
-    const reactedCommitters: ReactedCommitterMap = (await prComment(
-      signed,
-      committerMap,
-      committers,
-      pullRequestNo
-    )) as ReactedCommitterMap
-    /* pushing the unsigned contributors to the CLA Json File */
+    const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
     if (signed) {
       core.info("All committers have signed the CLA")
       return
     }
-
     if (reactedCommitters) {
       if (reactedCommitters.newSigned) {
-        //reactedCommitters.newSigned.forEach((reactedCommitter) => reactedCommitter.pullRequestNo = pullRequestNo)
         clas.signedContributors.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(clas, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
+        /* pushing the recently signed  contributors to the CLA Json File */
         await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
       }
       if (reactedCommitters.allSignedFlag) {
