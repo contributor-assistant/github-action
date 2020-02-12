@@ -22,7 +22,7 @@ function isUserWhitelisted(committer) {
 
       return new RegExp(regex).test(committer)
     }
-    core.info("pattern is" + pattern)
+    core.info("pattern is " + pattern)
     core.info("committer is " + committer)
     return pattern === committer
   }).length > 0
