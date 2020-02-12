@@ -28,6 +28,12 @@ function isUserWhitelisted(committer) {
   }).length > 0
 }
 
+function checkWhitelist(committers: CommittersDetails[]) {
+  const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
+  console.log("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
+  return committersAfterWhiteListCheck
+}
+
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
 
   core.info("committers akshay are " + JSON.stringify(committers, null, 3))
@@ -90,6 +96,7 @@ export async function getclas(pullRequestNo: number) {
   }
   let result, clas, sha
   const committers = (await getCommitters()) as CommittersDetails[]
+  checkWhitelist(committers)
   try {
     result = await octokit.repos.getContents({
       owner: context.repo.owner,
