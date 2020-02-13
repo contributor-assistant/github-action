@@ -1,6 +1,5 @@
 import * as core from "@actions/core"
 import { context } from "@actions/github"
-const io = require("@actions/io")
 import { getclas } from "./checkcla"
 import { lockPullRequest } from "./pullRequestLock"
 

@@ -6,7 +6,6 @@ import signatureWithPRComment from "./signatureComment";
 import {
   CommitterMap,
   ReactedCommitterMap,
-  LabelName,
   CommittersDetails
 } from "./interfaces";
 
