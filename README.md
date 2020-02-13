@@ -45,7 +45,7 @@ jobs:
 
 #### 2. Pull Request event triggers CLA Workflow
 
-CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed(optional) `. 
+CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed`. 
 <br/> When the CLA workflow is triggered on pull request `closed` event, it will lock the Pull Request conversation after the Pull Request merge,  so that the contributors cannot modify or delete the signatures (Pull Request comment) later. This feature is optional. 
 
 #### 3. Signing the CLA
