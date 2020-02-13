@@ -3,17 +3,14 @@ import octokit from "./octokit"
 import * as core from "@actions/core"
 import { context } from "@actions/github"
 import prComment from "./pullRequestComment"
-import {
-  CommitterMap,
-  CommittersDetails,
-  ReactedCommitterMap
-} from "./interfaces"
+import { CommitterMap, CommittersDetails, ReactedCommitterMap } from "./interfaces"
+import { checkWhitelist } from "./checkWhiteList"
+const _ = require('lodash')
 
-function prepareCommiterMap(
-  committers: CommittersDetails[],
-  clas
-): CommitterMap {
+function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
+
   let committerMap: CommitterMap = {}
+
   committerMap.notSigned = committers.filter(
     committer => !clas.signedContributors.some(cla => committer.id === cla.id)
   )
@@ -28,36 +25,26 @@ function prepareCommiterMap(
   return committerMap
 }
 
-async function updateFile(
-  pathToClaSignatures,
-  sha,
-  contentBinary,
-  branch,
-  pullRequestNo
-) {
+async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
   await octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
     sha: sha,
-    message: `**CLA ASSISTANT ACTION** Updating file for storing signatures from Pull Request ${pullRequestNo}`,
+    message: `**CLA Assistant Action** Updating file for storing signatures from Pull Request ${pullRequestNo}`,
     content: contentBinary,
     branch: branch
   })
 }
 
-async function createFile(
-  pathToClaSignatures,
-  contentBinary,
-  branch
-): Promise<object> {
+async function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
   /* TODO: add dynamic  Message content  */
   let response = await octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
     message:
-      "**CLA ASSISTANT ACTION** Creating file for storing CLA Signatures",
+      "**CLA Assistant Action** Creating file for storing CLA Signatures",
     content: contentBinary,
     branch: branch
   })
@@ -77,7 +64,9 @@ export async function getclas(pullRequestNo: number) {
     branch = "master"
   }
   let result, clas, sha
-  const committers = (await getCommitters()) as CommittersDetails[]
+  let committers = (await getCommitters()) as CommittersDetails[]
+  //TODO code in more readable and efficient way
+  committers = checkWhitelist(committers)
   try {
     result = await octokit.repos.getContents({
       owner: context.repo.owner,
@@ -101,19 +90,12 @@ export async function getclas(pullRequestNo: number) {
       const initalContentBinary = Buffer.from(initalContentString).toString(
         "base64"
       )
-      const promise = Promise.all([
-        createFile(pathToClaSignatures, initalContentBinary, branch),
-        prComment(signed, committerMap, committers, pullRequestNo)
-      ])
+      const promise = Promise.all([createFile(pathToClaSignatures, initalContentBinary, branch), prComment(signed, committerMap, committers, pullRequestNo)])
       if (promise) {
-        core.setFailed(
-          `committers of pull request ${context.issue.number}  has to sign the CLA`
-        )
+        core.setFailed(`committers of pull request ${context.issue.number}  has to sign the CLA`)
         return
       }
-      core.setFailed(
-        "error occured when creating the signed contributors file " + error
-      )
+      core.setFailed("error occured when creating the signed contributors file " + error)
     } else {
       core.setFailed(error.message)
     }
@@ -121,48 +103,30 @@ export async function getclas(pullRequestNo: number) {
   clas = Buffer.from(result.data.content, "base64").toString()
   clas = JSON.parse(clas)
   committerMap = prepareCommiterMap(committers, clas) as CommitterMap
-  core.debug(
-    "unsigned contributors are: " +
-      JSON.stringify(committerMap.notSigned, null, 2)
-  )
-  core.debug(
-    "signed contributors are: " + JSON.stringify(committerMap.signed, null, 2)
-  )
+  core.debug("unsigned contributors are: " + JSON.stringify(committerMap.notSigned, null, 2))
+  core.debug("signed contributors are: " + JSON.stringify(committerMap.signed, null, 2))
   //DO NULL CHECK FOR below
   if (committerMap) {
-    if (committerMap.notSigned!.length === 0) {
-      core.debug("null check")
-      signed = true
+    if (committerMap.notSigned) {
+      if (committerMap.notSigned.length === 0) {
+        core.debug("null check")
+        signed = true
+      }
     }
   }
   try {
-    const reactedCommitters: ReactedCommitterMap = (await prComment(
-      signed,
-      committerMap,
-      committers,
-      pullRequestNo
-    )) as ReactedCommitterMap
-    /* pushing the unsigned contributors to the CLA Json File */
+    const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
     if (signed) {
       core.info("All committers have signed the CLA")
       return
     }
-
     if (reactedCommitters) {
       if (reactedCommitters.newSigned) {
-        //reactedCommitters.newSigned.forEach((reactedCommitter) => reactedCommitter.pullRequestNo = pullRequestNo)
         clas.signedContributors.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(clas, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
-        await updateFile(
-          pathToClaSignatures,
-          sha,
-          contentBinary,
-          branch,
-          pullRequestNo
-        )
-
-
+        /* pushing the recently signed  contributors to the CLA Json File */
+        await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
       }
       if (reactedCommitters.allSignedFlag) {
         core.info("All committers have signed the CLA")
@@ -171,16 +135,11 @@ export async function getclas(pullRequestNo: number) {
     }
 
     /* return when there are no unsigned committers */
-    if (
-      committerMap.notSigned === undefined ||
-      committerMap.notSigned.length === 0
-    ) {
+    if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
       core.info("All committers have signed the CLA")
       return
     } else {
-      core.setFailed(
-        `committers of Pull Request number ${context.issue.number}  has to sign the CLA`
-      )
+      core.setFailed(`committers of Pull Request number ${context.issue.number}  has to sign the CLA`)
     }
   } catch (err) {
     core.setFailed(err.message)

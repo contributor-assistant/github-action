@@ -1,9 +1,6 @@
-import octokit from './octokit'
-import { context } from '@actions/github'
-import { CommitterMap, CommittersDetails, CommentedCommitterMap } from './interfaces'
+import { CommittersDetails } from './interfaces'
 const fetch = require("node-fetch");
 import * as core from '@actions/core'
-
 
 export default async function blockChainWebhook(newSignedCommitters: CommittersDetails[]) {
     const blockchainURL = core.getInput('blockchain-webhook-endpoint') || 'https://u9afh6n36g.execute-api.eu-central-1.amazonaws.com/dev/webhook'
