@@ -39,6 +39,7 @@ jobs:
         path-To-cladocument: 'https://github.com/ibakshay/test-action-workflow/blob/master/cla.md'
         branch: 'master'
         whitelist: user1,user2,bot*
+        empty-commit-flag: false
         blockchain-storage-flag: false
 
 ```
@@ -50,7 +51,7 @@ CLA action workflow will be triggered on all Pull Request `opened, synchronize, 
 
 #### 3. Signing the CLA
 CLA workflow  creates a comment on Pull Request asking contributors who have not signed the CLA to sign and also fails the pull request status check with a `failure`. The contributors are asked to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
-If the contributor has already signed the CLA then the PR status will pass with `success`. <br/> By default, the GitHub Action workflow will also create an empty commit with message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA. 
+If the contributor has already signed the CLA then the PR status will pass with `success`. <br/> By default, this  Action workflow will also create an empty commit with message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA. 
 
 ![Screenshot 2020-01-08 at 14 16 37](https://user-images.githubusercontent.com/33329946/71981019-c219c600-3221-11ea-874b-bb12107e77a9.png)
 
@@ -64,7 +65,7 @@ After the contributor signed a CLA, the contributor's signature with metadata wi
 
 #### 5. Whitelisting users and bots
 
-If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation  to sign a CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma seperated string to the `whitelist` input in a workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
+If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation  to sign a CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma seperated string to the `whitelist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
 
 #### 6. Signatures can be additionally stored on the Ethereum Blockchain
 
