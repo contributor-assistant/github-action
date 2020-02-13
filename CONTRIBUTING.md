@@ -1,6 +1,6 @@
-# Contributing to CLA Assistant
+# Contributing to CLA Assistant GitHub Action
 
-You want to contribute to CLA Assistant? Welcome! Please read this document to understand what you can do:
+You want to contribute to CLA Assistant GitHub Action? Welcome! Please read this document to understand what you can do:
  * [Help Others](#help-others)
  * [Analyze Issues](#analyze-issues)
  * [Report an Issue](#report-an-issue)
