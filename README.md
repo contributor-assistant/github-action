@@ -58,13 +58,13 @@ If the contributor has already signed the CLA then the PR status will pass with 
 
 #### 4. Signatures stored in a JSON file
 
-After the contributor signed the CLA, the contributor's signature with metadata will be stored in a json file inside the repository like below screenshot and you can specify the custom path to this file with `path-to-signatures` input in the workflow . <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`
+After the contributor signed a CLA, the contributor's signature with metadata will be stored in a json file inside the repository like below screenshot and you can specify the custom path to this file with `path-to-signatures` input in the workflow . <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`
 
 ![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
 
 #### 5. Whitelisting users and bots
 
-If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation  to sign the CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma seperated string to the `whitelist` input in workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
+If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation  to sign a CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma seperated string to the `whitelist` input in a workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
 
 #### 6. Signatures can be additionally stored on the Ethereum Blockchain
 
