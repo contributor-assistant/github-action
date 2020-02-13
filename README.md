@@ -64,7 +64,7 @@ After the contributor signed the CLA, the contributor's signature with metadata 
 
 #### 5. Whitelisting users and bots
 
-If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleague to sign the CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma seperated string to the `whitelist` input(in this case `dependabot-preview[bot],greenkeeper[bot]`) to the `whitelist`input in the workflow file. You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
+If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation  to sign the CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma seperated string to the `whitelist` input in workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
 
 #### 6. Signatures can be additionally stored on the Ethereum Blockchain
 
