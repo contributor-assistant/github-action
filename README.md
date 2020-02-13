@@ -62,7 +62,11 @@ After the contributor signed the CLA, the contributor's signature with metadata 
 
 ![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
 
-#### 5. Signatures can be additionally stored on the Ethereum Blockchain
+#### 5. Whitelisting users and bots
+
+If a GitHub username is included in the whitelist, they will not be required to sign a CLA. For example, You can make use of this feature If you don't want your colleague to sign the CLA. And also, Since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names (in this case dependabot-preview[bot] and greenkeeper[bot] separated by a comma) to the `whitelist`input in the workflow file. You can also use wildcard symbol in case you want to whitelist all bot users like `bot*`
+
+#### 6. Signatures can be additionally stored on the Ethereum Blockchain
 
 To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. A detailed description on integrating with the Ethereum Blockchain can be found [here](https://github.com/cla-assistant/blockchain-services) - special credits and thanks goes to [@FabianRiewe](https://github.com/fabianriewe).  
 
