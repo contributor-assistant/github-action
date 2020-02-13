@@ -1,6 +1,6 @@
-# Contributing to CLA Assistant
+# Contributing to CLA Assistant GitHub Action
 
-You want to contribute to CLA Assistant? Welcome! Please read this document to understand what you can do:
+You want to contribute to CLA Assistant GitHub Action? Welcome! Please read this document to understand what you can do:
  * [Help Others](#help-others)
  * [Analyze Issues](#analyze-issues)
  * [Report an Issue](#report-an-issue)
@@ -111,8 +111,8 @@ These are some of the rules we try to follow:
 -   Apply a clean coding style adapted to the surrounding code, even though we are aware the existing code is not fully clean
 -   Use (4)spaces for indentation (except if the modified file consistently uses tabs)
 -   Use variable naming conventions like in the other files you are seeing (camelcase)
--   No console.log() - use logging service
--   Run the ESLint code check and make it succeed
+-   No console.log() - instead use GitHub Action Native logging service (For example `core.info("Hello World")`)
+-   Run the TSLint code check and make it succeed
 -   Comment your code where it gets non-trivial
 -   Keep an eye on performance and memory consumption, properly destroy objects when not used anymore
 -   Write a unit test
