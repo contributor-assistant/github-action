@@ -1,4 +1,4 @@
-# Handling CLAs with GitHub Action (Alpha release)
+# Handling CLAs with GitHub Action (Alpha)
 
 Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant enables contributors to sign CLAs from within a pull request. With this GitHub Action we get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the repository's file system**
 
