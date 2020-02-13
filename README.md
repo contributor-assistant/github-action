@@ -38,8 +38,9 @@ jobs:
         path-to-signatures: 'signatures/version1/cla.json'
         path-To-cladocument: 'https://github.com/ibakshay/test-action-workflow/blob/master/cla.md'
         branch: 'master'
-        blockchain-storage-flag: false
         whitelist: user1,user2,bot*
+        blockchain-storage-flag: false
+
 ```
 
 #### 2. Pull Request event triggers CLA Workflow
