@@ -35,6 +35,7 @@ jobs:
       with: 
         path-to-signatures: 'signatures/version1/cla.json'
         path-To-cladocument: 'https://github.com/ibakshay/test-action-workflow/blob/master/cla.md'
+        # branch should not be protected
         branch: 'master'
         whitelist: user1,user2,bot*
         empty-commit-flag: false
