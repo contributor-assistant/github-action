@@ -98,7 +98,7 @@ export async function getclas(pullRequestNo: number) {
           `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
         ))
     } else {
-      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}}`);
+      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`);
     }
     return
   }
