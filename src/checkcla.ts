@@ -90,7 +90,7 @@ export async function getclas(pullRequestNo: number) {
       const initalContentBinary = Buffer.from(initalContentString).toString(
         "base64"
       )
-      const promise = Promise.all([createFile(pathToClaSignatures, initalContentBinary, branch), prComment(signed, committerMap, committers, pullRequestNo)])
+      const promise = await Promise.all([createFile(pathToClaSignatures, initalContentBinary, branch), prComment(signed, committerMap, committers, pullRequestNo)])
       if (promise) {
         core.setFailed(`committers of pull request ${context.issue.number}  has to sign the CLA`)
         return
