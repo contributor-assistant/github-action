@@ -88,57 +88,57 @@ export async function getclas(pullRequestNo: number) {
       const initialContent = { signedContributors: [] }
       const initialContentString = JSON.stringify(initialContent, null, 2)
       const initialContentBinary = Buffer.from(initialContentString).toString("base64")
-      const promise = await Promise.all([createFile(pathToClaSignatures, initialContentBinary, branch), prComment(signed, committerMap, committers, pullRequestNo)])
+      const promise = Promise.all([createFile(pathToClaSignatures, initialContentBinary, branch), prComment(signed, committerMap, committers, pullRequestNo)])
       if (promise) {
         core.setFailed(`committers of pull request ${context.issue.number}  has to sign the CLA`)
         return
       }
       core.setFailed(`Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`)
+    } else {
+      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`);
     }
-    else {
-      core.setFailed(error.message)
-    }
-    clas = Buffer.from(result.data.content, "base64").toString()
-    clas = JSON.parse(clas)
-    committerMap = prepareCommiterMap(committers, clas) as CommitterMap
-    core.debug("unsigned contributors are: " + JSON.stringify(committerMap.notSigned, null, 2))
-    core.debug("signed contributors are: " + JSON.stringify(committerMap.signed, null, 2))
-    //DO NULL CHECK FOR below
-    if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
-      core.debug("null check")
-      signed = true
-    }
-    try {
-      const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
-      if (signed) {
-        core.info("All committers have signed the CLA")
-        return
-      }
-      if (reactedCommitters) {
-        if (reactedCommitters.newSigned) {
-          clas.signedContributors.push(...reactedCommitters.newSigned)
-          let contentString = JSON.stringify(clas, null, 2)
-          let contentBinary = Buffer.from(contentString).toString("base64")
-          /* pushing the recently signed  contributors to the CLA Json File */
-          await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
-        }
-        if (reactedCommitters.allSignedFlag) {
-          core.info("All committers have signed the CLA")
-          return
-        }
-      }
-
-      /* return when there are no unsigned committers */
-      if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
-        core.info("All committers have signed the CLA")
-        return
-      } else {
-        core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
-      }
-    } catch (err) {
-      core.setFailed(`Could not update the JSON file: ${err.message}`)
-      throw new Error("error while updating the JSON file" + err)
-    }
-    return clas
+    return
   }
+  clas = Buffer.from(result.data.content, "base64").toString()
+  clas = JSON.parse(clas)
+  committerMap = prepareCommiterMap(committers, clas) as CommitterMap
+  core.debug("unsigned contributors are: " + JSON.stringify(committerMap.notSigned, null, 2))
+  core.debug("signed contributors are: " + JSON.stringify(committerMap.signed, null, 2))
+  //DO NULL CHECK FOR below
+  if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
+    core.debug("null check")
+    signed = true
+  }
+  try {
+    const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+    if (signed) {
+      core.info("All committers have signed the CLA")
+      return
+    }
+    if (reactedCommitters) {
+      if (reactedCommitters.newSigned) {
+        clas.signedContributors.push(...reactedCommitters.newSigned)
+        let contentString = JSON.stringify(clas, null, 2)
+        let contentBinary = Buffer.from(contentString).toString("base64")
+        /* pushing the recently signed  contributors to the CLA Json File */
+        await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
+      }
+      if (reactedCommitters.allSignedFlag) {
+        core.info("All committers have signed the CLA")
+        return
+      }
+    }
+
+    /* return when there are no unsigned committers */
+    if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
+      core.info("All committers have signed the CLA")
+      return
+    } else {
+      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
+    }
+  } catch (err) {
+    core.setFailed(`Could not update the JSON file: ${err.message}`)
+    throw new Error("error while updating the JSON file" + err)
+  }
+  return clas
 }
