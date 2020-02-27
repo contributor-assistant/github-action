@@ -37,9 +37,9 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
   })
 }
 
-async function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
-  /* TODO: add dynamic  Message content  */
-  let response = await octokit.repos.createOrUpdateFile({
+function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
+  /* TODO: add dynamic message content  */
+  return octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
@@ -48,8 +48,8 @@ async function createFile(pathToClaSignatures, contentBinary, branch): Promise<o
     content: contentBinary,
     branch: branch
   })
-  return response
 }
+
 export async function getclas(pullRequestNo: number) {
   let committerMap = {} as CommitterMap
 
@@ -86,19 +86,21 @@ export async function getclas(pullRequestNo: number) {
       })
 
       const initialContent = { signedContributors: [] }
-      const initalContentString = JSON.stringify(initialContent, null, 2)
-      const initalContentBinary = Buffer.from(initalContentString).toString(
-        "base64"
-      )
-      const promise = await Promise.all([createFile(pathToClaSignatures, initalContentBinary, branch), prComment(signed, committerMap, committers, pullRequestNo)])
-      if (promise) {
-        core.setFailed(`committers of pull request ${context.issue.number}  has to sign the CLA`)
-        return
-      }
-      core.setFailed("error occured when creating the signed contributors file " + error)
+      const initialContentString = JSON.stringify(initialContent, null, 2)
+      const initialContentBinary = Buffer.from(initialContentString).toString("base64")
+
+      Promise.all([
+        createFile(pathToClaSignatures, initialContentBinary, branch),
+        prComment(signed, committerMap, committers, pullRequestNo),
+      ])
+        .then(() => core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`))
+        .catch(error => core.setFailed(
+          `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
+        ))
     } else {
-      core.setFailed(error.message)
+      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`);
     }
+    return
   }
   clas = Buffer.from(result.data.content, "base64").toString()
   clas = JSON.parse(clas)
@@ -106,13 +108,9 @@ export async function getclas(pullRequestNo: number) {
   core.debug("unsigned contributors are: " + JSON.stringify(committerMap.notSigned, null, 2))
   core.debug("signed contributors are: " + JSON.stringify(committerMap.signed, null, 2))
   //DO NULL CHECK FOR below
-  if (committerMap) {
-    if (committerMap.notSigned) {
-      if (committerMap.notSigned.length === 0) {
-        core.debug("null check")
-        signed = true
-      }
-    }
+  if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
+    core.debug("null check")
+    signed = true
   }
   try {
     const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
@@ -139,10 +137,10 @@ export async function getclas(pullRequestNo: number) {
       core.info("All committers have signed the CLA")
       return
     } else {
-      core.setFailed(`committers of Pull Request number ${context.issue.number}  has to sign the CLA`)
+      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
     }
   } catch (err) {
-    core.setFailed(err.message)
+    core.setFailed(`Could not update the JSON file: ${err.message}`)
     throw new Error("error while updating the JSON file" + err)
   }
   return clas
