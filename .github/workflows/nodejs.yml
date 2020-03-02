@@ -1,6 +1,6 @@
 name: Node CI
 
-on: 
+on:
   push:
    branches:
     - '*'
@@ -28,4 +28,4 @@ jobs:
     - name: Npm install
       run: npm ci
     - name: Npm build
-      run: npm run build --if-present 
+      run: npm run build --if-present
