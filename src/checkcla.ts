@@ -24,7 +24,7 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
   })
   return committerMap
 }
-
+//TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
   await octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
@@ -44,7 +44,7 @@ function createFile(pathToClaSignatures, contentBinary, branch): Promise<object>
     repo: context.repo.repo,
     path: pathToClaSignatures,
     message:
-      "**CLA Assistant Action** Creating file for storing CLA Signatures",
+      "Creating file for storing CLA Signatures",
     content: contentBinary,
     branch: branch
   })
