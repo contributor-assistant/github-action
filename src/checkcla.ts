@@ -31,7 +31,7 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
     repo: context.repo.repo,
     path: pathToClaSignatures,
     sha: sha,
-    message: `${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
+    message: `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
     content: contentBinary,
     branch: branch
   })
