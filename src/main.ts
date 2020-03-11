@@ -5,8 +5,6 @@ import { lockPullRequest } from "./pullRequestLock"
 
 export async function run() {
   try {
-    const payload = context.actor
-    core.debug(JSON.stringify(payload, null, 2))
     const pullRequestNo: number = context.issue.number
     core.info("CLA Assistant GitHub Action has started")
     core.info("the PR No is " + JSON.stringify(pullRequestNo))
