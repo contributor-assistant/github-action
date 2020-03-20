@@ -1,4 +1,4 @@
-name: "CLA Assistant GitHub Actions"
+name: "CLA assistant lite"
 description: "An action to handle the Contributor License Agreement"
 author: "SAP"
 branding:
