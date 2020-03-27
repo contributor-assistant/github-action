@@ -90,7 +90,7 @@ To make the whole process more fraud resistant we grant the option to additional
 | `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`  |
 | `empty-commit-flag`   | _optional_ |  provide the boolean `true` or `false` so that GitHub Actions will add empty commit whenever user signs the CLA. Default is `true`  |
 | `whitelist`   | _optional_ | You can specify users and bots to be [whitelisted](https://github.com/cla-assistant/github-action#5-whitelisting-users-and-bots). For example `user1,user2,bot*`  |
-| `blockchain-storage-flag`     | _optional_ |  provide the boolean `true` or `false` to optionally store the Controbutor's signature data in the Ethereum blockchain. Default is `false` |
+| `blockchain-storage-flag`     | _optional_ |  provide the boolean `true` or `false` to optionally store the Contributor's signature data in the Ethereum blockchain. Default is `false` |
 
 This action won't work for Pull Request coming from the forks as the [GitHub Action Token](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token) does not have write access for the forks, However, the GitHub team assured in one of the [discussion](https://github.community/t5/GitHub-Actions/Github-Workflow-not-running-from-pull-request-from-forked/m-p/32979#M1325) that they will ship this feature to enable read/write access for the PRs coming from the forks. 
 
