@@ -8,6 +8,7 @@ export async function run() {
     const pullRequestNo: number = context.issue.number
     core.info(`CLA Assistant GitHub Action has started`)
     core.info(`the Pull request number is ${JSON.stringify(pullRequestNo)}`)
+    return core.setOutput("test", "success")
 
     if (context.payload.action != "closed") {
       await getclas(pullRequestNo)
