@@ -19,6 +19,5 @@ function isUserWhitelisted(committer) {
 
 export function checkWhitelist(committers: CommittersDetails[]) {
     const committersAfterWhiteListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserWhitelisted !== undefined && isUserWhitelisted(committer.name)))
-    console.debug("committersAfterWhiteListCheck " + JSON.stringify(committersAfterWhiteListCheck, null, 2))
     return committersAfterWhiteListCheck
 }
