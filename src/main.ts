@@ -7,8 +7,8 @@ export async function run() {
   try {
     core.debug(JSON.stringify(context, null, 2));
     const pullRequestNo: number = context.issue.number
-    core.info("CLA Assistant GitHub Action has started")
-    core.info("the PR No is " + JSON.stringify(pullRequestNo))
+    core.info(`CLA Assistant GitHub Action has started`)
+    core.info(`the Pull request number is ${JSON.stringify(pullRequestNo)}`)
     if (context.payload.action === "closed") {
       return lockPullRequest(pullRequestNo)
     } else {
