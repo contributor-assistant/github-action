@@ -97,10 +97,10 @@ function prepareContributorMap(committers: CommittersDetails[], claFileContent, 
   }
   else if (signatureFilePresent === true) {
     contributorMap.notSigned = committers.filter(
-      committer => !claFileContent.signedsignedContributors.some(cla => committer.id === cla.id)
+      committer => !claFileContent.signedContributors.some(cla => committer.id === cla.id)
     )
     contributorMap.signed = committers.filter(committer =>
-      claFileContent.signedsignedContributors.some(cla => committer.id === cla.id)
+      claFileContent.signedContributors.some(cla => committer.id === cla.id)
     )
     committers.map(committer => {
       if (!committer.id) {
