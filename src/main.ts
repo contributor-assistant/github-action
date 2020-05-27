@@ -1,6 +1,6 @@
 import * as core from "@actions/core"
 import { context } from "@actions/github"
-import { claCheck } from "./checkcla"
+import { startClaCheck } from "./checkcla"
 import { lockPullRequest } from "./pullRequestLock"
 
 export async function run() {
@@ -9,7 +9,7 @@ export async function run() {
     core.info(`the Pull request number is ${JSON.stringify(context.issue.number)}`)
 
     if (context.payload.action != "closed") {
-      await claCheck()
+      return startClaCheck()
     } else {
       return lockPullRequest()
     }

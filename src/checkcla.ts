@@ -7,7 +7,7 @@ import { CommitterMap, CommittersDetails, ReactedCommitterMap } from "./interfac
 import { filterWhitelistedCommitters } from "./checkWhiteList"
 const _ = require('lodash')
 
-export async function claCheck() {
+export async function startClaCheck() {
   const pullRequestNo: number = context.issue.number
   let committerMap = {} as CommitterMap
   let signed: boolean = false
@@ -22,7 +22,7 @@ export async function claCheck() {
     sha = repoContent.data.sha
   } catch (error) {
     if (error.status === 404) {
-      committerMap = prepareCommiterMap(committers, null, signatureFilePresent = false) as CommitterMap
+      committerMap = prepareContributorMap(committers, null, signatureFilePresent = false) as CommitterMap
       await Promise.all([
         createFile(),
         prComment(signed, committerMap, committers, pullRequestNo),
@@ -34,9 +34,11 @@ export async function claCheck() {
     //TODO.  return statement needed ?
     return
   }
-  clas = Buffer.from(repoContent.data.content, "base64").toString()
-  clas = JSON.parse(clas)
-  committerMap = prepareCommiterMap(committers, clas, signatureFilePresent) as CommitterMap
+  let claFileContentString = Buffer.from(repoContent.data.content, "base64").toString()
+  let claFileContent = JSON.parse(claFileContentString)
+  let [contributorSignaturesFromFile] = claFileContent.signedContributors
+  core.debug(`the signatures contributores are ${JSON.stringify(contributorSignaturesFromFile, null, 2)}`)
+  committerMap = prepareContributorMap(committers, contributorSignaturesFromFile, signatureFilePresent) as CommitterMap
   //DO NULL CHECK FOR below
   if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
     core.debug("null check")
@@ -81,33 +83,33 @@ async function getCommitters() {
   return committers
 }
 
-function prepareCommiterMap(committers: CommittersDetails[], clas, signatureFilePresent): CommitterMap {
+function prepareContributorMap(committers: CommittersDetails[], contributorSignaturesFromFile, signatureFilePresent): CommitterMap {
 
-  let committerMap: CommitterMap = {}
+  let contributorMap: CommitterMap = {}
   if (signatureFilePresent === false) {
-    committerMap.notSigned = committers
-    committerMap.signed = []
+    contributorMap.notSigned = committers
+    contributorMap.signed = []
     committers.map(committer => {
-      if (!committer.id && committerMap.unknown) {
-        committerMap.unknown.push(committer)
+      if (!committer.id && contributorMap.unknown) {
+        contributorMap.unknown.push(committer)
       }
     })
 
   }
   else if (signatureFilePresent === true) {
-    committerMap.notSigned = committers.filter(
-      committer => !clas.signedContributors.some(cla => committer.id === cla.id)
+    contributorMap.notSigned = committers.filter(
+      committer => !contributorSignaturesFromFile.some(cla => committer.id === cla.id)
     )
-    committerMap.signed = committers.filter(committer =>
-      clas.signedContributors.some(cla => committer.id === cla.id)
+    contributorMap.signed = committers.filter(committer =>
+      contributorSignaturesFromFile.signedContributors.some(cla => committer.id === cla.id)
     )
     committers.map(committer => {
       if (!committer.id) {
-        committerMap.unknown!.push(committer)
+        contributorMap.unknown!.push(committer)
       }
     })
   }
-  return committerMap
+  return contributorMap
 }
 //TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
