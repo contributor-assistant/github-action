@@ -36,9 +36,8 @@ export async function startClaCheck() {
   }
   let claFileContentString = Buffer.from(repoContent.data.content, "base64").toString()
   let claFileContent = JSON.parse(claFileContentString)
-  let [contributorSignaturesFromFile] = claFileContent.signedContributors
-  core.debug(`the signatures contributores are ${JSON.stringify(contributorSignaturesFromFile, null, 2)}`)
-  committerMap = prepareContributorMap(committers, contributorSignaturesFromFile, signatureFilePresent) as CommitterMap
+  core.debug(`the signatures contributores are ${JSON.stringify(claFileContent, null, 2)}`)
+  committerMap = prepareContributorMap(committers, claFileContent, signatureFilePresent) as CommitterMap
   //DO NULL CHECK FOR below
   if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
     core.debug("null check")
@@ -83,7 +82,7 @@ async function getCommitters() {
   return committers
 }
 
-function prepareContributorMap(committers: CommittersDetails[], contributorSignaturesFromFile, signatureFilePresent): CommitterMap {
+function prepareContributorMap(committers: CommittersDetails[], claFileContent, signatureFilePresent): CommitterMap {
 
   let contributorMap: CommitterMap = {}
   if (signatureFilePresent === false) {
@@ -98,10 +97,10 @@ function prepareContributorMap(committers: CommittersDetails[], contributorSigna
   }
   else if (signatureFilePresent === true) {
     contributorMap.notSigned = committers.filter(
-      committer => !contributorSignaturesFromFile.some(cla => committer.id === cla.id)
+      committer => !claFileContent.signedsignedContributors.some(cla => committer.id === cla.id)
     )
     contributorMap.signed = committers.filter(committer =>
-      contributorSignaturesFromFile.some(cla => committer.id === cla.id)
+      claFileContent.signedsignedContributors.some(cla => committer.id === cla.id)
     )
     committers.map(committer => {
       if (!committer.id) {
