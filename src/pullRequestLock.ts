@@ -2,7 +2,8 @@ import octokit from './octokit'
 import * as core from '@actions/core'
 import { context } from '@actions/github'
 
-export async function lockPullRequest(pullRequestNo: number) {
+export async function lockPullRequest() {
+    const pullRequestNo: number = context.issue.number
     core.info('Locking the Pull Request to safe guard the Pull Request CLA Signatures')
     try {
         await octokit.issues.lock(

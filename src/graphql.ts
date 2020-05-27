@@ -5,7 +5,7 @@ import { CommittersDetails } from './interfaces'
 
 
 
-export default async function getCommitters() {
+export default async function getCommittersGraphQL() {
     try {
         let committers: CommittersDetails[] = []
         let filteredCommitters: CommittersDetails[] = []

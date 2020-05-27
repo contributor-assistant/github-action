@@ -1,19 +1,17 @@
 import * as core from "@actions/core"
 import { context } from "@actions/github"
-import { getclas } from "./checkcla"
+import { claCheck } from "./checkcla"
 import { lockPullRequest } from "./pullRequestLock"
 
 export async function run() {
   try {
-    const pullRequestNo: number = context.issue.number
     core.info(`CLA Assistant GitHub Action has started`)
-    core.info(`the Pull request number is ${JSON.stringify(pullRequestNo)}`)
-    return core.setOutput("test", "success")
+    core.info(`the Pull request number is ${JSON.stringify(context.issue.number)}`)
 
     if (context.payload.action != "closed") {
-      await getclas(pullRequestNo)
+      await claCheck()
     } else {
-      return lockPullRequest(pullRequestNo)
+      return lockPullRequest()
     }
   } catch (error) {
     core.setFailed(error.message)
