@@ -101,7 +101,7 @@ function prepareContributorMap(committers: CommittersDetails[], contributorSigna
       committer => !contributorSignaturesFromFile.some(cla => committer.id === cla.id)
     )
     contributorMap.signed = committers.filter(committer =>
-      contributorSignaturesFromFile.signedContributors.some(cla => committer.id === cla.id)
+      contributorSignaturesFromFile.some(cla => committer.id === cla.id)
     )
     committers.map(committer => {
       if (!committer.id) {
