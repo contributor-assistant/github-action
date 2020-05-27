@@ -96,7 +96,7 @@ function prepareContributorMap(committers: CommittersDetails[], claFileContent, 
 
   }
   else if (signatureFilePresent === true) {
-    core.debug(`debug`)
+    core.debug(`the signatures contributores are ${JSON.stringify(claFileContent, null, 2)}`)
     contributorMap.notSigned = committers.filter(
       committer => !claFileContent.signedContributors.some(cla => committer.id === cla.id)
     )
