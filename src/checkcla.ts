@@ -53,7 +53,7 @@ export async function startClaCheck() {
       if (reactedCommitters.newSigned !== undefined && reactedCommitters.newSigned.length > 0) {
         core.debug(`debug: reactedCommitters ${JSON.stringify(reactedCommitters)}`)
         signaturesInFile.signedContributors.push(...reactedCommitters.newSigned)
-        let contentString = JSON.stringify(clas, null, 2)
+        let contentString = JSON.stringify(signaturesInFile, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
         /* pushing the recently signed  contributors to the CLA Json File */
         await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
