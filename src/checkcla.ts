@@ -52,6 +52,7 @@ export async function startClaCheck() {
     }
     if (reactedCommitters) {
       if (reactedCommitters.newSigned) {
+        core.debug(`debug: reactedCommitters ${reactedCommitters.newSigned}`)
         clas.signedContributors.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(clas, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
@@ -115,6 +116,7 @@ function prepareContributorMap(committers: CommittersDetails[], claFileContent, 
 //TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
   try {
+    core.debug('update file')
     await octokit.repos.createOrUpdateFile({
       owner: context.repo.owner,
       repo: context.repo.repo,
