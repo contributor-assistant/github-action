@@ -38,6 +38,7 @@ export async function startClaCheck() {
   claFileContent = JSON.parse(claFileContent)
   core.debug(`the signatures contributores are ${JSON.stringify(claFileContent, null, 2)}`)
   committerMap = prepareContributorMap(committers, claFileContent, signatureFilePresent) as CommitterMap
+  core.debug(`commiterMap:  ${JSON.stringify(committerMap, null, 2)}`)
   //DO NULL CHECK FOR below
   if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
     core.debug("null check")
