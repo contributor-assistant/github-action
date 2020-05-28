@@ -51,7 +51,7 @@ export async function startClaCheck() {
     }
     if (reactedCommitters) {
       if (reactedCommitters.newSigned) {
-        core.debug(`debug: reactedCommitters ${JSON.stringify(reactedCommitters.newSigned)}`)
+        core.debug(`debug: reactedCommitters ${JSON.stringify(reactedCommitters)}`)
         signaturesInFile.signedContributors.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(clas, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
