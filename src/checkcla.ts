@@ -50,7 +50,7 @@ export async function startClaCheck() {
       return
     }
     if (reactedCommitters) {
-      if (reactedCommitters.newSigned) {
+      if (reactedCommitters.newSigned !== undefined && reactedCommitters.newSigned.length > 0) {
         core.debug(`debug: reactedCommitters ${JSON.stringify(reactedCommitters)}`)
         signaturesInFile.signedContributors.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(clas, null, 2)
