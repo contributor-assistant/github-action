@@ -36,7 +36,8 @@ export async function startClaCheck() {
   }
   let claFileContentString = Buffer.from(repoContent.data.content, "base64").toString()
   let claFileContent = JSON.parse(claFileContentString)
-  let signaturesInFile = claFileContent.signedContributors
+  core.debug(claFileContent)
+  let signaturesInFile= claFileContent.signedContributors
   committerMap = prepareContributorMap(committers, signaturesInFile, signatureFileAlreadyPresent) as CommitterMap
   core.debug(`commiterMap:  ${JSON.stringify(committerMap, null, 2)}`)
   //DO NULL CHECK FOR below
