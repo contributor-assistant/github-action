@@ -34,8 +34,9 @@ export async function startClaCheck() {
     //TODO.  return statement needed ?
     return
   }
-  let claFileContent = Buffer.from(repoContent.data.content, "base64").toString()
-  let signaturesInFile = JSON.parse(claFileContent)
+  let claFileContentString = Buffer.from(repoContent.data.content, "base64").toString()
+  let claFileContent = JSON.parse(claFileContentString)
+  let signaturesInFile = claFileContent.signedContributors
   committerMap = prepareContributorMap(committers, signaturesInFile, signatureFileAlreadyPresent) as CommitterMap
   core.debug(`commiterMap:  ${JSON.stringify(committerMap, null, 2)}`)
   //DO NULL CHECK FOR below
@@ -52,7 +53,7 @@ export async function startClaCheck() {
     if (reactedCommitters) {
       if (reactedCommitters.newSigned !== undefined && reactedCommitters.newSigned.length > 0) {
         core.debug(`debug: reactedCommitters ${JSON.stringify(reactedCommitters)}`)
-        signaturesInFile.signedContributors.push(...reactedCommitters.newSigned)
+        signaturesInFile.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(signaturesInFile, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
         /* pushing the recently signed  contributors to the CLA Json File */
@@ -99,10 +100,10 @@ function prepareContributorMap(committers: CommittersDetails[], signaturesInFile
   else if (signatureFilePresent === true) {
     core.debug(`the signatures contributores are ${JSON.stringify(signaturesInFile, null, 2)}`)
     contributorMap.notSigned = committers.filter(
-      committer => !signaturesInFile.signedContributors.some(cla => committer.id === cla.id)
+      committer => !signaturesInFile.some(cla => committer.id === cla.id)
     )
     contributorMap.signed = committers.filter(committer =>
-      signaturesInFile.signedContributors.some(cla => committer.id === cla.id)
+      signaturesInFile.some(cla => committer.id === cla.id)
     )
     committers.map(committer => {
       if (!committer.id) {
