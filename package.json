@@ -22,7 +22,7 @@
     "@actions/io": "^1.0.0",
     "@types/jquery": "^3.3.31",
     "actions-toolkit": "^2.1.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
