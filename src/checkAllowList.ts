@@ -1,10 +1,11 @@
-const _ = require('lodash')
-import * as core from "@actions/core"
-import { CommittersDetails } from "./interfaces"
+import { CommittersDetails } from './interfaces'
+
+import * as _ from 'lodash'
+import * as core from '@actions/core'
 
 function isUserNotInAllowList(committer) {
 
-    const allowListedItem: string = core.getInput("allowlist")
+    const allowListedItem: string = core.getInput('allowlist')
     const allowListPatterns: string[] = allowListedItem.split(',')
 
     return allowListPatterns.filter(function (pattern) {
