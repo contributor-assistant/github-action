@@ -38,7 +38,7 @@ jobs:
           path-To-cladocument: 'https://github.com/ibakshay/test-action-workflow/blob/master/cla.md'
           # branch should not be protected
           branch: 'master'
-          whitelist: user1,user2,bot*
+          allowlist: user1,user2,bot*
           empty-commit-flag: false
           blockchain-storage-flag: false
 
@@ -63,9 +63,9 @@ After the contributor signed a CLA, the contributor's signature with metadata wi
 
 ![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
 
-#### 5. Whitelisting users and bots
+#### 5. Users and bots in allowlist 
 
-If a GitHub username is included in the whitelist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to whitelist them. You can do so by adding their names in a comma separated string to the `whitelist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to whitelist all bot users something like `bot*`.
+If a GitHub username is included in the allowlist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to add them in `allowlist`. You can do so by adding their names in a comma separated string to the `allowlist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to allow all bot users something like `bot*`.
 
 #### 6. Signatures can be additionally stored on the Ethereum Blockchain
 
@@ -89,7 +89,7 @@ To make the whole process more fraud resistant we grant the option to additional
 | `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. Default path is  "./signatures/cla.json". |
 | `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`  |
 | `empty-commit-flag`   | _optional_ |  provide the boolean `true` or `false` so that GitHub Actions will add empty commit whenever user signs the CLA. Default is `true`  |
-| `whitelist`   | _optional_ | You can specify users and bots to be [whitelisted](https://github.com/cla-assistant/github-action#5-whitelisting-users-and-bots). For example `user1,user2,bot*`  |
+| `allowlist`   | _optional_ | You can specify users and bots to be [added in allowlist](https://github.com/cla-assistant/github-action#5-allowlist-users-and-bots). For example `user1,user2,bot*`  |
 | `blockchain-storage-flag`     | _optional_ |  provide the boolean `true` or `false` to optionally store the Contributor's signature data in the Ethereum blockchain. Default is `false` |
 
 This action won't work for Pull Request coming from the forks as the [GitHub Action Token](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/authenticating-with-the-github_token) does not have write access for the forks, However, the GitHub team assured in one of the [discussion](https://github.community/t5/GitHub-Actions/Github-Workflow-not-running-from-pull-request-from-forked/m-p/32979#M1325) that they will ship this feature to enable read/write access for the PRs coming from the forks. 
