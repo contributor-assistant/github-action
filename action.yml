@@ -20,8 +20,8 @@ inputs:
   empty-commit-flag:
     description: "GitHub Actions will add empty commit whenever the user signs the CLA (optional)"
     default: true
-  whitelist:
-    description: "whitelisted users don't have to sign the CLA document"
+  allowlist:
+    description: "users in the allow list don't have to sign the CLA document"
 runs:
   using: "node12"
   main: "lib/main.js"

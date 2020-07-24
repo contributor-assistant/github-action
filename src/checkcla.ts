@@ -4,7 +4,7 @@ import * as core from "@actions/core"
 import { context } from "@actions/github"
 import prComment from "./pullRequestComment"
 import { CommitterMap, CommittersDetails, ReactedCommitterMap } from "./interfaces"
-import { checkWhitelist } from "./checkWhiteList"
+import { checkAllowList } from "./checkAllowList"
 const _ = require('lodash')
 
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
@@ -66,7 +66,7 @@ export async function getclas(pullRequestNo: number) {
   let result, clas, sha
   let committers = (await getCommitters()) as CommittersDetails[]
   //TODO code in more readable and efficient way
-  committers = checkWhitelist(committers)
+  committers = checkAllowList(committers)
   try {
     result = await octokit.repos.getContents({
       owner: context.repo.owner,
