@@ -1,5 +1,6 @@
 import { CommittersDetails } from './interfaces'
-const fetch = require("node-fetch");
+
+import * as fetch from 'node-fetch'
 import * as core from '@actions/core'
 
 export default async function blockChainWebhook(newSignedCommitters: CommittersDetails[]) {
@@ -16,10 +17,7 @@ export default async function blockChainWebhook(newSignedCommitters: CommittersD
         }
         const res = await fetch(blockchainURL, config)
         const response = await res.json()
-        core.debug("the response of the webhook is " + JSON.stringify(response))
-        //const response = await res.json()
         if (response.success) {
-            core.debug("the response2 of the webhook is " + JSON.stringify(response))
             //return json
             return response
         }

@@ -1,5 +1,5 @@
 import octokit from './octokit'
-import * as core from '@actions/core';
+import * as core from '@actions/core'
 import { context } from '@actions/github'
 import { CommittersDetails } from './interfaces'
 
