@@ -35,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with: 
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-cla-document: 'https://github.com/ibakshay/test-action-workflow/blob/master/cla.md'
+          path-to-cla-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md'
           # branch should not be protected
           branch: 'master'
           allowlist: user1,user2,bot*
