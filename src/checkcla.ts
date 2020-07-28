@@ -10,7 +10,6 @@ import * as core from '@actions/core'
 
 
 export async function getclas(pullRequestNo: number) {
-  core.info(`getclas---->>>`)
   let committerMap = {} as CommitterMap
 
   let signed: boolean = false
