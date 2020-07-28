@@ -14,9 +14,6 @@ inputs:
   blockchain-storage-flag:
     description: "Optional functionality to store all the blockchain signatures in the ethirium blockchain as a smart contract"
     default: false
-  label:
-    description: "Optional functionality to add the label CLA Signed or not signed"
-    default: false
   empty-commit-flag:
     description: "GitHub Actions will add empty commit whenever the user signs the CLA (optional)"
     default: true
