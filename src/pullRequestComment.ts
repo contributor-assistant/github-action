@@ -1,6 +1,5 @@
 import octokit from './octokit'
 import * as core from '@actions/core'
-import { pathToCLADocument } from './url'
 import { context } from '@actions/github'
 import signatureWithPRComment from './signatureComment'
 import {
@@ -21,6 +20,7 @@ async function getComment() {
 }
 
 function commentContent(signed: boolean, committerMap: CommitterMap): string {
+  const pathToCLADocument = core.getInput('path-to-cla-document')
 
   if (signed) {
     return `**CLA Assistant Lite** All Contributors  have signed the CLA. `
@@ -32,7 +32,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   }
   core.info(`commentContent------> ${pathToCLADocument}`)
   let you = committersCount > 1 ? "you all" : "you"
-  let text = `**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that ${you} sign our [Contributor License Agreement](${pathToCLADocument()}) before we can accept your contribution. You can sign the CLA by just  posting a Pull Request Comment same as the below format.
+  let text = `**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that ${you} sign our [Contributor License Agreement](${pathToCLADocument}) before we can accept your contribution. You can sign the CLA by just  posting a Pull Request Comment same as the below format.
   - - -
   ***I have read the CLA Document and I hereby sign the CLA***
   - - - 
