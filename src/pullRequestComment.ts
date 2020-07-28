@@ -30,6 +30,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
     committersCount =
       committerMap.signed.length + committerMap.notSigned.length
   }
+  core.info(`commentContent------> ${pathToCLADocument}`)
   let you = committersCount > 1 ? "you all" : "you"
   let text = `**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that ${you} sign our [Contributor License Agreement](${pathToCLADocument()}) before we can accept your contribution. You can sign the CLA by just  posting a Pull Request Comment same as the below format.
   - - -
