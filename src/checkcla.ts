@@ -8,9 +8,14 @@ import { context } from '@actions/github'
 import * as _ from 'lodash'
 import * as core from '@actions/core'
 
+const getInitialCommittersMap = (): CommitterMap => ({
+  signed: [],
+  notSigned: [],
+  unknown: []
+})
 
 export async function getclas(pullRequestNo: number) {
-  let committerMap = {} as CommitterMap
+  let committerMap = getInitialCommittersMap()
 
   let signed: boolean = false
   //getting the path of the cla from the user
@@ -40,7 +45,7 @@ export async function getclas(pullRequestNo: number) {
       committerMap.signed = []
       committers.map(committer => {
         if (!committer.id) {
-          committerMap.unknown!.push(committer)
+          committerMap.unknown.push(committer)
         }
       })
 
@@ -104,7 +109,7 @@ export async function getclas(pullRequestNo: number) {
 
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
 
-  let committerMap: CommitterMap = {}
+  let committerMap = getInitialCommittersMap()
 
   committerMap.notSigned = committers.filter(
     committer => !clas.signedContributors.some(cla => committer.id === cla.id)
@@ -114,7 +119,7 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
   )
   committers.map(committer => {
     if (!committer.id) {
-      committerMap.unknown!.push(committer)
+      committerMap.unknown.push(committer)
     }
   })
   return committerMap
