@@ -1,7 +1,7 @@
 export interface CommitterMap {
-    signed?: CommittersDetails[],
-    notSigned?: CommittersDetails[],
-    unknown?: CommittersDetails[]
+    signed: CommittersDetails[],
+    notSigned: CommittersDetails[],
+    unknown: CommittersDetails[]
 }
 
 export interface ReactedCommitterMap {
