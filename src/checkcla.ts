@@ -139,11 +139,13 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
 
 function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
   /* TODO: add dynamic message content  */
+  const commitMessage = core.getInput('create-file-commit-message')
   return octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
     message:
+      commitMessage ||
       'Creating file for storing CLA Signatures',
     content: contentBinary,
     branch: branch
