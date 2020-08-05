@@ -141,6 +141,7 @@ function createFile(sha, contentBinary): Promise<object> {
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
+  core.info(sha)
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
