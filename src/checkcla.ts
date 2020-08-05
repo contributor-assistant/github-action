@@ -126,12 +126,15 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
 }
 //TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
+  const commitMessage = core.getInput('signed-commit-message')
   await octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
     sha: sha,
-    message: `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
+    message: commitMessage ?
+      commitMessage.replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
+      `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
     content: contentBinary,
     branch: branch
   })
