@@ -7,32 +7,19 @@ import { context } from '@actions/github'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
+import * as input from './shared/getInputs'
 
 
 export async function getclas(pullRequestNo: number) {
   let committerMap = getInitialCommittersMap()
-
   let signed: boolean = false
-  //getting the path of the cla from the user
-  let pathToClaSignatures: string = core.getInput('path-to-signatures')
-  let branch: string = core.getInput('branch')
-  if (!pathToClaSignatures || pathToClaSignatures == '') {
-    pathToClaSignatures = "signatures/cla.json" // default path for storing the signatures
-  }
-  if (!branch || branch == '') {
-    branch = 'master'
-  }
+
   let result, clas, sha
   let committers = (await getCommitters()) as CommittersDetails[]
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await octokit.repos.getContent({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      path: pathToClaSignatures,
-      ref: branch
-    })
+    result = await getFileContent()
     sha = result.data.sha
   } catch (error) {
     if (error.status === 404) {
@@ -49,7 +36,7 @@ export async function getclas(pullRequestNo: number) {
       const initialContentBinary = Buffer.from(initialContentString).toString('base64')
 
       Promise.all([
-        createFile(pathToClaSignatures, initialContentBinary, branch),
+        createFile(initialContentBinary),
         prComment(signed, committerMap, committers, pullRequestNo),
       ])
         .then(() => core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`))
@@ -81,7 +68,7 @@ export async function getclas(pullRequestNo: number) {
         let contentString = JSON.stringify(clas, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
         /* pushing the recently signed  contributors to the CLA Json File */
-        await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
+        await updateFile(sha, contentBinary, pullRequestNo)
       }
       if (reactedCommitters.allSignedFlag) {
         core.info(`All committers have signed the CLA`)
@@ -126,38 +113,43 @@ const getInitialCommittersMap = (): CommitterMap => ({
   unknown: []
 })
 
-//TODO: refactor the commit message when a project admin does recheck PR
-async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
+
+async function getFileContent() {
+
+  return octokit.repos.getContent({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    ref: input.getBranch()
+  })
+
+}
+
+// TODO: refactor the commit message when a project admin does recheck PR
+async function updateFile(sha, contentBinary, pullRequestNo) {
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   await octokitInstance.repos.createOrUpdateFileContents({
-    owner: getRemoteOrgName(),
-    repo: getRemoteRepositoryName(),
-    path: pathToClaSignatures,
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
     sha: sha,
     message: `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
     content: contentBinary,
-    branch: branch
+    branch: input.getBranch()
   })
 }
 
-function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
+function createFile(contentBinary): Promise<object> {
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
 
   return octokitInstance.repos.createOrUpdateFileContents({
-    owner: getRemoteOrgName(),
-    repo: getRemoteRepositoryName(),
-    path: pathToClaSignatures,
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
     message:
       'Creating file for storing CLA Signatures',
     content: contentBinary,
-    branch: branch
+    branch: input.getBranch()
   })
 }
 
-function getRemoteRepositoryName(): string {
-  return core.getInput('remote-repository-name') || context.repo.repo
-}
-
-function getRemoteOrgName(): string {
-  return core.getInput('remote-organization-name') || context.repo.owner
-}
