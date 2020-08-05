@@ -124,7 +124,8 @@ async function getFileContent() {
     path: input.getPathToSignatures(),
     ref: input.getBranch()
   })
-
+  core.info(`-------->>>>`)
+  core.info(JSON.stringify(result, null, 2))
   return result
 
 }
