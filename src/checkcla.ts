@@ -19,7 +19,12 @@ export async function getclas(pullRequestNo: number) {
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await getFileContent()
+    result = await octokit.repos.getContent({
+      owner: input.getRemoteOrgName(),
+      repo: input.getRemoteRepoName(),
+      path: input.getPathToSignatures(),
+      ref: input.getBranch()
+    })
     sha = result.data.sha
   } catch (error) {
     if (error.status === 404) {
