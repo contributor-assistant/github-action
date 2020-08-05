@@ -35,7 +35,7 @@ export async function getclas(pullRequestNo: number) {
       const initialContentString = JSON.stringify(initialContent, null, 2)
       const initialContentBinary = Buffer.from(initialContentString).toString('base64')
 
-      await createFile(initialContentBinary).catch(error => core.setFailed(
+      await createFile(sha, initialContentBinary).catch(error => core.setFailed(
         `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
       ))
       await prComment(signed, committerMap, committers, pullRequestNo)
@@ -130,14 +130,14 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
-    sha: sha,
+    sha,
     message: `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
     content: contentBinary,
     branch: input.getBranch()
   })
 }
 
-function createFile(contentBinary): Promise<object> {
+function createFile(sha, contentBinary): Promise<object> {
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
@@ -145,6 +145,7 @@ function createFile(contentBinary): Promise<object> {
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
+    sha,
     message:
       'Creating file for storing CLA Signatures',
     content: contentBinary,
