@@ -35,14 +35,12 @@ export async function getclas(pullRequestNo: number) {
       const initialContentString = JSON.stringify(initialContent, null, 2)
       const initialContentBinary = Buffer.from(initialContentString).toString('base64')
 
-      Promise.all([
-        createFile(initialContentBinary),
-        prComment(signed, committerMap, committers, pullRequestNo),
-      ])
-        .then(() => core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`))
-        .catch(error => core.setFailed(
-          `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
-        ))
+      await createFile(initialContentBinary).catch(error => core.setFailed(
+        `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
+      ))
+      await prComment(signed, committerMap, committers, pullRequestNo)
+      core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
