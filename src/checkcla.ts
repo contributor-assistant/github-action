@@ -20,8 +20,6 @@ export async function getclas(pullRequestNo: number) {
   committers = checkAllowList(committers)
   try {
     result = await getFileContent()
-    core.info(`----->>>>>>>>>>>>`)
-    core.info(result)
     sha = result.data.sha
   } catch (error) {
     if (error.status === 404) {
@@ -37,7 +35,7 @@ export async function getclas(pullRequestNo: number) {
       const initialContentString = JSON.stringify(initialContent, null, 2)
       const initialContentBinary = Buffer.from(initialContentString).toString('base64')
 
-      await createFile(sha, initialContentBinary).catch(error => core.setFailed(
+      await createFile(initialContentBinary).catch(error => core.setFailed(
         `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
       ))
       await prComment(signed, committerMap, committers, pullRequestNo)
@@ -115,6 +113,10 @@ const getInitialCommittersMap = (): CommitterMap => ({
 
 
 async function getFileContent() {
+  core.info(input.getRemoteOrgName())
+  core.info(input.getRemoteRepoName())
+  core.info(input.getPathToSignatures())
+  core.info(input.getBranch())
 
   const result = await octokit.repos.getContent({
     owner: input.getRemoteOrgName(),
@@ -141,16 +143,14 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
   })
 }
 
-function createFile(sha, contentBinary): Promise<object> {
+function createFile(contentBinary): Promise<object> {
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
-  core.info(sha)
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
-    sha,
     message:
       'Creating file for storing CLA Signatures',
     content: contentBinary,
