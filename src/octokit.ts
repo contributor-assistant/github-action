@@ -1,5 +1,12 @@
-import { GitHub } from '@actions/github'
+import { getOctokit } from '@actions/github'
 
-const octokit = new GitHub(process.env.GITHUB_TOKEN as string)
+const tokenToRemoteRepository = process.env.REMOTE_REPOSITORY_TOKEN
+const githubActionsDefaultToken = process.env.GITHUB_TOKEN
 
-export default octokit 
+export const octokit = getOctokit(githubActionsDefaultToken as string)
+export const octokitUsingPAT = getOctokit(githubActionsDefaultToken as string)
+
+export function isTokenToRemoteRepositoryPresent(): boolean {
+    return (typeof tokenToRemoteRepository !== "undefined") || tokenToRemoteRepository !== ''
+}
+

@@ -9,7 +9,7 @@ inputs:
     description: "Give a path for storing CLAs in a json file "
     default: "./signatures/cla.json"
   branch:
-    description: "select a branch where all the CLAs are stored"
+    description: "provide a branch where all the CLAs are stored"
     default: "master"
   blockchain-storage-flag:
     description: "Optional functionality to store all the blockchain signatures in the ethirium blockchain as a smart contract"
@@ -21,6 +21,10 @@ inputs:
     description: "users in the allow list don't have to sign the CLA document"
   path-to-cla-document:
     description: "Fully qualified web link to cla document Example: https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md"
+  remote-repository-name:
+    description: "provide the remote repository name where all the signatures should be stored"
+  remote-organization-name:
+    description: "provide the remote organization name where all the signatures should be stored"
 runs:
   using: "node12"
   main: "lib/main.js"

@@ -1,9 +1,9 @@
-import octokit from './octokit'
+import { octokit } from './octokit'
 import * as core from '@actions/core'
 import { context } from '@actions/github'
 
 export async function addEmptyCommit() {
-    const contributorName: string = context.payload.comment.user.login
+    const contributorName: string = context?.payload?.comment?.user?.login
     core.info(`Adding empty commit for ${contributorName} who has signed the CLA `)
 
     if (context.payload.comment) {

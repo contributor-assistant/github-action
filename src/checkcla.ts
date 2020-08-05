@@ -1,6 +1,6 @@
+import { octokit, isTokenToRemoteRepositoryPresent, octokitUsingPAT } from './octokit'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
-import octokit from './octokit'
 import prComment from './pullRequestComment'
 import { CommitterMap, CommittersDetails, ReactedCommitterMap } from './interfaces'
 import { context } from '@actions/github'
@@ -8,11 +8,6 @@ import { context } from '@actions/github'
 import * as _ from 'lodash'
 import * as core from '@actions/core'
 
-const getInitialCommittersMap = (): CommitterMap => ({
-  signed: [],
-  notSigned: [],
-  unknown: []
-})
 
 export async function getclas(pullRequestNo: number) {
   let committerMap = getInitialCommittersMap()
@@ -32,7 +27,7 @@ export async function getclas(pullRequestNo: number) {
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await octokit.repos.getContents({
+    result = await octokit.repos.getContent({
       owner: context.repo.owner,
       repo: context.repo.repo,
       path: pathToClaSignatures,
@@ -124,11 +119,19 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
   })
   return committerMap
 }
+
+const getInitialCommittersMap = (): CommitterMap => ({
+  signed: [],
+  notSigned: [],
+  unknown: []
+})
+
 //TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
-  await octokit.repos.createOrUpdateFile({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+  const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
+  await octokitInstance.repos.createOrUpdateFileContents({
+    owner: getRemoteOrgName(),
+    repo: getRemoteRepositoryName(),
     path: pathToClaSignatures,
     sha: sha,
     message: `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
@@ -138,14 +141,23 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
 }
 
 function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
-  /* TODO: add dynamic message content  */
-  return octokit.repos.createOrUpdateFile({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
+  const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
+
+  return octokitInstance.repos.createOrUpdateFileContents({
+    owner: getRemoteOrgName(),
+    repo: getRemoteRepositoryName(),
     path: pathToClaSignatures,
     message:
       'Creating file for storing CLA Signatures',
     content: contentBinary,
     branch: branch
   })
+}
+
+function getRemoteRepositoryName(): string {
+  return core.getInput('remote-repository-name') || context.repo.repo
+}
+
+function getRemoteOrgName(): string {
+  return core.getInput('remote-organization-name') || context.repo.owner
 }
