@@ -20,13 +20,14 @@ export async function getclas(pullRequestNo: number) {
   committers = checkAllowList(committers)
   try {
     result = await octokit.repos.getContent({
-      owner: input.getRemoteOrgName(),
-      repo: input.getRemoteRepoName(),
-      path: input.getPathToSignatures(),
-      ref: input.getBranch()
+      owner: core.getInput('remote-organization-name'),
+      repo: core.getInput('remote-repository-name'),
+      path: core.getInput('path-to-signatures'),
+      ref: core.getInput('branch')
     })
     sha = result.data.sha
   } catch (error) {
+    core.warning(error)
     if (error.status === 404) {
       committerMap.notSigned = committers
       committerMap.signed = []
