@@ -114,12 +114,14 @@ const getInitialCommittersMap = (): CommitterMap => ({
 
 async function getFileContent() {
 
-  return octokit.repos.getContent({
+  const result = await octokit.repos.getContent({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
     ref: input.getBranch()
   })
+
+  return result
 
 }
 
