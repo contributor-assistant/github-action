@@ -141,7 +141,8 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
 
 function createFile(contentBinary): Promise<object> {
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
-
+  const tokenFlag = isTokenToRemoteRepositoryPresent()
+  core.info(tokenFlag.toString())
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
