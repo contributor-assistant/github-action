@@ -46,9 +46,8 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   }
   if (committerMap && committerMap.unknown && committerMap.unknown.length > 0) {
     let seem = committerMap.unknown.length > 1 ? "seem" : "seems"
-    text += `<hr/>**${committerMap.unknown.join(
-      ", "
-    )}** ${seem} not to be a GitHub user.`
+    let committerNames = committerMap.unknown.map(committer => committer.name)
+    text += `**${committerNames.join(", ")}** ${seem} not to be a GitHub user.`
     text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>'
   }
   text += '<sub>You can retrigger the CLA Action by commenting **recheckcla** in this Pull Request</sub>'
