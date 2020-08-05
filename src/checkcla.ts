@@ -20,7 +20,8 @@ export async function getclas(pullRequestNo: number) {
   committers = checkAllowList(committers)
   try {
     result = await getFileContent()
-    console.log(result)
+    core.info(`----->>>>>>>>>>>>`)
+    core.info(result)
     sha = result.data.sha
   } catch (error) {
     if (error.status === 404) {
