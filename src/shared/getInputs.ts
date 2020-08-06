@@ -2,18 +2,18 @@ import { context } from '@actions/github'
 import * as core from '@actions/core'
 
 
-export const getRemoteRepoName = (): string => { return core.getInput('remote-repository-name') || context.repo.repo }
+export const getRemoteRepoName = (): string => { return core.getInput('remote-repository-name', { required: false }) || context.repo.repo }
 
-export const getRemoteOrgName = (): string => { return core.getInput('remote-organization-name') || context.repo.owner }
+export const getRemoteOrgName = (): string => { return core.getInput('remote-organization-name', { required: false }) || context.repo.owner }
 
-export const getPathToSignatures = (): string => core.getInput('path-to-signatures')
+export const getPathToSignatures = (): string => core.getInput('path-to-signatures', { required: false })
 
-export const getPathToCLADocument = (): string => core.getInput('path-to-cla-document')
+export const getPathToCLADocument = (): string => core.getInput('path-to-cla-document', { required: false })
 
-export const getBranch = (): string => core.getInput('branch')
+export const getBranch = (): string => core.getInput('branch', { required: false })
 
-export const getEmptyCommitFlag = (): string => core.getInput('empty-commit-flag')
+export const getEmptyCommitFlag = (): string => core.getInput('empty-commit-flag', { required: false })
 
-export const getAllowList = (): string => core.getInput('allowlist')
+export const getAllowList = (): string => core.getInput('allowlist', { required: false })
 
 
