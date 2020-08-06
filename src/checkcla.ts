@@ -9,6 +9,7 @@ import * as _ from 'lodash'
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
 
+const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
 
 export async function getclas(pullRequestNo: number) {
   let committerMap = getInitialCommittersMap()
@@ -114,8 +115,8 @@ const getInitialCommittersMap = (): CommitterMap => ({
 
 
 async function getFileContent() {
-
-  const result = await octokit.repos.getContent({
+  core.warning(isTokenToRemoteRepositoryPresent().toString())
+  const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
@@ -130,7 +131,6 @@ async function getFileContent() {
 // TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(sha, contentBinary, pullRequestNo) {
   const commitMessage = core.getInput('signed-commit-message')
-  const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
   core.info(`updateFile`)
@@ -149,7 +149,6 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
 
 function createFile(contentBinary): Promise<object> {
   const commitMessage = core.getInput('create-file-commit-message')
-  const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
   core.info(`createFile`)
