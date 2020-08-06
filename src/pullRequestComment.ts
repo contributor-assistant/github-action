@@ -13,7 +13,7 @@ async function getComment() {
     const response = await octokit.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number })
 
     //TODO: check the below regex
-    return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite.*/))
+    return response.data.find(comment => comment.body.match(/.*I have read the CLA Document and I hereby sign the CLA.*/))
   } catch (e) {
     core.setFailed(`Error occured when getting  all the comments of the pull request: ${e.message}`)
   }
