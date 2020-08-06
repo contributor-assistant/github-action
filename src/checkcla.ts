@@ -57,7 +57,8 @@ export async function getclas(pullRequestNo: number) {
     signed = true
   }
   try {
-    const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+    const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+    core.warning(reactedCommitters)
     if (signed) {
       core.info(`All committers have signed the CLA`)
       return
@@ -65,7 +66,6 @@ export async function getclas(pullRequestNo: number) {
 
     if (reactedCommitters?.newSigned) {
       core.warning("I am here")
-      core.warning(reactedCommitters.newSigned.toString())
       clas.signedContributors.push(...reactedCommitters.newSigned)
       let contentString = JSON.stringify(clas, null, 2)
       let contentBinary = Buffer.from(contentString).toString("base64")
