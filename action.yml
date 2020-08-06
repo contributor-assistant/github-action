@@ -18,9 +18,19 @@ inputs:
     description: "GitHub Actions will add empty commit whenever the user signs the CLA (optional)"
     default: true
   allowlist:
-    description: "users in the allow list don't have to sign the CLA document"
+    description: "Users in the allow list don't have to sign the CLA document"
   path-to-cla-document:
     description: "Fully qualified web link to cla document Example: https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md"
+  signed-comment-message:
+    description: "Commit message when a new contributor signs the CLA in a PR"
+  request-comment-message:
+    description: "Introductory message to ask new contributors to sign"
+  signed-empty-commit-message:
+    description: "Commit message when a new contributor signs the CLA (empty)"
+  create-file-commit-message:
+    description: "Commit message when a new file is created"
+  all-signed-comment-message:
+    description: "Commit message when everyone has signed, defaults to **CLA Assistant Lite** All Contributors have signed the CLA."
 runs:
   using: "node12"
   main: "lib/main.js"
