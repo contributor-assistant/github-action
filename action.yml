@@ -19,8 +19,10 @@ inputs:
   path-to-cla-document:
     description: "Fully qualified web link to cla document Example: https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md"
   remote-repository-name:
+    default: ""
     description: "provide the remote repository name where all the signatures should be stored"
   remote-organization-name:
+    default: ""
     description: "provide the remote organization name where all the signatures should be stored"
 runs:
   using: "node12"
