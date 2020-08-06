@@ -19,12 +19,7 @@ export async function getclas(pullRequestNo: number) {
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await octokit.repos.getContent({
-      owner: input.getRemoteOrgName(),
-      repo: input.getRemoteRepoName(),
-      path: core.getInput('path-to-signatures'),
-      ref: core.getInput('branch')
-    })
+    result = await getFileContent()
     sha = result.data.sha
   } catch (error) {
     core.warning(error)
@@ -119,19 +114,15 @@ const getInitialCommittersMap = (): CommitterMap => ({
 
 
 async function getFileContent() {
-  core.info(input.getRemoteOrgName())
-  core.info(input.getRemoteRepoName())
-  core.info(input.getPathToSignatures())
-  core.info(input.getBranch())
 
   const result = await octokit.repos.getContent({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
     ref: input.getBranch()
+  }).catch(error => {
+    core.setFailed(`Error occured when getting the contents of the repository: ${error}`)
   })
-  core.info(`-------->>>>`)
-  core.info(JSON.stringify(result, null, 2))
   return result
 
 }
