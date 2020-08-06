@@ -32,7 +32,7 @@ export async function getclas(pullRequestNo: number) {
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await octokit.repos.getContents({
+    result = await octokit.repos.getContent({
       owner: context.repo.owner,
       repo: context.repo.repo,
       path: pathToClaSignatures,
@@ -70,7 +70,6 @@ export async function getclas(pullRequestNo: number) {
   clas = JSON.parse(clas)
   committerMap = prepareCommiterMap(committers, clas) as CommitterMap
 
-  // TODO NULL check
   if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
     signed = true
   }
@@ -80,19 +79,18 @@ export async function getclas(pullRequestNo: number) {
       core.info(`All committers have signed the CLA`)
       return
     }
-    if (reactedCommitters) {
-      if (reactedCommitters.newSigned) {
-        clas.signedContributors.push(...reactedCommitters.newSigned)
-        let contentString = JSON.stringify(clas, null, 2)
-        let contentBinary = Buffer.from(contentString).toString("base64")
-        /* pushing the recently signed  contributors to the CLA Json File */
-        await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
-      }
-      if (reactedCommitters.allSignedFlag) {
-        core.info(`All committers have signed the CLA`)
-        return
-      }
+    if (reactedCommitters?.newSigned.length) {
+      clas.signedContributors.push(...reactedCommitters.newSigned)
+      let contentString = JSON.stringify(clas, null, 2)
+      let contentBinary = Buffer.from(contentString).toString("base64")
+      /* pushing the recently signed  contributors to the CLA Json File */
+      await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
     }
+    if (reactedCommitters.allSignedFlag) {
+      core.info(`All committers have signed the CLA`)
+      return
+    }
+
 
     /* return when there are no unsigned committers */
     if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
@@ -127,7 +125,7 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
 //TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
   const commitMessage = core.getInput('signed-commit-message')
-  await octokit.repos.createOrUpdateFile({
+  await octokit.repos.createOrUpdateFileContents({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
@@ -143,7 +141,7 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
 function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
   /* TODO: add dynamic message content  */
   const commitMessage = core.getInput('create-file-commit-message')
-  return octokit.repos.createOrUpdateFile({
+  return octokit.repos.createOrUpdateFileContents({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,

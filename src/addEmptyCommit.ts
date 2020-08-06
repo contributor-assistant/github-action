@@ -3,7 +3,7 @@ import * as core from '@actions/core'
 import { context } from '@actions/github'
 
 export async function addEmptyCommit() {
-    const contributorName: string = context.payload.comment.user.login
+    const contributorName: string = context?.payload?.comment?.user.login
     core.info(`Adding empty commit for ${contributorName} who has signed the CLA `)
 
     if (context.payload.comment) {
@@ -13,8 +13,8 @@ export async function addEmptyCommit() {
             try {
                 const commitMessage = core.getInput('signed-empty-commit-message')
                 const message = commitMessage ?
-                      commitMessage.replace('$contributorName', contributorName) :
-                      ` @${contributorName} has signed the CLA `
+                    commitMessage.replace('$contributorName', contributorName) :
+                    ` @${contributorName} has signed the CLA `
                 const pullRequestResponse = await octokit.pulls.get({
                     owner: context.repo.owner,
                     repo: context.repo.repo,

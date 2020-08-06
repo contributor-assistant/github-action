@@ -9,7 +9,7 @@ export default async function getCommitters() {
     try {
         let committers: CommittersDetails[] = []
         let filteredCommitters: CommittersDetails[] = []
-        let response = await octokit.graphql(`
+        let response: any = await octokit.graphql(`
         query($owner:String! $name:String! $number:Int! $cursor:String!){
             repository(owner: $owner, name: $name) {
             pullRequest(number: $number) {
