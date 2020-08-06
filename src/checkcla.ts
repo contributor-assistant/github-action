@@ -32,7 +32,7 @@ export async function getclas(pullRequestNo: number) {
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await octokit.repos.getContent({
+    result = await octokit.repos.getContents({
       owner: context.repo.owner,
       repo: context.repo.repo,
       path: pathToClaSignatures,
@@ -125,7 +125,7 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
 //TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
   const commitMessage = core.getInput('signed-commit-message')
-  await octokit.repos.createOrUpdateFileContents({
+  await octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,
@@ -141,7 +141,7 @@ async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullR
 function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
   /* TODO: add dynamic message content  */
   const commitMessage = core.getInput('create-file-commit-message')
-  return octokit.repos.createOrUpdateFileContents({
+  return octokit.repos.createOrUpdateFile({
     owner: context.repo.owner,
     repo: context.repo.repo,
     path: pathToClaSignatures,

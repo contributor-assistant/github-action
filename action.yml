@@ -21,7 +21,7 @@ inputs:
     description: "Users in the allow list don't have to sign the CLA document"
   path-to-cla-document:
     description: "Fully qualified web link to cla document Example: https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md"
-  signed-comment-message:
+  signed-commit-message:
     description: "Commit message when a new contributor signs the CLA in a PR"
   request-comment-message:
     description: "Introductory message to ask new contributors to sign"
