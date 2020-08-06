@@ -58,7 +58,7 @@ export async function getclas(pullRequestNo: number) {
   }
   try {
     const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
-    core.warning(reactedCommitters)
+    core.warning(JSON.stringify(reactedCommitters, null, 3))
     if (signed) {
       core.info(`All committers have signed the CLA`)
       return
