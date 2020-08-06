@@ -62,20 +62,19 @@ export async function getclas(pullRequestNo: number) {
       core.info(`All committers have signed the CLA`)
       return
     }
-    if (reactedCommitters) {
-      if (reactedCommitters.newSigned) {
-        core.warning("I am here")
-        core.warning(reactedCommitters.newSigned.toString())
-        clas.signedContributors.push(...reactedCommitters.newSigned)
-        let contentString = JSON.stringify(clas, null, 2)
-        let contentBinary = Buffer.from(contentString).toString("base64")
-        /* pushing the recently signed  contributors to the CLA Json File */
-        await updateFile(sha, contentBinary, pullRequestNo)
-      }
-      if (reactedCommitters.allSignedFlag) {
-        core.info(`All committers have signed the CLA`)
-        return
-      }
+
+    if (reactedCommitters?.newSigned) {
+      core.warning("I am here")
+      core.warning(reactedCommitters.newSigned.toString())
+      clas.signedContributors.push(...reactedCommitters.newSigned)
+      let contentString = JSON.stringify(clas, null, 2)
+      let contentBinary = Buffer.from(contentString).toString("base64")
+      /* pushing the recently signed  contributors to the CLA Json File */
+      await updateFile(sha, contentBinary, pullRequestNo)
+    }
+    if (reactedCommitters?.allSignedFlag) {
+      core.info(`All committers have signed the CLA`)
+      return
     }
 
     /* return when there are no unsigned committers */
