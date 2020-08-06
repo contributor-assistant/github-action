@@ -64,7 +64,7 @@ export async function getclas(pullRequestNo: number) {
       return
     }
 
-    if (reactedCommitters?.newSigned) {
+    if (reactedCommitters?.newSigned.length) {
       core.warning("I am here")
       clas.signedContributors.push(...reactedCommitters.newSigned)
       let contentString = JSON.stringify(clas, null, 2)
