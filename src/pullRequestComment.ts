@@ -23,7 +23,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   const pathToCLADocument = core.getInput('path-to-cla-document')
 
   if (signed) {
-    return core.getInput('signed-comment-message') || `**CLA Assistant Lite** All Contributors have signed the CLA.`
+    return core.getInput('all-signed-comment-message') || `**CLA Assistant Lite** All Contributors have signed the CLA.`
   }
   let committersCount = 1
   if (committerMap && committerMap.signed && committerMap.notSigned) {
