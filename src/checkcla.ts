@@ -64,6 +64,8 @@ export async function getclas(pullRequestNo: number) {
     }
     if (reactedCommitters) {
       if (reactedCommitters.newSigned) {
+        core.warning("I am here")
+        core.warning(reactedCommitters.newSigned as unknown as string)
         clas.signedContributors.push(...reactedCommitters.newSigned)
         let contentString = JSON.stringify(clas, null, 2)
         let contentBinary = Buffer.from(contentString).toString("base64")
@@ -139,7 +141,7 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
     sha,
     message: commitMessage ?
       commitMessage.replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
-      `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
+      `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
     content: contentBinary,
     branch: input.getBranch()
   })
