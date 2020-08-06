@@ -23,7 +23,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   const pathToCLADocument = core.getInput('path-to-cla-document')
 
   if (signed) {
-    return `**CLA Assistant Lite** All Contributors  have signed the CLA. `
+    return core.getInput('all-signed-comment-message') || `**CLA Assistant Lite** All Contributors have signed the CLA.`
   }
   let committersCount = 1
   if (committerMap && committerMap.signed && committerMap.notSigned) {
@@ -31,7 +31,8 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
       committerMap.signed.length + committerMap.notSigned.length
   }
   let you = committersCount > 1 ? "you all" : "you"
-  let text = `**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that ${you} sign our [Contributor License Agreement](${pathToCLADocument}) before we can accept your contribution. You can sign the CLA by just  posting a Pull Request Comment same as the below format.
+  let lineOne = (core.getInput('request-comment-message') || '**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement]($pathToCLADocument) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.').replace('$pathToCLADocument', pathToCLADocument).replace('$you', you)
+  let text = `${lineOne}
   - - -
   ***I have read the CLA Document and I hereby sign the CLA***
   - - - 
@@ -46,9 +47,8 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   }
   if (committerMap && committerMap.unknown && committerMap.unknown.length > 0) {
     let seem = committerMap.unknown.length > 1 ? "seem" : "seems"
-    text += `<hr/>**${committerMap.unknown.join(
-      ", "
-    )}** ${seem} not to be a GitHub user.`
+    let committerNames = committerMap.unknown.map(committer => committer.name)
+    text += `**${committerNames.join(", ")}** ${seem} not to be a GitHub user.`
     text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>'
   }
   text += '<sub>You can retrigger the CLA Action by commenting **recheckcla** in this Pull Request</sub>'

@@ -129,6 +129,7 @@ async function getFileContent() {
 
 // TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(sha, contentBinary, pullRequestNo) {
+  const commitMessage = core.getInput('signed-commit-message')
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
@@ -138,13 +139,16 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
     sha,
-    message: `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
+    message: commitMessage ?
+      commitMessage.replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
+      `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
     content: contentBinary,
     branch: input.getBranch()
   })
 }
 
 function createFile(contentBinary): Promise<object> {
+  const commitMessage = core.getInput('create-file-commit-message')
   const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
@@ -153,8 +157,7 @@ function createFile(contentBinary): Promise<object> {
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
-    message:
-      'Creating file for storing CLA Signatures',
+    message: commitMessage || 'Creating file for storing CLA Signatures',
     content: contentBinary,
     branch: input.getBranch()
   })
