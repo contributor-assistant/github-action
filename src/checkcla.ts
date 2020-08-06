@@ -1,4 +1,4 @@
-import { octokit, isTokenToRemoteRepositoryPresent } from './octokit'
+import { octokit, isTokenToRemoteRepositoryPresent, octokitUsingPAT } from './octokit'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
 import prComment from './pullRequestComment'
@@ -138,8 +138,11 @@ async function getFileContent() {
 
 // TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(sha, contentBinary, pullRequestNo) {
-  //const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
-  await octokit.repos.createOrUpdateFileContents({
+  const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
+  const tokenFlag = isTokenToRemoteRepositoryPresent()
+  core.info(tokenFlag.toString())
+  core.info(`updateFile`)
+  await octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
@@ -151,10 +154,11 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
 }
 
 function createFile(contentBinary): Promise<object> {
-  //const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
+  const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.info(tokenFlag.toString())
-  return octokit.repos.createOrUpdateFileContents({
+  core.info(`createFile`)
+  return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
