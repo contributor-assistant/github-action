@@ -20,8 +20,8 @@ export async function getclas(pullRequestNo: number) {
   committers = checkAllowList(committers)
   try {
     result = await octokit.repos.getContent({
-      owner: core.getInput('remote-organization-name'),
-      repo: core.getInput('remote-repository-name'),
+      owner: context.repo.owner,
+      repo: context.repo.repo,
       path: core.getInput('path-to-signatures'),
       ref: core.getInput('branch')
     })

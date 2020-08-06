@@ -8,8 +8,7 @@ export const octokit = getOctokit(githubActionsDefaultToken as string)
 //export const octokitUsingPAT = isTokenToRemoteRepositoryPresent() ? getOctokit(tokenToRemoteRepository as string) : octokit
 
 export function isTokenToRemoteRepositoryPresent(): boolean {
-    core.info(tokenToRemoteRepository)
 
-    return (typeof tokenToRemoteRepository !== "undefined") || tokenToRemoteRepository !== ''
+    return (typeof tokenToRemoteRepository !== "undefined")
 }
 
