@@ -32,7 +32,7 @@
     "jest": "^24.8.0",
     "jest-circus": "^24.7.1",
     "ts-jest": "^24.2.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.8.3"
   },
   "author": "ibakshay",
   "license": "Apache-2.0",
