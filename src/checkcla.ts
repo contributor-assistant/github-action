@@ -65,7 +65,6 @@ export async function getclas(pullRequestNo: number) {
     }
 
     if (reactedCommitters?.newSigned.length) {
-      core.warning("I am here")
       clas.signedContributors.push(...reactedCommitters.newSigned)
       let contentString = JSON.stringify(clas, null, 2)
       let contentBinary = Buffer.from(contentString).toString("base64")
@@ -129,17 +128,16 @@ async function getFileContent() {
 
 // TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(sha, contentBinary, pullRequestNo) {
-  const commitMessage = core.getInput('signed-commit-message')
   const tokenFlag = isTokenToRemoteRepositoryPresent()
-  core.info(tokenFlag.toString())
-  core.info(`updateFile`)
+  core.debug(tokenFlag.toString())
+
   await octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
     sha,
-    message: commitMessage ?
-      commitMessage.replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
+    message: input.getSignedCommitMessage() ?
+      input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
       `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
     content: contentBinary,
     branch: input.getBranch()
@@ -147,14 +145,14 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
 }
 
 function createFile(contentBinary): Promise<object> {
-  const commitMessage = core.getInput('create-file-commit-message')
+
   const tokenFlag = isTokenToRemoteRepositoryPresent()
   core.debug(tokenFlag.toString())
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
-    message: commitMessage || 'Creating file for storing CLA Signatures',
+    message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
     content: contentBinary,
     branch: input.getBranch()
   })
