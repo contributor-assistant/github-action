@@ -1,5 +1,4 @@
 import { octokit } from './octokit'
-import * as core from '@actions/core'
 import { context } from '@actions/github'
 import signatureWithPRComment from './signatureComment'
 import {
@@ -7,6 +6,9 @@ import {
   ReactedCommitterMap,
   CommittersDetails
 } from './interfaces'
+
+import * as input from './shared/getInputs'
+import * as core from '@actions/core'
 
 async function getComment() {
   try {
@@ -20,18 +22,17 @@ async function getComment() {
 }
 
 function commentContent(signed: boolean, committerMap: CommitterMap): string {
-  const pathToCLADocument = core.getInput('path-to-cla-document')
 
   if (signed) {
-    return core.getInput('all-signed-comment-message') || `****CLA Assistant Lite bot**** All contributors have signed the CLA  ✍️ `
+    return input.getCustomAllSignedPrComment() || `****CLA Assistant Lite bot**** All contributors have signed the CLA  ✍️ `
   }
   let committersCount = 1
+
   if (committerMap && committerMap.signed && committerMap.notSigned) {
-    committersCount =
-      committerMap.signed.length + committerMap.notSigned.length
+    committersCount = committerMap.signed.length + committerMap.notSigned.length
   }
   let you = committersCount > 1 ? "you all" : "you"
-  let lineOne = (core.getInput('request-comment-message') || '**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement]($pathToCLADocument) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.').replace('$pathToCLADocument', pathToCLADocument).replace('$you', you)
+  let lineOne = (input.getCustomNotSignedPrComment() || 'Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement]($pathToCLADocument) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.').replace('$pathToCLADocument', input.getPathToCLADocument()).replace('$you', you)
   let text = `**CLA Assistant Lite bot:** <br/> ${lineOne}
   - - -
   ***I have read the CLA Document and I hereby sign the CLA***

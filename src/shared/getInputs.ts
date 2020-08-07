@@ -22,10 +22,8 @@ export const getEmptySignedCommitMessage = (): string => core.getInput('signed-e
 
 export const getCreateFileCommitMessage = (): string => core.getInput('create-file-commit-message', { required: false })
 
+export const getCustomNotSignedPrComment = (): string => core.getInput('custom-notsigned-prcomment', { required: false })
 
-// TODO: optimise below  input name
-export const getRequestCommentMessage = (): string => core.getInput('request-comment-message', { required: false })
-
-export const getAllSigned = (): string => core.getInput('all-signed-comment-message', { required: false })
+export const getCustomAllSignedPrComment = (): string => core.getInput('custom-allsigned-prcomment', { required: false })
 
 
