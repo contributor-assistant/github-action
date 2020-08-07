@@ -23,7 +23,7 @@ export async function getclas(pullRequestNo: number) {
     result = await getFileContent()
     sha = result?.data?.sha
   } catch (error) {
-    core.warning(error)
+    core.debug(error)
     if (error.status === 404) {
       committerMap.notSigned = committers
       committerMap.signed = []
@@ -116,7 +116,7 @@ const getInitialCommittersMap = (): CommitterMap => ({
 
 
 async function getFileContent() {
-  core.warning(isTokenToRemoteRepositoryPresent().toString())
+  core.debug(isTokenToRemoteRepositoryPresent().toString())
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
@@ -149,8 +149,7 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
 function createFile(contentBinary): Promise<object> {
   const commitMessage = core.getInput('create-file-commit-message')
   const tokenFlag = isTokenToRemoteRepositoryPresent()
-  core.info(tokenFlag.toString())
-  core.info(`createFile`)
+  core.debug(tokenFlag.toString())
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
