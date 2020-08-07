@@ -86,7 +86,7 @@ export async function getclas(pullRequestNo: number) {
       /* pushing the recently signed  contributors to the CLA Json File */
       await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
     }
-    if (reactedCommitters.allSignedFlag) {
+    if (reactedCommitters?.allSignedFlag) {
       core.info(`All committers have signed the CLA`)
       return
     }
