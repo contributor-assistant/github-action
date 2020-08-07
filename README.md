@@ -1,3 +1,4 @@
+
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
 # Handling CLAs with GitHub Action (Alpha)
 
@@ -30,7 +31,7 @@ jobs:
       - name: "CLA Assistant"
         if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request'
         # Alpha Release
-        uses: cla-assistant/github-action@v1.4.2-alpha
+        uses: cla-assistant/github-action@v1.4.3-alpha
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with: 

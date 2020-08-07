@@ -52,7 +52,6 @@ export async function getclas(pullRequestNo: number) {
   clas = JSON.parse(clas)
   committerMap = prepareCommiterMap(committers, clas) as CommitterMap
 
-  // TODO NULL check
   if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
     signed = true
   }
@@ -63,7 +62,6 @@ export async function getclas(pullRequestNo: number) {
       core.info(`All committers have signed the CLA`)
       return
     }
-
     if (reactedCommitters?.newSigned.length) {
       clas.signedContributors.push(...reactedCommitters.newSigned)
       let contentString = JSON.stringify(clas, null, 2)
@@ -75,6 +73,11 @@ export async function getclas(pullRequestNo: number) {
       core.info(`✍️ All contributors have signed the CLA`)
       return
     }
+    if (reactedCommitters?.allSignedFlag) {
+      core.info(`All committers have signed the CLA`)
+      return
+    }
+
 
     /* return when there are no unsigned committers */
     if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
