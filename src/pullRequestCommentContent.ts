@@ -17,11 +17,12 @@ export function commentContent(signed: boolean, committerMap: CommitterMap): str
     }
 
     let you = committersCount > 1 ? `you all` : `you`
-    let lineOne = (input.getCustomNotSignedPrComment() || '**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement]($pathToCLADocument) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.').replace('$pathToCLADocument', input.getPathToCLADocument()).replace('$you', you)
+    let lineOne = (input.getCustomNotSignedPrComment() || '<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement]($pathToCLADocument) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.').replace('$pathToCLADocument', input.getPathToCLADocument()).replace('$you', you)
     let text = `**CLA Assistant Lite bot:** <br/> ${lineOne}
     - - -
     ***I have read the CLA Document and I hereby sign the CLA***
     - - - 
+    <br/>
     `
 
     if (committersCount > 1 && committerMap && committerMap.signed && committerMap.notSigned) {
