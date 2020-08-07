@@ -22,6 +22,7 @@ export function commentContent(signed: boolean, committerMap: CommitterMap): str
 - - -
 ***I have read the CLA Document and I hereby sign the CLA***
 - - - 
+
 `
 
     if (committersCount > 1 && committerMap && committerMap.signed && committerMap.notSigned) {
