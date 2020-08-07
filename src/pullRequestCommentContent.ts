@@ -39,6 +39,6 @@ export function commentContent(signed: boolean, committerMap: CommitterMap): str
         text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>'
     }
 
-    text += '<sub>You can retrigger this bot by commenting **recheckcla** in this Pull Request</sub>'
+    text += '<br/><sub>You can retrigger this bot by commenting **recheckcla** in this Pull Request</sub>'
     return text
 }
