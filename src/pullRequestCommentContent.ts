@@ -21,7 +21,8 @@ export function commentContent(signed: boolean, committerMap: CommitterMap): str
     let text = `**CLA Assistant Lite bot:** <br/> ${lineOne}
 - - -
 ***I have read the CLA Document and I hereby sign the CLA***
-- - - `
+- - - 
+`
 
     if (committersCount > 1 && committerMap && committerMap.signed && committerMap.notSigned) {
         text += `**${committerMap.signed.length}** out of **${committerMap.signed.length + committerMap.notSigned.length}** committers have signed the CLA.`
@@ -39,6 +40,6 @@ export function commentContent(signed: boolean, committerMap: CommitterMap): str
         text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>'
     }
 
-    text += '<br/><sub>You can retrigger this bot by commenting **recheckcla** in this Pull Request</sub>'
+    text += '<sub>You can retrigger this bot by commenting **recheckcla** in this Pull Request</sub>'
     return text
 }
