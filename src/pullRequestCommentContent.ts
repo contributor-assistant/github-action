@@ -21,8 +21,7 @@ export function commentContent(signed: boolean, committerMap: CommitterMap): str
     let text = `**CLA Assistant Lite bot:** <br/> ${lineOne}
 - - -
 ***I have read the CLA Document and I hereby sign the CLA***
-- - - 
-    `
+- - - `
 
     if (committersCount > 1 && committerMap && committerMap.signed && committerMap.notSigned) {
         text += `**${committerMap.signed.length}** out of **${committerMap.signed.length + committerMap.notSigned.length}** committers have signed the CLA.`
