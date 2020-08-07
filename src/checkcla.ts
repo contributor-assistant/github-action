@@ -1,45 +1,29 @@
+import { octokit, isTokenToRemoteRepositoryPresent, octokitUsingPAT } from './octokit'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
-import octokit from './octokit'
 import prComment from './pullRequestComment'
 import { CommitterMap, CommittersDetails, ReactedCommitterMap } from './interfaces'
 import { context } from '@actions/github'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
+import * as input from './shared/getInputs'
 
-const getInitialCommittersMap = (): CommitterMap => ({
-  signed: [],
-  notSigned: [],
-  unknown: []
-})
+const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
 
 export async function getclas(pullRequestNo: number) {
   let committerMap = getInitialCommittersMap()
-
   let signed: boolean = false
-  //getting the path of the cla from the user
-  let pathToClaSignatures: string = core.getInput('path-to-signatures')
-  let branch: string = core.getInput('branch')
-  if (!pathToClaSignatures || pathToClaSignatures == '') {
-    pathToClaSignatures = "signatures/cla.json" // default path for storing the signatures
-  }
-  if (!branch || branch == '') {
-    branch = 'master'
-  }
+
   let result, clas, sha
   let committers = (await getCommitters()) as CommittersDetails[]
   //TODO code in more readable and efficient way
   committers = checkAllowList(committers)
   try {
-    result = await octokit.repos.getContents({
-      owner: context.repo.owner,
-      repo: context.repo.repo,
-      path: pathToClaSignatures,
-      ref: branch
-    })
-    sha = result.data.sha
+    result = await getFileContent()
+    sha = result?.data?.sha
   } catch (error) {
+    core.debug(error)
     if (error.status === 404) {
       committerMap.notSigned = committers
       committerMap.signed = []
@@ -53,14 +37,12 @@ export async function getclas(pullRequestNo: number) {
       const initialContentString = JSON.stringify(initialContent, null, 2)
       const initialContentBinary = Buffer.from(initialContentString).toString('base64')
 
-      Promise.all([
-        createFile(pathToClaSignatures, initialContentBinary, branch),
-        prComment(signed, committerMap, committers, pullRequestNo),
-      ])
-        .then(() => core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`))
-        .catch(error => core.setFailed(
-          `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
-        ))
+      await createFile(initialContentBinary).catch(error => core.setFailed(
+        `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
+      ))
+      await prComment(signed, committerMap, committers, pullRequestNo)
+      core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
@@ -74,7 +56,8 @@ export async function getclas(pullRequestNo: number) {
     signed = true
   }
   try {
-    const reactedCommitters: ReactedCommitterMap = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+    const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+    core.warning(JSON.stringify(reactedCommitters, null, 3))
     if (signed) {
       core.info(`All committers have signed the CLA`)
       return
@@ -84,7 +67,11 @@ export async function getclas(pullRequestNo: number) {
       let contentString = JSON.stringify(clas, null, 2)
       let contentBinary = Buffer.from(contentString).toString("base64")
       /* pushing the recently signed  contributors to the CLA Json File */
-      await updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo)
+      await updateFile(sha, contentBinary, pullRequestNo)
+    }
+    if (reactedCommitters?.allSignedFlag) {
+      core.info(`✍️ All contributors have signed the CLA`)
+      return
     }
     if (reactedCommitters?.allSignedFlag) {
       core.info(`All committers have signed the CLA`)
@@ -94,7 +81,7 @@ export async function getclas(pullRequestNo: number) {
 
     /* return when there are no unsigned committers */
     if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
-      core.info(`All committers have signed the CLA`)
+      core.info(`✍️ All contributors have signed the CLA`)
       return
     } else {
       core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
@@ -122,33 +109,55 @@ function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap
   })
   return committerMap
 }
-//TODO: refactor the commit message when a project admin does recheck PR
-async function updateFile(pathToClaSignatures, sha, contentBinary, branch, pullRequestNo) {
-  const commitMessage = core.getInput('signed-commit-message')
-  await octokit.repos.createOrUpdateFile({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    path: pathToClaSignatures,
-    sha: sha,
-    message: commitMessage ?
-      commitMessage.replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
-      `@${context.actor} has signed the CLA from Pull Request ${pullRequestNo}`,
+
+const getInitialCommittersMap = (): CommitterMap => ({
+  signed: [],
+  notSigned: [],
+  unknown: []
+})
+
+
+async function getFileContent() {
+  core.debug(isTokenToRemoteRepositoryPresent().toString())
+  const result = await octokitInstance.repos.getContent({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    ref: input.getBranch()
+  })
+  return result
+
+}
+
+// TODO: refactor the commit message when a project admin does recheck PR
+async function updateFile(sha, contentBinary, pullRequestNo) {
+  const tokenFlag = isTokenToRemoteRepositoryPresent()
+  core.debug(tokenFlag.toString())
+
+  await octokitInstance.repos.createOrUpdateFileContents({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    sha,
+    message: input.getSignedCommitMessage() ?
+      input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
+      `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
     content: contentBinary,
-    branch: branch
+    branch: input.getBranch()
   })
 }
 
-function createFile(pathToClaSignatures, contentBinary, branch): Promise<object> {
-  /* TODO: add dynamic message content  */
-  const commitMessage = core.getInput('create-file-commit-message')
-  return octokit.repos.createOrUpdateFile({
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    path: pathToClaSignatures,
-    message:
-      commitMessage ||
-      'Creating file for storing CLA Signatures',
+function createFile(contentBinary): Promise<object> {
+
+  const tokenFlag = isTokenToRemoteRepositoryPresent()
+  core.debug(tokenFlag.toString())
+  return octokitInstance.repos.createOrUpdateFileContents({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
     content: contentBinary,
-    branch: branch
+    branch: input.getBranch()
   })
 }
+

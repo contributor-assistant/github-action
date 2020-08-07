@@ -1,4 +1,4 @@
-import octokit from './octokit'
+import { octokit } from './octokit'
 import { context } from '@actions/github'
 import { CommitterMap, CommittersDetails, CommentedCommitterMap } from './interfaces'
 import { addEmptyCommit } from './addEmptyCommit'

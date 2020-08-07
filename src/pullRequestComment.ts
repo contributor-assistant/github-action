@@ -1,4 +1,4 @@
-import octokit from './octokit'
+import { octokit } from './octokit'
 import * as core from '@actions/core'
 import { context } from '@actions/github'
 import signatureWithPRComment from './signatureComment'
@@ -13,7 +13,7 @@ async function getComment() {
     const response = await octokit.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number })
 
     //TODO: check the below regex
-    return response.data.find(comment => comment.body.match(/.*I have read the CLA Document and I hereby sign the CLA.*/))
+    return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
   } catch (e) {
     core.setFailed(`Error occured when getting  all the comments of the pull request: ${e.message}`)
   }
@@ -23,7 +23,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   const pathToCLADocument = core.getInput('path-to-cla-document')
 
   if (signed) {
-    return core.getInput('all-signed-comment-message') || `**CLA Assistant Lite** All Contributors have signed the CLA.`
+    return core.getInput('all-signed-comment-message') || `****CLA Assistant Lite bot**** All contributors have signed the CLA  ✍️ `
   }
   let committersCount = 1
   if (committerMap && committerMap.signed && committerMap.notSigned) {
@@ -32,7 +32,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
   }
   let you = committersCount > 1 ? "you all" : "you"
   let lineOne = (core.getInput('request-comment-message') || '**CLA Assistant Lite:** <br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement]($pathToCLADocument) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.').replace('$pathToCLADocument', pathToCLADocument).replace('$you', you)
-  let text = `${lineOne}
+  let text = `**CLA Assistant Lite bot:** <br/> ${lineOne}
   - - -
   ***I have read the CLA Document and I hereby sign the CLA***
   - - - 
@@ -51,7 +51,7 @@ function commentContent(signed: boolean, committerMap: CommitterMap): string {
     text += `**${committerNames.join(", ")}** ${seem} not to be a GitHub user.`
     text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>'
   }
-  text += '<sub>You can retrigger the CLA Action by commenting **recheckcla** in this Pull Request</sub>'
+  text += '<sub>You can retrigger this bot by commenting **recheckcla** in this Pull Request</sub>'
   return text
 }
 
