@@ -18,14 +18,14 @@ export async function reRunLastWorkFlowIfRequired() {
 
     if (runs.data.total_count > 0) {
         const run = runs.data.workflow_runs[0].id
-        core.debug(`Rerunning build run ${run}`)
-        // TODO: check if last workflow run failed https://developer.github.com/v3/actions/workflow-runs/#get-a-workflow-run
-        await checkIfLastWorkFlowFailed(run)
+        const workFlowFailedFlag = await checkIfLastWorkFlowFailed(run)
 
-        const reRun = await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
-
-        core.debug(`rerun ${JSON.stringify(reRun)}`)
+        if (workFlowFailedFlag) {
+            core.debug(`Rerunning build run ${run}`)
+            await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
+        }
     }
+
     return
 }
 
@@ -49,7 +49,7 @@ async function getSelfWorkflowId(): Promise<number> {
         .find(w => w.name == context.workflow)
 
     if (!workflow) {
-        throw new Error("Unable to locate this workflow's ID in this repository, can't retrigger job..");
+        throw new Error(`Unable to locate this workflow's ID in this repository, can't retrigger job..`)
     }
     return workflow.id
 }
@@ -60,7 +60,7 @@ async function listWorkflowRunsInBranch(branch: string, workflowId: number): Pro
         repo: context.repo.repo,
         branch,
         workflow_id: workflowId,
-        event: "pull_request"
+        event: 'pull_request'
     })
     return runs
 }
@@ -80,7 +80,7 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<any> {
         run_id: run
     })
 
-    core.debug(JSON.stringify(response, null, 3))
+    return response.status == 'failed'
 
 
 }
