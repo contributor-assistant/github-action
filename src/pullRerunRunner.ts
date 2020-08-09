@@ -19,7 +19,9 @@ export async function reRunLastWorkFlowIfRequired() {
     if (runs.data.total_count > 0) {
         const run = runs.data.workflow_runs[0].id
         core.debug(`Rerunning build run ${run}`)
-        await reRunWorkflow(run)
+        // TODO: check if last workflow run failed https://developer.github.com/v3/actions/workflow-runs/#get-a-workflow-run
+        const reRun = await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
+        core.debug(reRun)
     }
     return
 }
