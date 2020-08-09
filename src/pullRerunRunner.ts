@@ -20,8 +20,11 @@ export async function reRunLastWorkFlowIfRequired() {
         const run = runs.data.workflow_runs[0].id
         core.debug(`Rerunning build run ${run}`)
         // TODO: check if last workflow run failed https://developer.github.com/v3/actions/workflow-runs/#get-a-workflow-run
+        await checkIfLastWorkFlowFailed(run)
+
         const reRun = await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
-        core.debug(reRun)
+
+        core.debug(`rerun ${JSON.stringify(reRun)}`)
     }
     return
 }
@@ -66,6 +69,18 @@ async function reRunWorkflow(run: number): Promise<any> {
     await octokit.actions.reRunWorkflow({
         owner: context.repo.owner,
         repo: context.repo.repo,
-        run_id: run,
-    });
+        run_id: run
+    })
+}
+
+async function checkIfLastWorkFlowFailed(run: number): Promise<any> {
+    const response: any = await octokit.actions.getWorkflowRun({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        run_id: run
+    })
+
+    core.debug(response)
+
+
 }
