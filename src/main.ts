@@ -1,17 +1,21 @@
-import * as core from '@actions/core'
 import { context } from '@actions/github'
 import { getclas } from './checkcla'
 import { lockPullRequest } from './pullRequestLock'
+import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
+
+import * as core from '@actions/core'
 
 export async function run() {
   try {
-    const pullRequestNo: number = context.issue.number
-    core.info(`CLA Assistant GitHub Action has started`)
+
+    core.info(`CLA Assistant GitHub Action bot has started the process`)
 
     if (context.payload.action === 'closed') {
-      return lockPullRequest(pullRequestNo)
+      return lockPullRequest()
     } else {
-      await getclas(pullRequestNo)
+
+      await getclas()
+      await reRunLastWorkFlowIfRequired()
     }
   } catch (error) {
     core.setFailed(error.message)

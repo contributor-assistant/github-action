@@ -11,7 +11,8 @@ import * as input from './shared/getInputs'
 
 const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
 
-export async function getclas(pullRequestNo: number) {
+export async function getclas() {
+  const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
 
