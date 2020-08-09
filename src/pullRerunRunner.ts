@@ -80,7 +80,8 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<any> {
         run_id: run
     })
 
-    return response.status == 'failed'
+    core.debug(JSON.stringify(response))
+    return response.status == 'failure'
 
 
 }
