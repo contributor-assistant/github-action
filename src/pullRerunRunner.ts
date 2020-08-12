@@ -23,8 +23,6 @@ export async function reRunLastWorkFlowIfRequired() {
         await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
         await checkIfLastWorkFlowFailed(run)
     }
-
-    return
 }
 
 async function getBranchOfPullRequest(): Promise<string> {
@@ -78,7 +76,7 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<any> {
         run_id: run
     })
 
-    core.debug(JSON.stringify(response, null, 2))
+    core.debug(JSON.stringify(response))
     return response.status == 'failure'
 
 
