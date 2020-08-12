@@ -1,8 +1,8 @@
 import { context } from '@actions/github'
 import { octokit, octokitUsingPAT } from './octokit'
 
-
 import * as core from '@actions/core'
+
 
 // Note: why this  re-run of the last failed CLA workflow status check is explained this issue https://github.com/cla-assistant/github-action/issues/39
 export async function reRunLastWorkFlowIfRequired() {
@@ -19,9 +19,11 @@ export async function reRunLastWorkFlowIfRequired() {
     if (runs.data.total_count > 0) {
         const run = runs.data.workflow_runs[0].id
 
-        core.debug(`Rerunning build run ${run}`)
-        await checkIfLastWorkFlowFailed(run)
-        await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
+        const isLastWorkFlowFailed: boolean = await checkIfLastWorkFlowFailed(run)
+        if (isLastWorkFlowFailed) {
+            core.debug(`Rerunning build run ${run}`)
+            await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
+        }
     }
 }
 
@@ -70,7 +72,7 @@ async function reRunWorkflow(run: number): Promise<any> {
     })
 }
 
-async function checkIfLastWorkFlowFailed(run: number): Promise<any> {
+async function checkIfLastWorkFlowFailed(run: number): Promise<boolean> {
     const response: any = await octokit.actions.getWorkflowRun({
         owner: context.repo.owner,
         repo: context.repo.repo,
@@ -78,7 +80,7 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<any> {
     })
 
     core.debug(JSON.stringify(response))
-    return response.status == 'failure'
+    return response.data.conclusion == 'failure'
 
 
 }
