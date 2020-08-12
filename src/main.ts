@@ -1,7 +1,6 @@
 import { context } from '@actions/github'
 import { getclas } from './checkcla'
 import { lockPullRequest } from './pullRequestLock'
-import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 
 import * as core from '@actions/core'
 
@@ -15,7 +14,6 @@ export async function run() {
     } else {
 
       await getclas()
-      await reRunLastWorkFlowIfRequired()
     }
   } catch (error) {
     core.setFailed(error.message)
