@@ -20,8 +20,8 @@ export async function reRunLastWorkFlowIfRequired() {
         const run = runs.data.workflow_runs[0].id
 
         core.debug(`Rerunning build run ${run}`)
-        await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
         await checkIfLastWorkFlowFailed(run)
+        await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
     }
 }
 
@@ -62,6 +62,7 @@ async function listWorkflowRunsInBranch(branch: string, workflowId: number): Pro
 }
 
 async function reRunWorkflow(run: number): Promise<any> {
+    // Personal Access token with repo scope is required to access this api - https://github.community/t/bug-rerun-workflow-api-not-working/126742
     await octokitUsingPAT.actions.reRunWorkflow({
         owner: context.repo.owner,
         repo: context.repo.repo,
