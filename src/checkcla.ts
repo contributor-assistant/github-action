@@ -8,6 +8,7 @@ import { context } from '@actions/github'
 import * as _ from 'lodash'
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
+import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 
 const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
 
@@ -82,7 +83,7 @@ export async function getclas() {
     /* return when there are no unsigned committers */
     if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
       core.info(`✍️ All contributors have signed the CLA`)
-      return
+      await reRunLastWorkFlowIfRequired()
     } else {
       core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
     }
