@@ -24,7 +24,6 @@ export async function getclas() {
     result = await getFileContent()
     sha = result?.data?.sha
   } catch (error) {
-    core.debug(error)
     if (error.status === 404) {
       committerMap.notSigned = committers
       committerMap.signed = []
@@ -119,7 +118,6 @@ const getInitialCommittersMap = (): CommitterMap => ({
 
 
 async function getFileContent() {
-  core.debug(isTokenToRemoteRepositoryPresent().toString())
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),

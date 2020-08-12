@@ -1,5 +1,5 @@
 import { context } from '@actions/github'
-import { octokit } from './octokit'
+import { octokit, octokitUsingPAT } from './octokit'
 
 
 import * as core from '@actions/core'
@@ -20,9 +20,9 @@ export async function reRunLastWorkFlowIfRequired() {
         const run = runs.data.workflow_runs[0].id
         const workFlowFailedFlag = await checkIfLastWorkFlowFailed(run)
 
+        core.debug(`Rerunning build run ${run}`)
+        await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
         if (workFlowFailedFlag) {
-            core.debug(`Rerunning build run ${run}`)
-            await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
         }
     }
 
@@ -66,7 +66,7 @@ async function listWorkflowRunsInBranch(branch: string, workflowId: number): Pro
 }
 
 async function reRunWorkflow(run: number): Promise<any> {
-    await octokit.actions.reRunWorkflow({
+    await octokitUsingPAT.actions.reRunWorkflow({
         owner: context.repo.owner,
         repo: context.repo.repo,
         run_id: run
