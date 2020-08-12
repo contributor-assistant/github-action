@@ -12,7 +12,7 @@ export const getPathToCLADocument = (): string => core.getInput('path-to-cla-doc
 
 export const getBranch = (): string => core.getInput('branch', { required: false })
 
-export const getAllowList = (): string => core.getInput('allowlist', { required: false })
+export const getAllowListItem = (): string => core.getInput('allowlist', { required: false })
 
 export const getEmptyCommitFlag = (): string => core.getInput('empty-commit-flag', { required: false })
 

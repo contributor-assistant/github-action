@@ -1,4 +1,4 @@
-import { octokit, isTokenToRemoteRepositoryPresent, octokitUsingPAT } from './octokit'
+import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from './octokit'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
 import prComment from './pullRequestComment'
@@ -9,7 +9,7 @@ import * as _ from 'lodash'
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
 
-const octokitInstance = isTokenToRemoteRepositoryPresent() ? octokitUsingPAT : octokit
+const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
 
 export async function getclas() {
   const pullRequestNo: number = context.issue.number
@@ -18,7 +18,7 @@ export async function getclas() {
 
   let result, clas, sha
   let committers = (await getCommitters()) as CommittersDetails[]
-  //TODO code in more readable and efficient way
+
   committers = checkAllowList(committers)
   try {
     result = await getFileContent()
@@ -130,8 +130,6 @@ async function getFileContent() {
 
 // TODO: refactor the commit message when a project admin does recheck PR
 async function updateFile(sha, contentBinary, pullRequestNo) {
-  const tokenFlag = isTokenToRemoteRepositoryPresent()
-  core.debug(tokenFlag.toString())
 
   await octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
@@ -144,12 +142,11 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
     content: contentBinary,
     branch: input.getBranch()
   })
+
 }
 
 function createFile(contentBinary): Promise<object> {
 
-  const tokenFlag = isTokenToRemoteRepositoryPresent()
-  core.debug(tokenFlag.toString())
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
@@ -158,5 +155,6 @@ function createFile(contentBinary): Promise<object> {
     content: contentBinary,
     branch: input.getBranch()
   })
+
 }
 

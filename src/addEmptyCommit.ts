@@ -1,6 +1,9 @@
 import { octokit } from './octokit'
-import * as core from '@actions/core'
 import { context } from '@actions/github'
+
+import * as core from '@actions/core'
+import * as input from './shared/getInputs'
+
 
 export async function addEmptyCommit() {
     const contributorName: string = context?.payload?.comment?.user?.login
@@ -11,9 +14,8 @@ export async function addEmptyCommit() {
         //Do empty commit only when the contributor signs the CLA with the PR comment 
         if (context.payload.comment.body === 'I have read the CLA Document and I hereby sign the CLA') {
             try {
-                const commitMessage = core.getInput('signed-empty-commit-message')
-                const message = commitMessage ?
-                    commitMessage.replace('$contributorName', contributorName) :
+                const message = input.getSignedCommitMessage() ?
+                    input.getSignedCommitMessage().replace('$contributorName', contributorName) :
                     ` @${contributorName} has signed the CLA `
                 const pullRequestResponse = await octokit.pulls.get({
                     owner: context.repo.owner,
@@ -48,8 +50,8 @@ export async function addEmptyCommit() {
                     sha: newCommit.data.sha
                 })
 
-            } catch (e) {
-                core.error(`failed when adding empty commit  with the contributor's signature name `)
+            } catch (error) {
+                core.error(`failed when adding empty commit  with the contributor's signature name: ${error} `)
 
             }
         }

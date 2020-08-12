@@ -2,13 +2,11 @@ import { octokit } from './octokit'
 import { context } from '@actions/github'
 import { CommitterMap, CommittersDetails, CommentedCommitterMap } from './interfaces'
 import { addEmptyCommit } from './addEmptyCommit'
-import blockChainWebhook from './blockChainWebhook'
-import * as core from '@actions/core'
+
+import * as input from './shared/getInputs'
 
 
-export default async function signatureWithPRComment(commentId, committerMap: CommitterMap, committers, pullRequestNo: number) {
-    const blockchainFlag = core.getInput('blockchain-storage-flag')
-    const emptyCommitFlag = core.getInput('empty-commit-flag')
+export default async function signatureWithPRComment(committerMap: CommitterMap, committers, pullRequestNo: number) {
 
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
@@ -46,22 +44,20 @@ export default async function signatureWithPRComment(commentId, committerMap: Co
     commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
     if (context.eventName === 'issue_comment') {
         //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
-        if (emptyCommitFlag == 'true') {
+        if (input.getEmptyCommitFlag() == 'true') {
             if (commentedCommitterMap.newSigned.some(contributor => contributor.id === context?.payload?.comment?.user.id)) {
                 await addEmptyCommit()
             }
         }
     }
 
-    if (blockchainFlag == 'true' && commentedCommitterMap.newSigned) {
-        await blockChainWebhook(commentedCommitterMap.newSigned)
-    }
+    // if (blockChainFlag == 'true' && commentedCommitterMap.newSigned) {
+    //     await blockChainWebhook(commentedCommitterMap.newSigned)
+    // }
 
 
     //checking if the commented users are only the contributors who has committed in the same PR (This is needed for the PR Comment and changing the status to success when all the contributors has reacted to the PR)
     commentedCommitterMap.onlyCommitters = committers.filter(committer => filteredListOfPRComments.some(commentedCommitter => committer.id == commentedCommitter.id))
-
-
     return commentedCommitterMap
 
 }
