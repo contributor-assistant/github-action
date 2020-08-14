@@ -32,7 +32,6 @@ export async function setupClaCheck() {
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
-    return
   }
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
