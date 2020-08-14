@@ -25,13 +25,14 @@ export async function setupClaCheck() {
   try {
     [sha, claFileContent] = await getCLAFileContentandSHA()
     core.warning(sha)
-    core.warning(claFileContent)
+    core.warning(JSON.stringify(claFileContent, null, 2))
   } catch (error) {
     if (error.status === 404) {
       await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
+    return
   }
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
