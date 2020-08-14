@@ -6,6 +6,7 @@ import * as core from '@actions/core'
 
 export async function run() {
   try {
+    core.info(context.workflow)
 
     core.info(`CLA Assistant GitHub Action bot has started the process`)
 
