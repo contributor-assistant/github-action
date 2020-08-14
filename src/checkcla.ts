@@ -13,6 +13,7 @@ import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
 
 export async function getclas() {
+
   const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
@@ -61,6 +62,7 @@ export async function getclas() {
 
     if (signed) {
       core.info(`All committers have signed the CLA`)
+      await reRunLastWorkFlowIfRequired()
       return
     }
     if (reactedCommitters?.newSigned.length) {
@@ -90,7 +92,7 @@ export async function getclas() {
   } catch (err) {
     core.setFailed(`Could not update the JSON file: ${err.message}`)
   }
-  return clas
+
 }
 
 function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
