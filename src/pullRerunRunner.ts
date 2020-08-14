@@ -16,7 +16,7 @@ export async function reRunLastWorkFlowIfRequired() {
     const branch = await getBranchOfPullRequest()
     const workflowId = await getSelfWorkflowId()
     const runs = await listWorkflowRunsInBranch(branch, workflowId)
-    core.warning(runs)
+    core.warning(JSON.stringify(runs))
 
     if (runs.data.total_count > 0) {
         const run = runs.data.workflow_runs[0].id
