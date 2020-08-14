@@ -6,6 +6,7 @@ import * as core from '@actions/core'
 
 // Note: why this  re-run of the last failed CLA workflow status check is explained this issue https://github.com/cla-assistant/github-action/issues/39
 export async function reRunLastWorkFlowIfRequired() {
+    core.debug(`reRunLastWorkFlowIfRequired------>`)
 
     if (context.eventName === "pull_request") {
         core.debug(`rerun not required for event - pull_request`)
