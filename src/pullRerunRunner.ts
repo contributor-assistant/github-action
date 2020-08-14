@@ -6,7 +6,6 @@ import * as core from '@actions/core'
 
 // Note: why this  re-run of the last failed CLA workflow status check is explained this issue https://github.com/cla-assistant/github-action/issues/39
 export async function reRunLastWorkFlowIfRequired() {
-    core.debug(`reRunLastWorkFlowIfRequired------>`)
 
     if (context.eventName === "pull_request") {
         core.debug(`rerun not required for event - pull_request`)
@@ -22,8 +21,8 @@ export async function reRunLastWorkFlowIfRequired() {
         const run = runs.data.workflow_runs[0].id
 
         const isLastWorkFlowFailed: boolean = await checkIfLastWorkFlowFailed(run)
-        core.debug(`Rerunning build run ${run}`)
         if (isLastWorkFlowFailed) {
+            core.debug(`Rerunning build run ${run}`)
             await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
         }
     }
@@ -82,7 +81,6 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<boolean> {
         run_id: run
     })
 
-    core.debug(JSON.stringify(response.data))
     return response.data.conclusion == 'failure'
 
 

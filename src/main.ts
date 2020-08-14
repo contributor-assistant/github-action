@@ -1,5 +1,5 @@
 import { context } from '@actions/github'
-import { getclas } from './checkcla'
+import { setupClaCheck } from './setupClaCheck'
 import { lockPullRequest } from './pullRequestLock'
 
 import * as core from '@actions/core'
@@ -13,7 +13,7 @@ export async function run() {
     if (context.payload.action === 'closed') {
       return lockPullRequest()
     } else {
-      await getclas()
+      await setupClaCheck()
     }
   } catch (error) {
     core.setFailed(error.message)

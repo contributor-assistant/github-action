@@ -12,39 +12,22 @@ import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 
 const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
 
-export async function getclas() {
+export async function setupClaCheck() {
 
   const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
-
   let result, clas, sha
-  let committers = (await getCommitters()) as CommittersDetails[]
 
+  let committers = (await getCommitters()) as CommittersDetails[]
   committers = checkAllowList(committers)
+
   try {
     result = await getFileContent()
     sha = result?.data?.sha
   } catch (error) {
     if (error.status === 404) {
-      committerMap.notSigned = committers
-      committerMap.signed = []
-      committers.map(committer => {
-        if (!committer.id) {
-          committerMap.unknown.push(committer)
-        }
-      })
-
-      const initialContent = { signedContributors: [] }
-      const initialContentString = JSON.stringify(initialContent, null, 2)
-      const initialContentBinary = Buffer.from(initialContentString).toString('base64')
-
-      await createFile(initialContentBinary).catch(error => core.setFailed(
-        `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
-      ))
-      await prComment(signed, committerMap, committers, pullRequestNo)
-      core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
-
+      await createCLASignatureStorageFile(committers, committerMap, pullRequestNo)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
@@ -117,6 +100,27 @@ const getInitialCommittersMap = (): CommitterMap => ({
   unknown: []
 })
 
+async function createCLASignatureStorageFile(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo) {
+  const signed = false
+  committerMap.notSigned = committers
+  committerMap.signed = []
+  committers.map(committer => {
+    if (!committer.id) {
+      committerMap.unknown.push(committer)
+    }
+  })
+
+  const initialContent = { signedContributors: [] }
+  const initialContentString = JSON.stringify(initialContent, null, 2)
+  const initialContentBinary = Buffer.from(initialContentString).toString('base64')
+
+  await createFile(initialContentBinary).catch(error => core.setFailed(
+    `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
+  ))
+  await prComment(signed, committerMap, committers, pullRequestNo)
+  core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+}
+
 
 async function getFileContent() {
   const result = await octokitInstance.repos.getContent({
@@ -159,3 +163,20 @@ function createFile(contentBinary): Promise<object> {
 
 }
 
+// committerMap.notSigned = committers
+// committerMap.signed = []
+// committers.map(committer => {
+//   if (!committer.id) {
+//     committerMap.unknown.push(committer)
+//   }
+// })
+
+// const initialContent = { signedContributors: [] }
+// const initialContentString = JSON.stringify(initialContent, null, 2)
+// const initialContentBinary = Buffer.from(initialContentString).toString('base64')
+
+// await createFile(initialContentBinary).catch(error => core.setFailed(
+//   `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
+// ))
+// await prComment(signed, committerMap, committers, pullRequestNo)
+// core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
