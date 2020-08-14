@@ -21,8 +21,8 @@ export async function reRunLastWorkFlowIfRequired() {
         const run = runs.data.workflow_runs[0].id
 
         const isLastWorkFlowFailed: boolean = await checkIfLastWorkFlowFailed(run)
+        core.debug(`Rerunning build run ${run}`)
         if (isLastWorkFlowFailed) {
-            core.debug(`Rerunning build run ${run}`)
             await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
         }
     }
@@ -80,7 +80,7 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<boolean> {
         run_id: run
     })
 
-    core.debug(JSON.stringify(response))
+    core.debug(JSON.stringify(response.data))
     return response.data.conclusion == 'failure'
 
 
