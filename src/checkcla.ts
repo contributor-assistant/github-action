@@ -62,7 +62,7 @@ export async function getclas() {
 
     if (signed) {
       core.info(`All committers have signed the CLA`)
-      return
+      return reRunLastWorkFlowIfRequired()
     }
     if (reactedCommitters?.newSigned.length) {
       clas.signedContributors.push(...reactedCommitters.newSigned)
@@ -73,18 +73,17 @@ export async function getclas() {
     }
     if (reactedCommitters?.allSignedFlag) {
       core.info(`All contributors have signed the CLA`)
-      return
+      return reRunLastWorkFlowIfRequired()
     }
     if (reactedCommitters?.allSignedFlag) {
       core.info(`All committers have signed the CLA`)
-      return
+      return reRunLastWorkFlowIfRequired()
     }
-
 
     /* return when there are no unsigned committers */
     if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
       core.info(`All contributors have signed the CLA`)
-      return
+      return reRunLastWorkFlowIfRequired()
     } else {
       core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
     }
