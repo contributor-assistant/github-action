@@ -16,7 +16,7 @@ export async function reRunLastWorkFlowIfRequired() {
     const branch = await getBranchOfPullRequest()
     const workflowId = await getSelfWorkflowId()
     const runs = await listWorkflowRunsInBranch(branch, workflowId)
-    core.warning(JSON.stringify(runs))
+    core.warning(JSON.stringify(runs.data, null, 3))
 
     if (runs.data.total_count > 0) {
         const run = runs.data.workflow_runs[0].id
@@ -55,12 +55,13 @@ async function getSelfWorkflowId(): Promise<number> {
 }
 
 async function listWorkflowRunsInBranch(branch: string, workflowId: number): Promise<any> {
+    console.debug(branch)
     const runs = await octokit.actions.listWorkflowRuns({
         owner: context.repo.owner,
         repo: context.repo.repo,
         branch,
         workflow_id: workflowId,
-        event: 'pull_request'
+        event: 'pull_request_target'
     })
     return runs
 }
