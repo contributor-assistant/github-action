@@ -105,7 +105,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
     }
   })
 
-  const initialContent = { signedContributors: [] }
+  const initialContent = { signedContributorssss: [] }
   const initialContentString = JSON.stringify(initialContent, null, 2)
   const initialContentBinary = Buffer.from(initialContentString).toString('base64')
 
