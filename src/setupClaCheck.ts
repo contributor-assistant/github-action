@@ -17,27 +17,25 @@ export async function setupClaCheck() {
   const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
-  let result, clas, sha
+  let sha, claFileContent
 
   let committers = (await getCommitters()) as CommittersDetails[]
   committers = checkAllowList(committers)
 
   try {
-    result = await getFileContent()
-    sha = result?.data?.sha
+    [sha, claFileContent] = await getCLAFileContentandSHA()
+    core.warning(sha)
+    core.warning(claFileContent)
   } catch (error) {
     if (error.status === 404) {
-      await createCLASignatureStorageFile(committers, committerMap, pullRequestNo)
+      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
-    return
   }
-  clas = Buffer.from(result.data.content, 'base64').toString()
-  clas = JSON.parse(clas)
-  committerMap = prepareCommiterMap(committers, clas) as CommitterMap
+  committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
-  if (committerMap && committerMap.notSigned && committerMap.notSigned.length === 0) {
+  if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
     signed = true
   }
   try {
@@ -48,18 +46,14 @@ export async function setupClaCheck() {
       return reRunLastWorkFlowIfRequired()
     }
     if (reactedCommitters?.newSigned.length) {
-      clas.signedContributors.push(...reactedCommitters.newSigned)
-      let contentString = JSON.stringify(clas, null, 2)
+      claFileContent.signedContributors.push(...reactedCommitters.newSigned)
+      let contentString = JSON.stringify(claFileContent, null, 2)
       let contentBinary = Buffer.from(contentString).toString("base64")
       /* pushing the recently signed  contributors to the CLA Json File */
       await updateFile(sha, contentBinary, pullRequestNo)
     }
     if (reactedCommitters?.allSignedFlag) {
       core.info(`All contributors have signed the CLA`)
-      return reRunLastWorkFlowIfRequired()
-    }
-    if (reactedCommitters?.allSignedFlag) {
-      core.info(`All committers have signed the CLA`)
       return reRunLastWorkFlowIfRequired()
     }
 
@@ -76,15 +70,15 @@ export async function setupClaCheck() {
 
 }
 
-function prepareCommiterMap(committers: CommittersDetails[], clas): CommitterMap {
+function prepareCommiterMap(committers: CommittersDetails[], claFileContent): CommitterMap {
 
   let committerMap = getInitialCommittersMap()
 
   committerMap.notSigned = committers.filter(
-    committer => !clas.signedContributors.some(cla => committer.id === cla.id)
+    committer => !claFileContent.signedContributors.some(cla => committer.id === cla.id)
   )
   committerMap.signed = committers.filter(committer =>
-    clas.signedContributors.some(cla => committer.id === cla.id)
+    claFileContent.signedContributors.some(cla => committer.id === cla.id)
   )
   committers.map(committer => {
     if (!committer.id) {
@@ -100,7 +94,7 @@ const getInitialCommittersMap = (): CommitterMap => ({
   unknown: []
 })
 
-async function createCLASignatureStorageFile(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo) {
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo) {
   const signed = false
   committerMap.notSigned = committers
   committerMap.signed = []
@@ -121,16 +115,17 @@ async function createCLASignatureStorageFile(committers: CommittersDetails[], co
   core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
-
-async function getFileContent() {
+async function getCLAFileContentandSHA() {
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName(),
     repo: input.getRemoteRepoName(),
     path: input.getPathToSignatures(),
     ref: input.getBranch()
   })
-  return result
-
+  const sha = result?.data?.sha
+  const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
+  const claFileContent = JSON.parse(claFileContentString)
+  return [sha, claFileContent]
 }
 
 // TODO: refactor the commit message when a project admin does recheck PR
@@ -162,21 +157,3 @@ function createFile(contentBinary): Promise<object> {
   })
 
 }
-
-// committerMap.notSigned = committers
-// committerMap.signed = []
-// committers.map(committer => {
-//   if (!committer.id) {
-//     committerMap.unknown.push(committer)
-//   }
-// })
-
-// const initialContent = { signedContributors: [] }
-// const initialContentString = JSON.stringify(initialContent, null, 2)
-// const initialContentBinary = Buffer.from(initialContentString).toString('base64')
-
-// await createFile(initialContentBinary).catch(error => core.setFailed(
-//   `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
-// ))
-// await prComment(signed, committerMap, committers, pullRequestNo)
-// core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
