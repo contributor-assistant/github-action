@@ -113,7 +113,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     const sha = result?.data?.sha
     const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
     const claFileContent = JSON.parse(claFileContentString)
-    // return { claFileContent, sha }
+    return { claFileContent, sha }
   } catch (error) {
     if (error.status === 404) {
       return createClaFileAndPRComment(committers, committerMap, pullRequestNo)
