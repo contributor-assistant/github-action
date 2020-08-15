@@ -17,23 +17,12 @@ export async function setupClaCheck() {
   const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
-  let sha, claFileContent
+  let sha: string, claFileContent
 
-  let committers = (await getCommitters()) as CommittersDetails[]
-  committers = checkAllowList(committers)
+  let committers = await getCommitters() as CommittersDetails[]
+  committers = checkAllowList(committers) as CommittersDetails[]
+  [claFileContent, sha] = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
 
-  try {
-    [sha, claFileContent] = await getCLAFileContentandSHA()
-    core.warning(sha)
-    core.warning(JSON.stringify(claFileContent, null, 2))
-  } catch (error) {
-    if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
-    } else {
-      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
-    }
-    return
-  }
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
   if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
@@ -95,7 +84,7 @@ const getInitialCommittersMap = (): CommitterMap => ({
   unknown: []
 })
 
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo) {
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo): Promise<any> {
   const signed = false
   committerMap.notSigned = committers
   committerMap.signed = []
@@ -116,17 +105,26 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
-async function getCLAFileContentandSHA() {
-  const result = await octokitInstance.repos.getContent({
-    owner: input.getRemoteOrgName(),
-    repo: input.getRemoteRepoName(),
-    path: input.getPathToSignatures(),
-    ref: input.getBranch()
-  })
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number) {
+  let result
+  try {
+    result = await octokitInstance.repos.getContent({
+      owner: input.getRemoteOrgName(),
+      repo: input.getRemoteRepoName(),
+      path: input.getPathToSignatures(),
+      ref: input.getBranch()
+    })
+  } catch (error) {
+    if (error.status === 404) {
+      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
+    } else {
+      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
+    }
+  }
   const sha = result?.data?.sha
   const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
   const claFileContent = JSON.parse(claFileContentString)
-  return [sha, claFileContent]
+  return [claFileContent, sha]
 }
 
 // TODO: refactor the commit message when a project admin does recheck PR

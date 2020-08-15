@@ -20,7 +20,7 @@ function isUserNotInAllowList(committer) {
     }).length > 0
 }
 
-export function checkAllowList(committers: CommittersDetails[]) {
+export function checkAllowList(committers: CommittersDetails[]): CommittersDetails[] {
     const committersAfterAllowListCheck: CommittersDetails[] = committers.filter(committer => committer && !(isUserNotInAllowList !== undefined && isUserNotInAllowList(committer.name)))
     return committersAfterAllowListCheck
 }
