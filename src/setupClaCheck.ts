@@ -2,7 +2,7 @@ import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from './octoki
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
 import prComment from './pullRequestComment'
-import { CommitterMap, CommittersDetails, ReactedCommitterMap } from './interfaces'
+import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAndSha } from './interfaces'
 import { context } from '@actions/github'
 
 import * as _ from 'lodash'
@@ -22,7 +22,7 @@ export async function setupClaCheck() {
   committers = checkAllowList(committers) as CommittersDetails[]
 
   //const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
-  await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+  const response: ClafileContentAndSha = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
 
   // committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
@@ -106,14 +106,13 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
-  let result
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<ClafileContentAndSha> {
+  let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
-    const sha = result?.data?.sha
-    const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
-    const claFileContent = JSON.parse(claFileContentString)
-    return { claFileContent, sha }
+    sha = result?.data?.sha
+    claFileContentString = Buffer.from(result.data.content, 'base64').toString()
+    claFileContent = JSON.parse(claFileContentString)
   } catch (error) {
     if (error.status === 404) {
       return createClaFileAndPRComment(committers, committerMap, pullRequestNo)
@@ -121,6 +120,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
   }
+  return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
 }
 
 // TODO: refactor the commit message when a project admin does recheck PR

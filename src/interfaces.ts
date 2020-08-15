@@ -40,3 +40,8 @@ export interface CommittersCommentDetails {
     created_at: string,
     updated_at: string
 }
+
+export interface ClafileContentAndSha {
+    claFileContent: string,
+    sha: string
+}
