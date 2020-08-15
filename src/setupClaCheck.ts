@@ -103,6 +103,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   ))
   await prComment(signed, committerMap, committers, pullRequestNo)
   core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+  return
 }
 
 async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
@@ -121,7 +122,6 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
-    return
   }
 
   const sha = result?.data?.sha
