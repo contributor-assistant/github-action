@@ -101,7 +101,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   await createFile(initialContentBinary).catch(error => core.setFailed(
     `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
   ))
-  await prComment(signed, committerMap, committers, pullRequestNo)
+  //await prComment(signed, committerMap, committers, pullRequestNo)
   core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
@@ -124,8 +124,8 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
+    return
   }
-
 }
 
 // TODO: refactor the commit message when a project admin does recheck PR
