@@ -103,6 +103,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
     `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
   ))
   await prComment(signed, committerMap, committers, pullRequestNo)
+  core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
 async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
@@ -115,8 +116,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     // return { claFileContent, sha }
   } catch (error) {
     if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
-      core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+      return createClaFileAndPRComment(committers, committerMap, pullRequestNo)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
