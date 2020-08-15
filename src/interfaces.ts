@@ -42,6 +42,6 @@ export interface CommittersCommentDetails {
 }
 
 export interface ClafileContentAndSha {
-    claFileContent: string,
+    claFileContent: any,
     sha: string
 }
