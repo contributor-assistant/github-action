@@ -21,42 +21,43 @@ export async function setupClaCheck() {
   let committers = await getCommitters() as CommittersDetails[]
   committers = checkAllowList(committers) as CommittersDetails[]
 
-  const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+  //const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+  await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
 
-  committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
+  // committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
-  if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
-    signed = true
-  }
-  try {
-    const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+  // if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
+  //   signed = true
+  // }
+  // try {
+  //   const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
 
-    if (signed) {
-      core.info(`All committers have signed the CLA`)
-      return reRunLastWorkFlowIfRequired()
-    }
-    if (reactedCommitters?.newSigned.length) {
-      claFileContent.signedContributors.push(...reactedCommitters.newSigned)
-      let contentString = JSON.stringify(claFileContent, null, 2)
-      let contentBinary = Buffer.from(contentString).toString("base64")
-      /* pushing the recently signed  contributors to the CLA Json File */
-      await updateFile(sha, contentBinary, pullRequestNo)
-    }
-    if (reactedCommitters?.allSignedFlag) {
-      core.info(`All contributors have signed the CLA`)
-      return reRunLastWorkFlowIfRequired()
-    }
+  //   if (signed) {
+  //     core.info(`All committers have signed the CLA`)
+  //     return reRunLastWorkFlowIfRequired()
+  //   }
+  //   if (reactedCommitters?.newSigned.length) {
+  //     claFileContent.signedContributors.push(...reactedCommitters.newSigned)
+  //     let contentString = JSON.stringify(claFileContent, null, 2)
+  //     let contentBinary = Buffer.from(contentString).toString("base64")
+  //     /* pushing the recently signed  contributors to the CLA Json File */
+  //     await updateFile(sha, contentBinary, pullRequestNo)
+  //   }
+  //   if (reactedCommitters?.allSignedFlag) {
+  //     core.info(`All contributors have signed the CLA`)
+  //     return reRunLastWorkFlowIfRequired()
+  //   }
 
-    /* return when there are no unsigned committers */
-    if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
-      core.info(`All contributors have signed the CLA`)
-      return reRunLastWorkFlowIfRequired()
-    } else {
-      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
-    }
-  } catch (err) {
-    core.setFailed(`Could not update the JSON file: ${err.message}`)
-  }
+  //   /* return when there are no unsigned committers */
+  //   if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
+  //     core.info(`All contributors have signed the CLA`)
+  //     return reRunLastWorkFlowIfRequired()
+  //   } else {
+  //     core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
+  //   }
+  // } catch (err) {
+  //   core.setFailed(`Could not update the JSON file: ${err.message}`)
+  // }
 
 }
 
@@ -111,7 +112,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     const sha = result?.data?.sha
     const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
     const claFileContent = JSON.parse(claFileContentString)
-    return { claFileContent, sha }
+    // return { claFileContent, sha }
   } catch (error) {
     if (error.status === 404) {
       await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
