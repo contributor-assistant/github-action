@@ -30,7 +30,7 @@ export default async function prComment(signed: boolean, committerMap: Committer
           body: commentContent(signed, committerMap)
         })
       }
-      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment( committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment(committerMap, committers, pullRequestNo)) as ReactedCommitterMap
       if (reactedCommitters) {
         if (reactedCommitters.onlyCommitters) {
           reactedCommitters.allSignedFlag = prepareAllSignedCommitters(committerMap, reactedCommitters.onlyCommitters, committers)
@@ -53,9 +53,9 @@ export default async function prComment(signed: boolean, committerMap: Committer
       })
       return reactedCommitters
     }
-  } catch (e) {
-    core.setFailed(
-      `Error occured when creating or editing the comments of the pull request: ${e.message}`)
+  } catch (error) {
+    throw new Error(
+      `Error occured when creating or editing the comments of the pull request: ${error.message}`)
   }
 }
 
@@ -66,8 +66,8 @@ async function getComment() {
 
     //TODO: check the below regex
     return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
-  } catch (e) {
-    core.setFailed(`Error occured when getting  all the comments of the pull request: ${e.message}`)
+  } catch (error) {
+    throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`)
   }
 }
 
