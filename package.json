@@ -21,6 +21,7 @@
     "@actions/github": "^4.0.0",
     "@octokit/rest": "^16.0.0",
     "actions-toolkit": "^2.1.0",
+    "babel-types": "^6.26.0",
     "lodash": "^4.17.19",
     "node-fetch": "^2.6.0"
   },
