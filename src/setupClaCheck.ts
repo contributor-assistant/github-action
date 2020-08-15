@@ -117,7 +117,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
 
   } catch (error) {
     if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
+      return createClaFileAndPRComment(committers, committerMap, pullRequestNo)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
