@@ -107,17 +107,11 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
 async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
   let result
   try {
-    result = await octokitInstance.repos.getContent({
-      owner: input.getRemoteOrgName(),
-      repo: input.getRemoteRepoName(),
-      path: input.getPathToSignatures(),
-      ref: input.getBranch()
-    })
-
+    result = await getFileContent()
     const sha = result?.data?.sha
     const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
     const claFileContent = JSON.parse(claFileContentString)
-    return { claFileContent, sha }
+    //return { claFileContent, sha }
   } catch (error) {
     if (error.status === 404) {
       // await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
@@ -156,4 +150,15 @@ function createFile(contentBinary): Promise<any> {
     branch: input.getBranch()
   })
 
+}
+
+async function getFileContent(): Promise<any> {
+
+  const result = await octokitInstance.repos.getContent({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    ref: input.getBranch()
+  })
+  return result
 }
