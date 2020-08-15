@@ -21,9 +21,7 @@ export async function setupClaCheck() {
   let committers = await getCommitters() as CommittersDetails[]
   committers = checkAllowList(committers) as CommittersDetails[]
 
-  await getCLAFileContentandSHA(committers, committerMap, pullRequestNo).catch(err => core.warning(err))
-
-  let claFileContent, sha
+  const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
@@ -121,7 +119,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     return { claFileContent, sha }
   } catch (error) {
     if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
+      // await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
       throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
