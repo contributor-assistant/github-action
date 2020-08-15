@@ -22,7 +22,7 @@ export async function setupClaCheck() {
   committers = checkAllowList(committers) as CommittersDetails[]
 
   //const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
-  await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+  const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
 
   // committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
