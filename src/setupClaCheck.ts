@@ -20,15 +20,15 @@ export async function setupClaCheck() {
 
   let committers = await getCommitters() as CommittersDetails[]
   committers = checkAllowList(committers) as CommittersDetails[]
-
   const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
   if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
     signed = true
   }
   try {
-    const reactedCommitters: any = await prComment(signed, committerMap, committers, pullRequestNo) as ReactedCommitterMap
+    const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
 
     if (signed) {
       core.info(`All committers have signed the CLA`)
@@ -51,81 +51,12 @@ export async function setupClaCheck() {
       core.info(`All contributors have signed the CLA`)
       return reRunLastWorkFlowIfRequired()
     } else {
-      throw new Error(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
+      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
     }
   } catch (err) {
-    throw new Error(`Could not update the JSON file: ${err.message}`)
+    core.setFailed(`Could not update the JSON file: ${err.message}`)
   }
 
-}
-
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
-  let result
-  try {
-    result = await octokitInstance.repos.getContent({
-      owner: input.getRemoteOrgName(),
-      repo: input.getRemoteRepoName(),
-      path: input.getPathToSignatures(),
-      ref: input.getBranch()
-    })
-    const sha = result?.data?.sha
-    const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
-    const claFileContent = JSON.parse(claFileContentString)
-    return { claFileContent, sha }
-  } catch (error) {
-    if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
-      core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
-    } else {
-      throw new Error(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
-    }
-  }
-}
-
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
-  const signed = false
-  committerMap.notSigned = committers
-  committerMap.signed = []
-  committers.map(committer => {
-    if (!committer.id) {
-      committerMap.unknown.push(committer)
-    }
-  })
-
-  const initialContent = { signedContributors: [] }
-  const initialContentString = JSON.stringify(initialContent, null, 3)
-  const initialContentBinary = Buffer.from(initialContentString).toString('base64')
-
-  await createFile(initialContentBinary).catch(error => core.setFailed(
-    `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
-  ))
-  await prComment(signed, committerMap, committers, pullRequestNo)
-}
-
-function createFile(contentBinary): Promise<any> {
-  return octokitInstance.repos.createOrUpdateFileContents({
-    owner: input.getRemoteOrgName(),
-    repo: input.getRemoteRepoName(),
-    path: input.getPathToSignatures(),
-    message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
-    content: contentBinary,
-    branch: input.getBranch()
-  })
-}
-
-// TODO: refactor the commit message when a project admin does recheck PR
-async function updateFile(sha, contentBinary, pullRequestNo): Promise<any> {
-  return octokitInstance.repos.createOrUpdateFileContents({
-    owner: input.getRemoteOrgName(),
-    repo: input.getRemoteRepoName(),
-    path: input.getPathToSignatures(),
-    sha,
-    message: input.getSignedCommitMessage() ?
-      input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
-      `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
-    content: contentBinary,
-    branch: input.getBranch()
-  })
 }
 
 function prepareCommiterMap(committers: CommittersDetails[], claFileContent): CommitterMap {
@@ -151,3 +82,76 @@ const getInitialCommittersMap = (): CommitterMap => ({
   notSigned: [],
   unknown: []
 })
+
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
+  const signed = false
+  committerMap.notSigned = committers
+  committerMap.signed = []
+  committers.map(committer => {
+    if (!committer.id) {
+      committerMap.unknown.push(committer)
+    }
+  })
+
+  const initialContent = { signedContributors: [] }
+  const initialContentString = JSON.stringify(initialContent, null, 3)
+  const initialContentBinary = Buffer.from(initialContentString).toString('base64')
+
+  await createFile(initialContentBinary).catch(error => core.setFailed(
+    `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
+  ))
+  await prComment(signed, committerMap, committers, pullRequestNo)
+}
+
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
+  let result
+  try {
+    result = await octokitInstance.repos.getContent({
+      owner: input.getRemoteOrgName(),
+      repo: input.getRemoteRepoName(),
+      path: input.getPathToSignatures(),
+      ref: input.getBranch()
+    })
+    const sha = result?.data?.sha
+    const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
+    const claFileContent = JSON.parse(claFileContentString)
+    return { claFileContent, sha }
+  } catch (error) {
+    if (error.status === 404) {
+      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
+      throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+    } else {
+      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
+    }
+  }
+}
+
+// TODO: refactor the commit message when a project admin does recheck PR
+async function updateFile(sha, contentBinary, pullRequestNo) {
+
+  await octokitInstance.repos.createOrUpdateFileContents({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    sha,
+    message: input.getSignedCommitMessage() ?
+      input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
+      `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
+    content: contentBinary,
+    branch: input.getBranch()
+  })
+
+}
+
+function createFile(contentBinary): Promise<any> {
+
+  return octokitInstance.repos.createOrUpdateFileContents({
+    owner: input.getRemoteOrgName(),
+    repo: input.getRemoteRepoName(),
+    path: input.getPathToSignatures(),
+    message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
+    content: contentBinary,
+    branch: input.getBranch()
+  })
+
+}
