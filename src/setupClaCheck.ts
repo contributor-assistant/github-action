@@ -84,7 +84,7 @@ const getInitialCommittersMap = (): CommitterMap => ({
   unknown: []
 })
 
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo): Promise<any> {
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
   const signed = false
   committerMap.notSigned = committers
   committerMap.signed = []
@@ -105,7 +105,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number) {
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
   let result
   try {
     result = await octokitInstance.repos.getContent({
@@ -114,13 +114,16 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
       path: input.getPathToSignatures(),
       ref: input.getBranch()
     })
+
   } catch (error) {
     if (error.status === 404) {
       await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
+      return
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
   }
+
   const sha = result?.data?.sha
   const claFileContentString = Buffer.from(result.data.content, 'base64').toString()
   const claFileContent = JSON.parse(claFileContentString)
@@ -144,7 +147,7 @@ async function updateFile(sha, contentBinary, pullRequestNo) {
 
 }
 
-function createFile(contentBinary): Promise<object> {
+function createFile(contentBinary): Promise<any> {
 
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName(),
