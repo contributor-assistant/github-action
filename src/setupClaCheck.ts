@@ -26,7 +26,7 @@ export async function setupClaCheck() {
   try {
     response = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
   } catch (error) {
-    core.warning(`There is no storage file`)
+    core.setFailed(`There is no storage file ${error}`)
     return
   }
   const claFileContent = response?.claFileContent
