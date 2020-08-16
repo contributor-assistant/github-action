@@ -17,12 +17,17 @@ export async function setupClaCheck() {
   const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
+  let response
 
   let committers = await getCommitters() as CommittersDetails[]
   committers = checkAllowList(committers) as CommittersDetails[]
 
   //const response: ClafileContentAndSha = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
-  const response: ClafileContentAndSha = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+  try {
+    response = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+  } catch (error) {
+    core.setFailed(`There is no storage file`)
+  }
   const claFileContent = response?.claFileContent
   const sha = response?.sha
 
