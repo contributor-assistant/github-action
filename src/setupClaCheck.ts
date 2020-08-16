@@ -26,7 +26,8 @@ export async function setupClaCheck() {
   try {
     response = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
   } catch (error) {
-    throw new Error(error)
+    core.setFailed(error)
+    return
   }
   const claFileContent = response?.claFileContent
   const sha = response?.sha
