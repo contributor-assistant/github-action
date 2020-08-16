@@ -96,7 +96,7 @@ If a GitHub username is included in the allowlist, they will not be required to 
 | `remote-repository-name`   | _optional_ | provide the remote repository name where all the signatures should be stored . | remote repository name | 
 | `remote-organization-name`   | _optional_ | provide the remote organization name where all the signatures should be stored. | remote organization name | 
 | `create-file-commit-message`   | _optional_ |Commit message when a new CLA file is created. | Creating file for storing CLA Signatures. |
-| `signed-commit-message`   | _optional_ | Commit message when a new contributor signs the CLA in a Pull Request. |  $contributorName has signed the CLA in #$pullRequestNo |
+| `signed-commit-message`   | _optional_ | Commit message when a new contributor signs the CLA in a Pull Request. |  $contributorName has signed the CLA in $pullRequestNo |
 | `custom-notsigned-prcomment`   | _optional_ | Introductory Pull Request comment to ask new contributors to sign. | Thank you for your contribution and please kindly read and sign our $pathToCLADocument |
 | ` custom-allsigned-prcomment`   | _optional_ | pull request comment when everyone has signed | All Contributors have signed the CLA. |
 
