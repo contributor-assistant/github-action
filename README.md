@@ -60,7 +60,7 @@ CLA action workflow will be triggered on all Pull Request `opened, synchronize, 
 
 #### 3. Signing the CLA
 CLA workflow creates a comment on Pull Request asking contributors who have not signed  CLA to sign and also fails the pull request status check with a `failure`. The contributors are requested to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
-If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/> By default, this  Action workflow will also create an empty commit with a message  **"@#contributorname# has signed the CLA"** whenever a contributor signs the CLA. 
+If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/>
 
 ![Screenshot 2020-02-13 at 10 24 17](https://user-images.githubusercontent.com/33329946/74420003-0ca6e780-4e4b-11ea-85a7-4ccc3f53e3d5.png)
 
@@ -76,19 +76,13 @@ After the contributor signed a CLA, the contributor's signature with metadata wi
 
 If a GitHub username is included in the allowlist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to add them in `allowlist`. You can do so by adding their names in a comma separated string to the `allowlist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to allow all bot users something like `bot*`.
 
-#### 6. Signatures can be additionally stored on the Ethereum Blockchain
-
-To make the whole process more fraud resistant we grant the option to additionally store the signatures on the Ethereum Blockchain. To use this feature just set the `blockchain-storage-flag: true`. A detailed description on integrating with the Ethereum Blockchain can be found [here](https://github.com/cla-assistant/blockchain-services) - special credits and thanks goes to [@FabianRiewe](https://github.com/fabianriewe).  
-
-
-
-
 ### Environmental Variables :
 
 
 | Name                  | Requirement | Description |
 | --------------------- | ----------- | ----------- |
-| `GITHUB_TOKEN`        | _required_ | Must be in the form of `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}`  ,  CLA Action uses this in-built GitHub token to make the API calls for interacting with GitHub. It is built into Github Actions and does not need to be manually specified in your secrets store. [More Info](https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token)|
+| `GITHUB_TOKEN`        | _required_ | Must be in the form of `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}`,  CLA Action uses this in-built GitHub token to make the API calls for interacting with GitHub. It is built into Github Actions and does not need to be manually specified in your secrets store. [More Info](https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token)|
+| `PERSONAL_ACCESS_TOKEN`        | _required_ | Must be in the form of `PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN}}`, you have to create a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo scope` and store in the repository's [secreets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets). This token is required for consuming the  [Actions re-run API](https://docs.github.com/en/rest/reference/actions#re-run-a-workflow) to automatially re-run the last failed workflow and also for storing the signatures in a remote repository. |
 
 ### Inputs Description :
 
