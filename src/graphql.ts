@@ -71,7 +71,7 @@ export default async function getCommitters() {
         return filteredCommitters
 
     } catch (e) {
-        core.setFailed('graphql call to get the committers details failed:' + e)
+        throw new Error('graphql call to get the committers details failed:' + e)
     }
 
 }
