@@ -44,7 +44,7 @@ export async function setupClaCheck() {
       return reRunLastWorkFlowIfRequired()
     }
     if (reactedCommitters?.newSigned.length) {
-      claFileContent.signedContributors.push(...reactedCommitters.newSigned)
+      claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
       let contentString = JSON.stringify(claFileContent, null, 2)
       let contentBinary = Buffer.from(contentString).toString("base64")
       /* pushing the recently signed  contributors to the CLA Json File */
@@ -56,7 +56,7 @@ export async function setupClaCheck() {
     }
 
     /* return when there are no unsigned committers */
-    if (committerMap.notSigned === undefined || committerMap.notSigned.length === 0) {
+    if (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0) {
       core.info(`All contributors have signed the CLA`)
       return reRunLastWorkFlowIfRequired()
     } else {
