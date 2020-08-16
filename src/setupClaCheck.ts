@@ -113,13 +113,14 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<ClafileContentAndSha> {
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
   let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
     sha = result?.data?.sha
     claFileContentString = Buffer.from(result.data.content, 'base64').toString()
     claFileContent = JSON.parse(claFileContentString)
+    return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
   } catch (error) {
     if (error.status === 404) {
       return createClaFileAndPRComment(committers, committerMap, pullRequestNo)
@@ -127,7 +128,6 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
   }
-  return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
 }
 
 // TODO: refactor the commit message when a project admin does recheck PR
