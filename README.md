@@ -2,15 +2,15 @@
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
 # Handling CLAs with GitHub Action (Alpha)
 
-Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant enables contributors to sign CLAs from within a pull request. With this GitHub Action we get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the repository's file system**
+Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository**
 
 ### Features
 1. decentralized data storage
-1. fully integrated with github environment 
-1. no UI  required
+1. fully integrated within github environment 
+1. no User Interface is required
 1. no need for permission/scope handling
 1. contributors can sign the CLA by just posting a Pull Request comment
-1. signatures will be stored in a file inside the repository plus optionally on the Ethereum Blockchain
+1. signatures will be stored in a file inside the repository or in a remote repository
 
 ## Configure Contributor License Agreement within two minutes 
 
@@ -21,7 +21,7 @@ name: "CLA Assistant"
 on:
   issue_comment:
     types: [created]
-  pull_request:
+  pull_request_target:
     types: [opened,closed,synchronize]
     
 jobs:
@@ -29,19 +29,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "CLA Assistant"
-        if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request'
+        if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         # Alpha Release
-        uses: cla-assistant/github-action@v1.4.3-alpha
+        uses: cla-assistant/github-action@refactor
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN : ${{ secrets.REMOTE_REPOSITORY_TOKEN }}
         with: 
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-cla-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md'
           # branch should not be protected
           branch: 'master'
-          allowlist: user1,user2,bot*
+          allowlist: user1,bot*
           empty-commit-flag: false
-          blockchain-storage-flag: false
+          remote-repository-name: safebees
+          remote-organization-name: ibakshay  
+         #optional inputs - If the optional inputs are not given, then default values will be taken
+         #create-file-commit-message: 'For example: Creating file for storing CLA Signatures'
+         #signed-commit-message: 'For example: $contributorName has signed the CLA in #$pullRequestNo'
+         #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
+         #custom-allsigned-prcomment: 'pull request comment when everyone has signed, defaults to **CLA Assistant Lite bot** All Contributors have signed the CLA.'
+
 
 ```
 
