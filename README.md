@@ -86,19 +86,19 @@ If a GitHub username is included in the allowlist, they will not be required to 
 
 ### Inputs Description :
 
-| Name                  | Requirement | Description |
-| --------------------- | ----------- | ----------- |
-| `path-to-cla-document`     | _required_ |  provide full URL `https://<clafile>` to the Contributor License Agreement (CLA) to which the Contributor can read  before signing the CLA. It can be a file inside the repository or it can be a gist |
-| `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. Default path is  "./signatures/cla.json". |
-| `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`  |
-| `empty-commit-flag`   | _optional_ |  provide the boolean `true` or `false` so that GitHub Actions will add empty commit whenever user signs the CLA. Default is `true`  |
-| `allowlist`   | _optional_ | You can specify users and bots to be [added in allowlist](https://github.com/cla-assistant/github-action#5-allowlist-users-and-bots). For example `user1,user2,bot*`  |
-| `remote-repository-name`   | _optional_ | provide the remote repository name where all the signatures should be stored, For example `github-action`  |
-| `remote-organization-name`   | _optional_ | provide the remote organization name where all the signatures should be stored, For example `cla-assistant`  |
-| `create-file-commit-message`   | _optional_ |Commit message when a new CLA file is created, For example `Creating file for storing CLA Signatures`  |
-| `signed-empty-commit-message`   | _optional_ | Commit message when a new contributor signs the CLA in a Pull Request For example `$contributorName has signed the CLA in #$pullRequestNo`  |
-| `custom-notsigned-prcomment`   | _optional_ | Introductory Pull Request comment to ask new contributors to sign,  For example `Thank you for your contribution and we kindly ask you to sign our CLA`  |
-| ` custom-allsigned-prcomment`   | _optional_ | pull request comment when everyone has signed, defaults to **CLA Assistant Lite** All Contributors have signed the CLA,  For example `Thank you for your contribution and we kindly ask you to sign our CLA`  |
+| Name                  | Requirement | Description | Example |
+| --------------------- | ----------- | ----------- | ------- |
+| `path-to-cla-document`     | _required_ |  provide full URL `https://<clafile>` to the Contributor License Agreement (CLA) to which the Contributor can read  before signing the CLA. It can be a file inside the repository or it can be a gist. | https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md |
+| `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. | signatures/version1/cla.json |
+| `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`.  | master | 
+| `empty-commit-flag`   | _optional_ |  provide the boolean `true` or `false` so that GitHub Actions will add empty commit whenever user signs the CLA. Default is `true`  | | 
+| `allowlist`   | _optional_ | You can specify users and bots to be [added in allowlist](https://github.com/cla-assistant/github-action#5-allowlist-users-and-bots).  | user1,user2,bot* | 
+| `remote-repository-name`   | _optional_ | provide the remote repository name where all the signatures should be stored . | remote repository name | 
+| `remote-organization-name`   | _optional_ | provide the remote organization name where all the signatures should be stored. | remote organization name | 
+| `create-file-commit-message`   | _optional_ |Commit message when a new CLA file is created. | Creating file for storing CLA Signatures. |
+| `signed-commit-message`   | _optional_ | Commit message when a new contributor signs the CLA in a Pull Request. |  $contributorName has signed the CLA in #$pullRequestNo |
+| `custom-notsigned-prcomment`   | _optional_ | Introductory Pull Request comment to ask new contributors to sign. | Thank you for your contribution and please kindly read and sign our $pathToCLADocument |
+| ` custom-allsigned-prcomment`   | _optional_ | pull request comment when everyone has signed | All Contributors have signed the CLA. |
 
 ## License
 
