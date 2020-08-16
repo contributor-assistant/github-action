@@ -26,7 +26,7 @@ export async function setupClaCheck() {
   try {
     response = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
   } catch (error) {
-    core.setFailed(`There is no storage file ${error}`)
+    core.setFailed(error)
     return
   }
   const claFileContent = response?.claFileContent
@@ -125,11 +125,10 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
   } catch (error) {
     if (error.status === 404) {
       await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
-      // core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
+      return
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
-    return
   }
 }
 
