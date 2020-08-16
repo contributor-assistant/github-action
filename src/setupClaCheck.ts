@@ -26,8 +26,7 @@ export async function setupClaCheck() {
   try {
     response = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
   } catch (error) {
-    core.setFailed(error)
-    return
+    throw new Error(error)
   }
   const claFileContent = response?.claFileContent
   const sha = response?.sha
@@ -118,10 +117,6 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
   let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
-    sha = result?.data?.sha
-    claFileContentString = Buffer.from(result.data.content, 'base64').toString()
-    claFileContent = JSON.parse(claFileContentString)
-    return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
   } catch (error) {
     if (error.status === 404) {
       await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
@@ -130,6 +125,11 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
   }
+
+  sha = result?.data?.sha
+  claFileContentString = Buffer.from(result.data.content, 'base64').toString()
+  claFileContent = JSON.parse(claFileContentString)
+  return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
 }
 
 // TODO: refactor the commit message when a project admin does recheck PR
