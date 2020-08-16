@@ -16,7 +16,7 @@ export async function run() {
       await setupClaCheck()
     }
   } catch (error) {
-    throw new Error(error.message)
+    core.setFailed(error.message)
   }
 }
 
