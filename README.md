@@ -42,7 +42,8 @@ jobs:
           branch: 'master'
           allowlist: user1,bot*
           empty-commit-flag: false
-         #optional inputs - If the optional inputs are not given, then default values will be taken
+          
+         #below are the optional inputs - If the optional inputs are not given, then default values will be taken
          #remote-organization-name: remote organisation name where the signatures should be stored (Default is storing the signatures in the same repository)   
          #remote-repository-name:   remote repository name where the signatures should be stored (Default is storing the signatures in the same repository)
          #create-file-commit-message: 'For example: Creating file for storing CLA Signatures'
