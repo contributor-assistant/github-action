@@ -34,7 +34,7 @@ jobs:
         uses: cla-assistant/github-action@refactor
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PERSONAL_ACCESS_TOKEN : ${{ secrets.REMOTE_REPOSITORY_TOKEN }}
+          PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with: 
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-cla-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md'
@@ -42,9 +42,9 @@ jobs:
           branch: 'master'
           allowlist: user1,bot*
           empty-commit-flag: false
-          remote-repository-name: safebees
-          remote-organization-name: ibakshay  
          #optional inputs - If the optional inputs are not given, then default values will be taken
+         #remote-organization-name: remote organisation name where the signatures should be stored (Default is storing the signatures in the same repository)   
+         #remote-repository-name:   remote repository name where the signatures should be stored (Default is storing the signatures in the same repository)
          #create-file-commit-message: 'For example: Creating file for storing CLA Signatures'
          #signed-commit-message: 'For example: $contributorName has signed the CLA in #$pullRequestNo'
          #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
@@ -55,7 +55,7 @@ jobs:
 
 #### 2. Pull Request event triggers CLA Workflow
 
-CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed`. 
+CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed`. This workflow will always run in the base repository and thats why we are making use of the [pull_request_target](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target) event.
 <br/> When the CLA workflow is triggered on pull request `closed` event, it will lock the Pull Request conversation after the Pull Request merge so that the contributors cannot modify or delete the signatures (Pull Request comment) later. This feature is optional. 
 
 #### 3. Signing the CLA
