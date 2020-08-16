@@ -4,6 +4,7 @@ import getCommitters from './graphql'
 import prComment from './pullRequestComment'
 import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAndSha } from './interfaces'
 import { context } from '@actions/github'
+import { createFile, getFileContent, updateFile } from './persistence'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
@@ -123,42 +124,6 @@ function prepareCommiterMap(committers: CommittersDetails[], claFileContent): Co
     }
   })
   return committerMap
-}
-
-// TODO: refactor the commit message when a project admin does recheck PR
-async function updateFile(sha, contentBinary, pullRequestNo) {
-  await octokitInstance.repos.createOrUpdateFileContents({
-    owner: input.getRemoteOrgName(),
-    repo: input.getRemoteRepoName(),
-    path: input.getPathToSignatures(),
-    sha,
-    message: input.getSignedCommitMessage() ?
-      input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
-      `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
-    content: contentBinary,
-    branch: input.getBranch()
-  })
-}
-
-function createFile(contentBinary): Promise<any> {
-  return octokitInstance.repos.createOrUpdateFileContents({
-    owner: input.getRemoteOrgName(),
-    repo: input.getRemoteRepoName(),
-    path: input.getPathToSignatures(),
-    message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
-    content: contentBinary,
-    branch: input.getBranch()
-  })
-}
-
-async function getFileContent(): Promise<any> {
-  const result = await octokitInstance.repos.getContent({
-    owner: input.getRemoteOrgName(),
-    repo: input.getRemoteRepoName(),
-    path: input.getPathToSignatures(),
-    ref: input.getBranch()
-  })
-  return result
 }
 
 const getInitialCommittersMap = (): CommitterMap => ({
