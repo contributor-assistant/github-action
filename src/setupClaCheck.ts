@@ -5,13 +5,10 @@ import prComment from './pullRequestComment'
 import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAndSha } from './interfaces'
 import { context } from '@actions/github'
 import { createFile, getFileContent, updateFile } from './persistence'
+import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
-import * as input from './shared/getInputs'
-import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
-
-const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
 
 export async function setupClaCheck() {
 

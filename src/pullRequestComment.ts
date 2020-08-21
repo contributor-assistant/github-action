@@ -8,7 +8,6 @@ import {
   CommittersDetails
 } from './interfaces'
 
-import * as core from '@actions/core'
 
 export default async function prComment(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[], pullRequestNo: number) {
   try {
