@@ -34,6 +34,7 @@ jobs:
         uses: cla-assistant/github-action@refactor
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # the below token should have repo scope and must be manually added by you in the repository's secret
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with: 
           path-to-signatures: 'signatures/version1/cla.json'
