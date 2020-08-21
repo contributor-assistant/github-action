@@ -1,4 +1,4 @@
-import { octokit } from './octokit'
+import { octokit } from '../octokit'
 import { context } from '@actions/github'
 import signatureWithPRComment from './signatureComment'
 import { commentContent } from './pullRequestCommentContent'
@@ -6,7 +6,7 @@ import {
   CommitterMap,
   ReactedCommitterMap,
   CommittersDetails
-} from './interfaces'
+} from '../interfaces'
 
 
 export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {

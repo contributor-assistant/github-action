@@ -1,6 +1,6 @@
 import { context } from '@actions/github'
 import { setupClaCheck } from './setupClaCheck'
-import { lockPullRequest } from './pullRequestLock'
+import { lockPullRequest } from './pullrequest/pullRequestLock'
 
 import * as core from '@actions/core'
 

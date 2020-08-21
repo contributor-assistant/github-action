@@ -1,9 +1,6 @@
-import { octokit } from './octokit'
+import { octokit } from '../octokit'
 import { context } from '@actions/github'
-import { CommitterMap, CommittersDetails, CommentedCommitterMap } from './interfaces'
-import { addEmptyCommit } from './addEmptyCommit'
-
-import * as input from './shared/getInputs'
+import { CommitterMap, CommittersDetails, CommentedCommitterMap } from '../interfaces'
 
 
 export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
@@ -41,15 +38,15 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
         delete filteredListOfPRComments[i].body
     }
     // //checking if the reacted committers are not the signed committers(not in the storage file) and filtering only the unsigned committers
-    commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
-    if (context.eventName === 'issue_comment') {
-        //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
-        if (input.getEmptyCommitFlag() == 'true') {
-            if (commentedCommitterMap.newSigned.some(contributor => contributor.id === context?.payload?.comment?.user.id)) {
-                await addEmptyCommit()
-            }
-        }
-    }
+    // commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
+    // if (context.eventName === 'issue_comment') {
+    //     //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
+    //     if (input.getEmptyCommitFlag() == 'true') {
+    //         if (commentedCommitterMap.newSigned.some(contributor => contributor.id === context?.payload?.comment?.user.id)) {
+    //             await addEmptyCommit()
+    //         }
+    //     }
+    // }
 
     // if (blockChainFlag == 'true' && commentedCommitterMap.newSigned) {
     //     await blockChainWebhook(commentedCommitterMap.newSigned)

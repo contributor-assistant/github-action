@@ -1,10 +1,9 @@
-import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from './octokit'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
-import prCommentSetup from './pullRequestComment'
+import prCommentSetup from './pullrequest/pullRequestComment'
 import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAndSha } from './interfaces'
 import { context } from '@actions/github'
-import { createFile, getFileContent, updateFile } from './persistence'
+import { createFile, getFileContent, updateFile } from './persistence/persistence'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 
 import * as _ from 'lodash'

@@ -1,8 +1,8 @@
 
-import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from './octokit'
+import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from '../octokit'
 import { context } from '@actions/github'
 
-import * as input from './shared/getInputs'
+import * as input from '../shared/getInputs'
 const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
 
 export async function getFileContent(): Promise<any> {

@@ -1,8 +1,8 @@
 import {
     CommitterMap
-} from './interfaces'
+} from '../interfaces'
 
-import * as input from './shared/getInputs'
+import * as input from '../shared/getInputs'
 
 export function commentContent(signed: boolean, committerMap: CommitterMap): string {
 
