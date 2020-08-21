@@ -50,7 +50,7 @@ jobs:
           #create-file-commit-message: 'For example: Creating file for storing CLA Signatures'
           #signed-commit-message: 'For example: $contributorName has signed the CLA in #$pullRequestNo'
           #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
-          #custom-allsigned-prcomment: 'pull request comment when everyone has signed, defaults to **CLA Assistant Lite bot** All Contributors have signed the CLA.'
+          #custom-allsigned-prcomment: 'pull request comment when all contributors has signed, defaults to **CLA Assistant Lite bot** All Contributors have signed the CLA.'
 
 
 ```
