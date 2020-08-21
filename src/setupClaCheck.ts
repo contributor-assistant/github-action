@@ -1,7 +1,7 @@
 import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from './octokit'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
-import prComment from './pullRequestComment'
+import prCommentSetup from './pullRequestComment'
 import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAndSha } from './interfaces'
 import { context } from '@actions/github'
 import { createFile, getFileContent, updateFile } from './persistence'
@@ -34,7 +34,7 @@ export async function setupClaCheck() {
     signed = true
   }
   try {
-    const reactedCommitters: any = (await prComment(signed, committerMap, committers)) as ReactedCommitterMap
+    const reactedCommitters: any = (await prCommentSetup(signed, committerMap, committers)) as ReactedCommitterMap
 
     if (signed) {
       core.info(`All committers have signed the CLA`)
@@ -100,7 +100,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   await createFile(initialContentBinary).catch(error => core.setFailed(
     `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
   ))
-  await prComment(signed, committerMap, committers)
+  await prCommentSetup(signed, committerMap, committers)
   throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 

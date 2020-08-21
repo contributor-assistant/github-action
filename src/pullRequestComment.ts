@@ -9,12 +9,12 @@ import {
 } from './interfaces'
 
 
-export default async function prComment(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
+export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
   try {
     const claBotComment = await getComment()
     if (!claBotComment) {
       return createComment(signed, committerMap)
-    } else if (claBotComment && claBotComment.id) {
+    } else if (claBotComment?.id) {
       if (signed) {
         await updateComment(signed, committerMap, claBotComment)
       }
