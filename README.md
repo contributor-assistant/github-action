@@ -64,7 +64,7 @@ CLA action workflow will be triggered on all Pull Request `opened, synchronize, 
 CLA workflow creates a comment on Pull Request asking contributors who have not signed  CLA to sign and also fails the pull request status check with a `failure`. The contributors are requested to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
 If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/>
 
-![Screenshot 2020-02-13 at 10 24 17](https://user-images.githubusercontent.com/33329946/74420003-0ca6e780-4e4b-11ea-85a7-4ccc3f53e3d5.png)
+<img width="685" alt="Screen Shot 2020-08-21 at 15 07 28" src="https://user-images.githubusercontent.com/33329946/90893948-2871e400-e3c0-11ea-81c9-c9ec6aedb568.png">
 
 <br/>
 
