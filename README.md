@@ -2,7 +2,7 @@
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
 # Handling CLAs with GitHub Action (Alpha)
 
-Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository**
+Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant gitHub action enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository**
 
 ### Features
 1. decentralized data storage
@@ -44,8 +44,8 @@ jobs:
           empty-commit-flag: false
           
          #below are the optional inputs - If the optional inputs are not given, then default values will be taken
-         #remote-organization-name: remote organisation name where the signatures should be stored (Default is storing the signatures in the same repository)   
-         #remote-repository-name:   remote repository name where the signatures should be stored (Default is storing the signatures in the same repository)
+         #remote-organization-name: enter the remote organization name where the signatures should be stored (Default is storing the signatures in the same repository)   
+         #remote-repository-name:  enter the  remote repository name where the signatures should be stored (Default is storing the signatures in the same repository)
          #create-file-commit-message: 'For example: Creating file for storing CLA Signatures'
          #signed-commit-message: 'For example: $contributorName has signed the CLA in #$pullRequestNo'
          #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
