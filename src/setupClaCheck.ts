@@ -12,7 +12,6 @@ import * as core from '@actions/core'
 
 export async function setupClaCheck() {
 
-  const pullRequestNo: number = context.issue.number
   let committerMap = getInitialCommittersMap()
   let signed: boolean = false
   let response
@@ -21,7 +20,7 @@ export async function setupClaCheck() {
   committers = checkAllowList(committers) as CommittersDetails[]
 
   try {
-    response = await getCLAFileContentandSHA(committers, committerMap, pullRequestNo)
+    response = await getCLAFileContentandSHA(committers, committerMap)
   } catch (error) {
     core.setFailed(error)
     return
@@ -35,7 +34,7 @@ export async function setupClaCheck() {
     signed = true
   }
   try {
-    const reactedCommitters: any = (await prComment(signed, committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+    const reactedCommitters: any = (await prComment(signed, committerMap, committers)) as ReactedCommitterMap
 
     if (signed) {
       core.info(`All committers have signed the CLA`)
@@ -46,7 +45,7 @@ export async function setupClaCheck() {
       let contentString = JSON.stringify(claFileContent, null, 2)
       let contentBinary = Buffer.from(contentString).toString("base64")
       /* pushing the recently signed  contributors to the CLA Json File */
-      await updateFile(sha, contentBinary, pullRequestNo)
+      await updateFile(sha, contentBinary)
     }
     if (reactedCommitters?.allSignedFlag) {
       core.info(`All contributors have signed the CLA`)
@@ -66,13 +65,13 @@ export async function setupClaCheck() {
 
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<any> {
   let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
   } catch (error) {
     if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap, pullRequestNo)
+      await createClaFileAndPRComment(committers, committerMap)
       return
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
@@ -84,7 +83,7 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
   return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
 }
 
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap, pullRequestNo: number): Promise<any> {
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap): Promise<any> {
   const signed = false
   committerMap.notSigned = committers
   committerMap.signed = []
@@ -101,7 +100,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   await createFile(initialContentBinary).catch(error => core.setFailed(
     `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
   ))
-  await prComment(signed, committerMap, committers, pullRequestNo)
+  await prComment(signed, committerMap, committers)
   throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 

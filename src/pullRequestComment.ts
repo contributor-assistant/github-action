@@ -9,47 +9,25 @@ import {
 } from './interfaces'
 
 
-export default async function prComment(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[], pullRequestNo: number) {
+export default async function prComment(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
   try {
-    const prComment = await getComment()
-    if (!prComment) {
-      await octokit.issues.createComment({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        issue_number: context.issue.number,
-        body: commentContent(signed, committerMap)
-      })
-      return
-    } else if (prComment && prComment.id) {
+    const claBotComment = await getComment()
+    if (!claBotComment) {
+      return createComment(signed, committerMap)
+    } else if (claBotComment && claBotComment.id) {
       if (signed) {
-        await octokit.issues.updateComment({
-          owner: context.repo.owner,
-          repo: context.repo.repo,
-          comment_id: prComment.id,
-          body: commentContent(signed, committerMap)
-        })
+        await updateComment(signed, committerMap, claBotComment)
       }
-      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment(committerMap, committers, pullRequestNo)) as ReactedCommitterMap
+
+      // reacted committers are contributors who have newly signed by posting the Pull Request comment
+      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment(committerMap, committers)) as ReactedCommitterMap
       if (reactedCommitters) {
         if (reactedCommitters.onlyCommitters) {
           reactedCommitters.allSignedFlag = prepareAllSignedCommitters(committerMap, reactedCommitters.onlyCommitters, committers)
         }
       }
-
-      committerMap.signed!.push(...reactedCommitters.newSigned)
-      committerMap.notSigned = committerMap.notSigned!.filter(
-        committer =>
-          !reactedCommitters.newSigned.some(
-            reactedCommitter => committer.id === reactedCommitter.id
-          )
-      )
-
-      await octokit.issues.updateComment({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        comment_id: prComment.id,
-        body: commentContent(reactedCommitters.allSignedFlag, committerMap)
-      })
+      committerMap = prepareCommiterMap(committerMap, reactedCommitters)
+      await updateComment(reactedCommitters.allSignedFlag, committerMap, claBotComment)
       return reactedCommitters
     }
   } catch (error) {
@@ -58,6 +36,23 @@ export default async function prComment(signed: boolean, committerMap: Committer
   }
 }
 
+async function createComment(signed: boolean, committerMap: CommitterMap): Promise<void> {
+  await octokit.issues.createComment({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    issue_number: context.issue.number,
+    body: commentContent(signed, committerMap)
+  }).catch(error => { throw new Error(`Error occured when creating a pull request comment: ${error.message}`) })
+}
+
+async function updateComment(signed: boolean, committerMap: CommitterMap, claBotComment: any): Promise<void> {
+  await octokit.issues.updateComment({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    comment_id: claBotComment.id,
+    body: commentContent(signed, committerMap)
+  }).catch(error => { throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`) })
+}
 
 async function getComment() {
   try {
@@ -68,6 +63,18 @@ async function getComment() {
   } catch (error) {
     throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`)
   }
+}
+
+function prepareCommiterMap(committerMap: CommitterMap, reactedCommitters) {
+  committerMap.signed?.push(...reactedCommitters.newSigned)
+  committerMap.notSigned = committerMap.notSigned!.filter(
+    committer =>
+      !reactedCommitters.newSigned.some(
+        reactedCommitter => committer.id === reactedCommitter.id
+      )
+  )
+  return committerMap
+
 }
 
 function prepareAllSignedCommitters(committerMap: CommitterMap, signedInPrCommitters: CommittersDetails[], committers: CommittersDetails[]): boolean {

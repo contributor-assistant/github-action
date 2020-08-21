@@ -6,7 +6,7 @@ import { addEmptyCommit } from './addEmptyCommit'
 import * as input from './shared/getInputs'
 
 
-export default async function signatureWithPRComment(committerMap: CommitterMap, committers, pullRequestNo: number) {
+export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
 
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
@@ -27,7 +27,7 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
             body: prComment.body.toLowerCase(),
             created_at: prComment.created_at,
             repoId: repoId,
-            pullRequestNo: pullRequestNo
+            pullRequestNo: context.issue.number
         })
     })
 

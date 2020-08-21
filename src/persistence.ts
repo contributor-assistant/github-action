@@ -26,14 +26,15 @@ export async function createFile(contentBinary): Promise<any> {
     })
 }
 
-export async function updateFile(sha, contentBinary, pullRequestNo): Promise<any> {
+export async function updateFile(sha, contentBinary): Promise<any> {
+    const pullRequestNo = context.issue.number
     await octokitInstance.repos.createOrUpdateFileContents({
         owner: input.getRemoteOrgName(),
         repo: input.getRemoteRepoName(),
         path: input.getPathToSignatures(),
         sha,
         message: input.getSignedCommitMessage() ?
-            input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', pullRequestNo) :
+            input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', context.issue.number.toString()) :
             `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
         content: contentBinary,
         branch: input.getBranch()
