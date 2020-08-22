@@ -10,9 +10,9 @@ import * as input from './shared/getInputs'
 export async function run() {
   try {
     core.info(`CLA Assistant GitHub Action bot has started the process`)
-    core.warning(input.getRemoteRepoName())
+    core.warning(JSON.stringify(input.getRemoteRepoName()))
     core.warning('or name----->')
-    core.warning(input.getRemoteOrgName())
+    core.warning(JSON.stringify(input.getRemoteOrgName()))
 
     if (context.payload.action === 'closed') {
       return lockPullRequest()
