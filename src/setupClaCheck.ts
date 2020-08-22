@@ -5,15 +5,24 @@ import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAnd
 import { context } from '@actions/github'
 import { createFile, getFileContent, updateFile } from './persistence/persistence'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
+import { isPersonalAccessTokenPresent } from './octokit'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
+import * as input from './shared/getInputs'
 
 export async function setupClaCheck() {
 
   let committerMap = getInitialCommittersMap()
+  if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
+    if (!isPersonalAccessTokenPresent()) {
+      core.setFailed('You need a personal access token for storing signatures in a remote repository')
+      return
+    }
+  }
   let signed: boolean = false
   let response
+
 
   let committers = await getCommitters() as CommittersDetails[]
   committers = checkAllowList(committers) as CommittersDetails[]
