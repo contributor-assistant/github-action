@@ -53,7 +53,7 @@ function prepareOctokit() {
         if (isPersonalAccessTokenPresent()) {
             octokitInstance = octokitUsingPAT
         } else {
-            throw new Error('You need a personal access token for storing signatures in a remote repository')
+            core.setFailed('You need a personal access token for storing signatures in a remote repository')
         }
     } else {
         core.warning("here2")
