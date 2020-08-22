@@ -1,12 +1,9 @@
-import { octokit } from './octokit'
+import { octokit } from '../octokit'
 import { context } from '@actions/github'
-import { CommitterMap, CommittersDetails, CommentedCommitterMap } from './interfaces'
-import { addEmptyCommit } from './addEmptyCommit'
-
-import * as input from './shared/getInputs'
+import { CommitterMap, CommittersDetails, CommentedCommitterMap } from '../interfaces'
 
 
-export default async function signatureWithPRComment(committerMap: CommitterMap, committers, pullRequestNo: number) {
+export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
 
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
@@ -27,7 +24,7 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
             body: prComment.body.toLowerCase(),
             created_at: prComment.created_at,
             repoId: repoId,
-            pullRequestNo: pullRequestNo
+            pullRequestNo: context.issue.number
         })
     })
 
@@ -40,16 +37,16 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
     for (var i = 0; i < filteredListOfPRComments.length; i++) {
         delete filteredListOfPRComments[i].body
     }
-    // //checking if the reacted committers are not the signed committers(not in the storage file) and filtering only the unsigned committers
+    //checking if the reacted committers are not the signed committers(not in the storage file) and filtering only the unsigned committers
     commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
-    if (context.eventName === 'issue_comment') {
-        //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
-        if (input.getEmptyCommitFlag() == 'true') {
-            if (commentedCommitterMap.newSigned.some(contributor => contributor.id === context?.payload?.comment?.user.id)) {
-                await addEmptyCommit()
-            }
-        }
-    }
+    // if (context.eventName === 'issue_comment') {
+    //     //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
+    //     if (input.getEmptyCommitFlag() == 'true') {
+    //         if (commentedCommitterMap.newSigned.some(contributor => contributor.id === context?.payload?.comment?.user.id)) {
+    //             await addEmptyCommit()
+    //         }
+    //     }
+    // }
 
     // if (blockChainFlag == 'true' && commentedCommitterMap.newSigned) {
     //     await blockChainWebhook(commentedCommitterMap.newSigned)

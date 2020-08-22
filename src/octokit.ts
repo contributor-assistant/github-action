@@ -1,5 +1,4 @@
 import { getOctokit } from '@actions/github'
-import * as core from '@actions/core'
 
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN
 const personalAcessToken = process.env.PERSONAL_ACCESS_TOKEN as string
