@@ -16,8 +16,8 @@ if (input?.getRemoteRepoName() || input?.getRemoteOrgName()) {
 
 export async function getFileContent(): Promise<any> {
     const result = await octokitInstance.repos.getContent({
-        owner: input.getRemoteOrgName(),
-        repo: input.getRemoteRepoName(),
+        owner: input.getRemoteOrgName() || context.repo.owner,
+        repo: input.getRemoteRepoName() || context.repo.repo,
         path: input.getPathToSignatures(),
         ref: input.getBranch()
     })
@@ -26,8 +26,8 @@ export async function getFileContent(): Promise<any> {
 
 export async function createFile(contentBinary): Promise<any> {
     return octokitInstance.repos.createOrUpdateFileContents({
-        owner: input.getRemoteOrgName(),
-        repo: input.getRemoteRepoName(),
+        owner: input.getRemoteOrgName() || context.repo.owner,
+        repo: input.getRemoteRepoName() || context.repo.repo,
         path: input.getPathToSignatures(),
         message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
         content: contentBinary,
@@ -38,8 +38,8 @@ export async function createFile(contentBinary): Promise<any> {
 export async function updateFile(sha, contentBinary): Promise<any> {
     const pullRequestNo = context.issue.number
     await octokitInstance.repos.createOrUpdateFileContents({
-        owner: input.getRemoteOrgName(),
-        repo: input.getRemoteRepoName(),
+        owner: input.getRemoteOrgName() || context.repo.owner,
+        repo: input.getRemoteRepoName() || context.repo.repo,
         path: input.getPathToSignatures(),
         sha,
         message: input.getSignedCommitMessage() ?
