@@ -5,6 +5,7 @@ import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAnd
 import { context } from '@actions/github'
 import { createFile, getFileContent, updateFile } from './persistence/persistence'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
+import { isPersonalAccessTokenPresent } from './octokit'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
@@ -12,20 +13,22 @@ import * as core from '@actions/core'
 export async function setupClaCheck() {
 
   let committerMap = getInitialCommittersMap()
-  let signed: boolean = false
-  let response
-
+  if (!isPersonalAccessTokenPresent()) {
+    core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
+    return
+  }
+  let signed: boolean = false, response
   let committers = await getCommitters() as CommittersDetails[]
   committers = checkAllowList(committers) as CommittersDetails[]
 
   try {
-    response = await getCLAFileContentandSHA(committers, committerMap)
+    response = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
   } catch (error) {
     core.setFailed(error)
     return
   }
   const claFileContent = response?.claFileContent
-  const sha = response?.sha
+  const sha: string = response?.sha
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
@@ -40,18 +43,14 @@ export async function setupClaCheck() {
       return reRunLastWorkFlowIfRequired()
     }
     if (reactedCommitters?.newSigned.length) {
-      claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
-      let contentString = JSON.stringify(claFileContent, null, 2)
-      let contentBinary = Buffer.from(contentString).toString("base64")
       /* pushing the recently signed  contributors to the CLA Json File */
-      await updateFile(sha, contentBinary)
+      await updateFile(sha, claFileContent, reactedCommitters)
     }
     if (reactedCommitters?.allSignedFlag) {
       core.info(`All contributors have signed the CLA`)
       return reRunLastWorkFlowIfRequired()
     }
 
-    /* return when there are no unsigned committers */
     if (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0) {
       core.info(`All contributors have signed the CLA`)
       return reRunLastWorkFlowIfRequired()
