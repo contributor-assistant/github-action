@@ -6,9 +6,11 @@ import * as input from '../shared/getInputs'
 import * as core from '@actions/core'
 let octokitInstance
 
-if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
+if (input?.getRemoteRepoName() || input?.getRemoteOrgName()) {
+    core.warning("here1")
     octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : core.setFailed('You need a personal access token for storing signatures in a remote repository')
 } else {
+    core.warning("here2")
     octokitInstance = octokit
 }
 
