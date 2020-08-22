@@ -9,7 +9,6 @@ import { isPersonalAccessTokenPresent } from './octokit'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
-import * as input from './shared/getInputs'
 
 export async function setupClaCheck() {
 
