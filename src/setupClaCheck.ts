@@ -14,11 +14,9 @@ import * as input from './shared/getInputs'
 export async function setupClaCheck() {
 
   let committerMap = getInitialCommittersMap()
-  if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    if (!isPersonalAccessTokenPresent()) {
-      core.setFailed('You need a personal access token for storing signatures in a remote repository')
-      return
-    }
+  if (!isPersonalAccessTokenPresent()) {
+    core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
+    return
   }
   let signed: boolean = false, response
   let committers = await getCommitters() as CommittersDetails[]
