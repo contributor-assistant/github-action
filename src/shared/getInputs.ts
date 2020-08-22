@@ -2,9 +2,11 @@ import { context } from '@actions/github'
 import * as core from '@actions/core'
 
 
-export const getRemoteRepoName = (): string => { return core.getInput('remote-repository-name', { required: false }) || context.repo.repo }
+//export const getRemoteRepoName = (): string => { return core.getInput('remote-repository-name', { required: false }) || context.repo.repo }
+export const getRemoteRepoName = (): string => { return core.getInput('remote-repository-name', { required: false }) }
 
-export const getRemoteOrgName = (): string => { return core.getInput('remote-organization-name', { required: false }) || context.repo.owner }
+//export const getRemoteOrgName = (): string => { return core.getInput('remote-organization-name', { required: false }) || context.repo.owner }
+export const getRemoteOrgName = (): string => { return core.getInput('remote-organization-name', { required: false }) }
 
 export const getPathToSignatures = (): string => core.getInput('path-to-signatures', { required: false })
 

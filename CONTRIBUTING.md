@@ -1,6 +1,6 @@
-# Contributing to CLA Assistant GitHub Action
+# Contributing to CLA Assistant
 
-You want to contribute to CLA Assistant GitHub Action? Welcome! Please read this document to understand what you can do:
+You want to contribute to CLA Assistant? Welcome! Please read this document to understand what you can do:
  * [Help Others](#help-others)
  * [Analyze Issues](#analyze-issues)
  * [Report an Issue](#report-an-issue)
@@ -81,28 +81,13 @@ You are welcome to contribute code to CLA Assistant in order to fix bugs or to i
 
 There are three important things to know:
 
-1.  You must be aware of the Apache License (which describes contributions) and **agree to the Contributors License Agreement**. This is common practice in all major Open Source projects.
- For company contributors special rules apply. See the respective section below for details.
+1.  You must be aware that you need to submit [Developer Certificate of Origin](https://developercertificate.org/) in order for your contribution to be accepted. This is common practice in all major Open Source projects.
 2.  There are **several requirements regarding code style, quality, and product standards** which need to be met (we also have to follow them). The respective section below gives more details on the coding guidelines.
 3.  **Not all proposed contributions can be accepted**. Some features may e.g. just fit a third-party add-on better. The code must fit the overall direction of CLA Assistant and really improve it. The more effort you invest, the better you should clarify in advance whether the contribution fits: the best way would be to just open an issue to discuss the feature you plan to implement (make it clear you intend to contribute).
 
-### Contributor License Agreement
+## Developer Certificate of Origin (DCO)
 
-When you contribute (code, documentation, or anything else), you have to be aware that your contribution is covered by the same [Apache 2.0 License](https://www.apache.org/licenses/LICENSE-2.0) that is applied to CLA Assistant itself.
-In particular you need to agree to the Individual Contributor License Agreement,
-which can be [found here](https://gist.github.com/CLAassistant/bd1ea8ec8aa0357414e8).
-(This applies to all contributors, including those contributing on behalf of a company). If you agree to its content, you simply have to click on the link posted by the CLA assistant as a comment to the pull request. Click it to check the CLA, then accept it on the following screen if you agree to it. CLA assistant will save this decision for upcoming contributions and will notify you if there is any change to the CLA in the meantime.
-
-#### Company Contributors
-
-If employees of a company contribute code, in **addition** to the individual agreement above, there needs to be one company agreement submitted. This is mainly for the protection of the contributing employees.
-
-A company representative authorized to do so needs to download, fill, and print
-the [Corporate Contributor License Agreement](/SAP Corporate Contributor License Agreement (5-26-15).pdf) form. Then either:
-
--   Scan it and e-mail it to [opensource@sap.com](mailto:opensource@sap.com) and [tools@sap.com](mailto:tools@sap.com)
--   Send it by traditional letter to: *SAP SE, Industry Standards & Open Source Team, Dietmar-Hopp-Allee 16, 69190 Walldorf, Germany*
-
+Due to legal reasons, contributors will be asked to accept a DCO before they submit the first pull request to this projects, this happens in an automated fashion during the submission process. SAP uses [the standard DCO text of the Linux Foundation](https://developercertificate.org/).
 
 ### Contribution Content Guidelines
 
@@ -111,8 +96,8 @@ These are some of the rules we try to follow:
 -   Apply a clean coding style adapted to the surrounding code, even though we are aware the existing code is not fully clean
 -   Use (4)spaces for indentation (except if the modified file consistently uses tabs)
 -   Use variable naming conventions like in the other files you are seeing (camelcase)
--   No console.log() - instead use GitHub Action Native logging service (For example `core.info("Hello World")`)
--   Run the TSLint code check and make it succeed
+-   No console.log() - use logging service
+-   Run the ESLint code check and make it succeed
 -   Comment your code where it gets non-trivial
 -   Keep an eye on performance and memory consumption, properly destroy objects when not used anymore
 -   Write a unit test
