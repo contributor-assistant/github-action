@@ -3,7 +3,14 @@ import { octokit, isPersonalAccessTokenPresent, octokitUsingPAT } from '../octok
 import { context } from '@actions/github'
 
 import * as input from '../shared/getInputs'
-const octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : octokit
+import * as core from '@actions/core'
+let octokitInstance
+
+if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
+    octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : core.setFailed('You need a personal access token for storing signatures in a remote repository')
+} else {
+    octokitInstance = octokit
+}
 
 export async function getFileContent(): Promise<any> {
     const result = await octokitInstance.repos.getContent({
