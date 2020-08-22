@@ -10,7 +10,7 @@ Streamline your workflow and let this GitHub Action(a lite version of [CLA Assis
 1. no User Interface is required
 1. contributors can sign the CLA by just posting a Pull Request comment
 1. signatures will be stored in a file inside the repository or in a remote repository
-1. signatures can be stored inside a private repository
+1. signatures can also be stored inside a private repository
 1. versioning of signatures
 
 ## Configure Contributor License Agreement within two minutes 
