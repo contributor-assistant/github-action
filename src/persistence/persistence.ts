@@ -4,17 +4,16 @@ import { context } from '@actions/github'
 
 import * as input from '../shared/getInputs'
 import * as core from '@actions/core'
+import { ReactedCommitterMap } from '../interfaces'
 
 let octokitInstance
 if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    // octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : core.setFailed('You need a personal access token for storing signatures in a remote repository')
     octokitInstance = octokitUsingPAT
 } else {
     octokitInstance = octokit
 }
 
 export async function getFileContent(): Promise<any> {
-    const octokitInstance = prepareOctokit()
     const result = await octokitInstance.repos.getContent({
         owner: input.getRemoteOrgName() || context.repo.owner,
         repo: input.getRemoteRepoName() || context.repo.repo,
@@ -25,7 +24,6 @@ export async function getFileContent(): Promise<any> {
 }
 
 export async function createFile(contentBinary): Promise<any> {
-    const octokitInstance = prepareOctokit()
     return octokitInstance.repos.createOrUpdateFileContents({
         owner: input.getRemoteOrgName() || context.repo.owner,
         repo: input.getRemoteRepoName() || context.repo.repo,
@@ -36,9 +34,11 @@ export async function createFile(contentBinary): Promise<any> {
     })
 }
 
-export async function updateFile(sha, contentBinary): Promise<any> {
-    const octokitInstance = prepareOctokit()
+export async function updateFile(sha: string, claFileContent, reactedCommitters: ReactedCommitterMap): Promise<any> {
     const pullRequestNo = context.issue.number
+    claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
+    let contentString = JSON.stringify(claFileContent, null, 2)
+    let contentBinary = Buffer.from(contentString).toString("base64")
     await octokitInstance.repos.createOrUpdateFileContents({
         owner: input.getRemoteOrgName() || context.repo.owner,
         repo: input.getRemoteRepoName() || context.repo.repo,
@@ -50,22 +50,4 @@ export async function updateFile(sha, contentBinary): Promise<any> {
         content: contentBinary,
         branch: input.getBranch()
     })
-}
-
-function prepareOctokit() {
-    let octokitInstance
-
-    if (input?.getRemoteRepoName() || input?.getRemoteOrgName()) {
-        core.warning("here1")
-        octokitInstance = isPersonalAccessTokenPresent() ? octokitUsingPAT : core.setFailed('You need a personal access token for storing signatures in a remote repository')
-        if (isPersonalAccessTokenPresent()) {
-            octokitInstance = octokitUsingPAT
-        } else {
-            core.setFailed('You need a personal access token for storing signatures in a remote repository')
-        }
-    } else {
-        core.warning("here2")
-        octokitInstance = octokit
-    }
-    return octokitInstance
 }
