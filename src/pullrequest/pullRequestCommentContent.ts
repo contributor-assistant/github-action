@@ -7,7 +7,9 @@ import * as input from '../shared/getInputs'
 export function commentContent(signed: boolean, committerMap: CommitterMap): string {
 
     if (signed) {
-        return input.getCustomAllSignedPrComment() || `****CLA Assistant Lite bot**** All contributors have signed the CLA  ✍️ `
+        const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the CLA  ✍️ `
+        const text = `****CLA Assistant Lite bot**** ${line1}`
+        return text
     }
     let committersCount = 1
 
