@@ -1,5 +1,10 @@
 # Change Log
 
+## [v2.0.1-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.1-alpha) (2020-08-25)
+
+**Fixed Bugs:**
+- Skip CLA comment if already commented [issue#46](https://github.com/cla-assistant/github-action/issues/46)
+
 ## [v2.0.0-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.0-alpha) (2020-08-22)
 
 **New features:**
