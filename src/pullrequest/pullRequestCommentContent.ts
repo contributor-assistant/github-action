@@ -5,16 +5,15 @@ import {
 import * as input from '../shared/getInputs'
 
 export function commentContent(signed: boolean, committerMap: CommitterMap): string {
-
-    if (input.getUseDcoFlag()) {
+    // using a `string` true or false purposely as github action input cannot have a boolean value
+    if (input.getUseDcoFlag() == 'true') {
         return dco(signed, committerMap)
     } else {
         return cla(signed, committerMap)
     }
-
 }
 
-function dco(signed: boolean, committerMap: CommitterMap) {
+function dco(signed: boolean, committerMap: CommitterMap): string {
 
     if (signed) {
         const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the DCO  ✍️ ✅`
@@ -56,7 +55,7 @@ function dco(signed: boolean, committerMap: CommitterMap) {
     return text
 }
 
-function cla(signed: boolean, committerMap: CommitterMap) {
+function cla(signed: boolean, committerMap: CommitterMap): string {
 
     if (signed) {
         const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the CLA  ✍️ ✅`
@@ -71,7 +70,7 @@ function cla(signed: boolean, committerMap: CommitterMap) {
     }
 
     let you = committersCount > 1 ? `you all` : `you`
-    let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement](${input.getPathToDocument()}) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you)    
+    let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement](${input.getPathToDocument()}) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you)
     let text = `**CLA Assistant Lite bot:** ${lineOne} 
    - - -
    ***I have read the CLA Document and I hereby sign the CLA***
