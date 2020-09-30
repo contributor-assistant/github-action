@@ -20,8 +20,6 @@ export const getEmptyCommitFlag = (): string => core.getInput('empty-commit-flag
 
 export const getSignedCommitMessage = (): string => core.getInput('signed-commit-message', { required: false })
 
-export const getEmptySignedCommitMessage = (): string => core.getInput('signed-empty-commit-message', { required: false })
-
 export const getCreateFileCommitMessage = (): string => core.getInput('create-file-commit-message', { required: false })
 
 export const getCustomNotSignedPrComment = (): string => core.getInput('custom-notsigned-prcomment', { required: false })
