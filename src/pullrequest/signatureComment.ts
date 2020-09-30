@@ -29,19 +29,21 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
         })
     })
 
-    listOfPRComments.map((comment) => {
-
-        if (getUseDcoFlag()) {
+    if (getUseDcoFlag()) {
+        listOfPRComments.map((comment) => {
             if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*dco \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*dco.*$/) && comment.name !== 'github-actions[bot]') {
                 filteredListOfPRComments.push(comment)
             }
-        }
-        else {
+        })
+
+    } else if (!getUseDcoFlag()) {
+        listOfPRComments.map((comment) => {
             if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
                 filteredListOfPRComments.push(comment)
             }
-        }
-    })
+        })
+    }
+
 
     for (var i = 0; i < filteredListOfPRComments.length; i++) {
         delete filteredListOfPRComments[i].body
