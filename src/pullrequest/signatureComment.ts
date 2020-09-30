@@ -29,17 +29,15 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
             pullRequestNo: context.issue.number
         })
     })
-
-    if (getUseDcoFlag()) {
-        core.warning(`getUseDcoFlag ----> ${getUseDcoFlag()}`)
+// using a `string` true or false purposely as github action input cannot have a boolean value
+    if (getUseDcoFlag() === 'true') {
         listOfPRComments.map((comment) => {
             if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*dco \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*dco.*$/) && comment.name !== 'github-actions[bot]') {
                 filteredListOfPRComments.push(comment)
             }
         })
         
-    } else if (!getUseDcoFlag()) {
-        core.warning(`NotgetUseDcoFlag ----> ${getUseDcoFlag()}`)
+    } else if (getUseDcoFlag() === 'false') {
         listOfPRComments.map((comment) => {
             if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
                 filteredListOfPRComments.push(comment)

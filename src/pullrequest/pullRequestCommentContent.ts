@@ -3,21 +3,17 @@ import {
 } from '../interfaces'
 
 import * as input from '../shared/getInputs'
-import * as core from '@actions/core'
 
 export function commentContent(signed: boolean, committerMap: CommitterMap): string {
-
-    if (input.getUseDcoFlag()) {
-        core.warning(`function1 ----> }`)
+    // using a `string` true or false purposely as github action input cannot have a boolean value
+    if (input.getUseDcoFlag() == 'true') {
         return dco(signed, committerMap)
     } else {
-        core.warning(`function22 ----> `)
         return cla(signed, committerMap)
     }
-
 }
 
-function dco(signed: boolean, committerMap: CommitterMap) {
+function dco(signed: boolean, committerMap: CommitterMap): string {
 
     if (signed) {
         const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the DCO  ✍️ ✅`
@@ -59,7 +55,7 @@ function dco(signed: boolean, committerMap: CommitterMap) {
     return text
 }
 
-function cla(signed: boolean, committerMap: CommitterMap) {
+function cla(signed: boolean, committerMap: CommitterMap): string {
 
     if (signed) {
         const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the CLA  ✍️ ✅`

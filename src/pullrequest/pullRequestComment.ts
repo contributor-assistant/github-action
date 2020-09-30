@@ -60,9 +60,10 @@ async function getComment() {
     const response = await octokit.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number })
 
     //TODO: check the below regex
-    if (getUseDcoFlag()) {
+    // using a `string` true or false purposely as github action input cannot have a boolean value
+    if (getUseDcoFlag() === 'true') {
       return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/))
-    } else if (!getUseDcoFlag()) {
+    } else if (getUseDcoFlag() === 'false') {
       return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
 
     }
