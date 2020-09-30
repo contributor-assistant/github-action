@@ -7,6 +7,7 @@ import {
   ReactedCommitterMap,
   CommittersDetails
 } from '../interfaces'
+import { getUseDcoFlag } from '../shared/getInputs'
 
 
 export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
@@ -59,7 +60,12 @@ async function getComment() {
     const response = await octokit.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number })
 
     //TODO: check the below regex
-    return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
+    if (getUseDcoFlag()) {
+      return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/))
+    } else if (!getUseDcoFlag()) {
+      return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
+
+    }
   } catch (error) {
     throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`)
   }
