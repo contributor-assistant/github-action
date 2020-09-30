@@ -1,6 +1,6 @@
 
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
-# Handling CLAs with GitHub Action (Alpha)
+# Handling CLAs and DCOs via GitHub Action (Alpha)
 
 Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant gitHub action enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository**
 
@@ -8,7 +8,7 @@ Streamline your workflow and let this GitHub Action(a lite version of [CLA Assis
 1. decentralized data storage
 1. fully integrated within github environment 
 1. no User Interface is required
-1. contributors can sign the CLA by just posting a Pull Request comment
+1. contributors can sign the CLA or DCO by just posting a Pull Request comment
 1. signatures will be stored in a file inside the repository or in a remote repository
 1. signatures can also be stored inside a private repository
 1. versioning of signatures
