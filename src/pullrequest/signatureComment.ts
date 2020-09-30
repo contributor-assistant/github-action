@@ -39,7 +39,7 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
         })
         
     } else if (!getUseDcoFlag()) {
-        core.info(`getUseDcoFlag ----> ${getUseDcoFlag()}`)
+        core.info(`NotgetUseDcoFlag ----> ${getUseDcoFlag()}`)
         listOfPRComments.map((comment) => {
             if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
                 filteredListOfPRComments.push(comment)
