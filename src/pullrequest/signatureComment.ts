@@ -1,6 +1,7 @@
 import { octokit } from '../octokit'
 import { context } from '@actions/github'
 import { CommitterMap, CommittersDetails, CommentedCommitterMap } from '../interfaces'
+import { getUseDcoFlag } from '../shared/getInputs'
 
 
 export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
@@ -29,8 +30,16 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
     })
 
     listOfPRComments.map((comment) => {
-        if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
-            filteredListOfPRComments.push(comment)
+
+        if (getUseDcoFlag()) {
+            if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*dco \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*dco.*$/) && comment.name !== 'github-actions[bot]') {
+                filteredListOfPRComments.push(comment)
+            }
+        }
+        else {
+            if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
+                filteredListOfPRComments.push(comment)
+            }
         }
     })
 
