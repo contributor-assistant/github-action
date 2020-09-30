@@ -10,7 +10,7 @@ export const getRemoteOrgName = (): string => { return core.getInput('remote-org
 
 export const getPathToSignatures = (): string => core.getInput('path-to-signatures', { required: false })
 
-export const getPathToCLADocument = (): string => core.getInput('path-to-cla-document', { required: false })
+export const getPathToDocument = (): string => core.getInput('path-to-document', { required: false })
 
 export const getBranch = (): string => core.getInput('branch', { required: false })
 
@@ -27,5 +27,7 @@ export const getCreateFileCommitMessage = (): string => core.getInput('create-fi
 export const getCustomNotSignedPrComment = (): string => core.getInput('custom-notsigned-prcomment', { required: false })
 
 export const getCustomAllSignedPrComment = (): string => core.getInput('custom-allsigned-prcomment', { required: false })
+
+export const getUseDcoFlag = (): string => core.getInput('use-dco-flag', { required: false })
 
 
