@@ -43,6 +43,7 @@ jobs:
           # branch should not be protected
           branch: 'master'
           allowlist: user1,bot*
+          use-dco-flag: false #'Set this to true if you want to use a dco instead of a cla'
           
          #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           #remote-organization-name: enter the remote organization name where the signatures should be stored (Default is storing the signatures in the same repository)   
@@ -51,7 +52,6 @@ jobs:
           #signed-commit-message: 'For example: $contributorName has signed the CLA in #$pullRequestNo'
           #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
           #custom-allsigned-prcomment: 'pull request comment when all contributors has signed, defaults to **CLA Assistant Lite bot** All Contributors have signed the CLA.'
-          #use-dco-flag: 'Set this to true if you want to use a dco instead of a cla'
 
 
 ```
