@@ -8,10 +8,10 @@ import * as core from '@actions/core'
 export function commentContent(signed: boolean, committerMap: CommitterMap): string {
 
     if (input.getUseDcoFlag()) {
-        core.warning(`function1 ----> ${input.getUseDcoFlag()}`)
+        core.warning(`function1 ----> }`)
         return dco(signed, committerMap)
     } else {
-        core.warning(`function22 ----> ${input.getUseDcoFlag()}`)
+        core.warning(`function22 ----> `)
         return cla(signed, committerMap)
     }
 
