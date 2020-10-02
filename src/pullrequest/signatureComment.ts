@@ -1,10 +1,13 @@
 import { octokit } from '../octokit'
 import { context } from '@actions/github'
 import { CommitterMap, CommittersDetails, CommentedCommitterMap } from '../interfaces'
+import { getUseDcoFlag } from '../shared/getInputs'
 
+import * as core from '@actions/core'
 
 export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
 
+    core.warning(`signatureWithPRComment ----> ${getUseDcoFlag()}`)
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
     let prResponse = await octokit.issues.listComments({
@@ -15,8 +18,7 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
     let listOfPRComments = [] as CommittersDetails[]
     let filteredListOfPRComments = [] as CommittersDetails[]
 
-    //TODO: Do null check for repoID
-    prResponse.data.map((prComment) => {
+    prResponse?.data.map((prComment) => {
         listOfPRComments.push({
             name: prComment.user.login,
             id: prComment.user.id,
@@ -27,12 +29,22 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
             pullRequestNo: context.issue.number
         })
     })
+// using a `string` true or false purposely as github action input cannot have a boolean value
+    if (getUseDcoFlag() === 'true') {
+        listOfPRComments.map((comment) => {
+            if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*dco \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*dco.*$/) && comment.name !== 'github-actions[bot]') {
+                filteredListOfPRComments.push(comment)
+            }
+        })
+        
+    } else if (getUseDcoFlag() === 'false') {
+        listOfPRComments.map((comment) => {
+            if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
+                filteredListOfPRComments.push(comment)
+            }
+        })
+    }
 
-    listOfPRComments.map((comment) => {
-        if (comment.body!.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) && comment.name !== 'github-actions[bot]') {
-            filteredListOfPRComments.push(comment)
-        }
-    })
 
     for (var i = 0; i < filteredListOfPRComments.length; i++) {
         delete filteredListOfPRComments[i].body

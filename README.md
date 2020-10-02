@@ -1,6 +1,6 @@
 
-![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg) [![Discord](https://img.shields.io/discord/463752820026376202.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/WpJpRKm)
-# Handling CLAs with GitHub Action (Alpha)
+![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
+# Handling CLAs and DCOs via GitHub Action (Alpha)
 
 Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant gitHub action enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository**
 
@@ -8,7 +8,7 @@ Streamline your workflow and let this GitHub Action(a lite version of [CLA Assis
 1. decentralized data storage
 1. fully integrated within github environment 
 1. no User Interface is required
-1. contributors can sign the CLA by just posting a Pull Request comment
+1. contributors can sign the CLA or DCO by just posting a Pull Request comment
 1. signatures will be stored in a file inside the repository or in a remote repository
 1. signatures can also be stored inside a private repository
 1. versioning of signatures
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "CLA Assistant"
-        if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
+        if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         # Alpha Release
         uses: cla-assistant/github-action@v2.0.1-alpha
         env: 
@@ -39,10 +39,11 @@ jobs:
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with: 
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-cla-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md'
+          path-to-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md' # e.g. a CLA or a DCO document
           # branch should not be protected
           branch: 'master'
           allowlist: user1,bot*
+          use-dco-flag: false #'Set this to true if you want to use a dco instead of a cla'
           
          #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           #remote-organization-name: enter the remote organization name where the signatures should be stored (Default is storing the signatures in the same repository)   
@@ -90,7 +91,7 @@ If a GitHub username is included in the allowlist, they will not be required to 
 
 | Name                  | Requirement | Description | Example |
 | --------------------- | ----------- | ----------- | ------- |
-| `path-to-cla-document`     | _required_ |  provide full URL `https://<clafile>` to the Contributor License Agreement (CLA) to which the Contributor can read  before signing the CLA. It can be a file inside the repository or it can be a gist. | https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md |
+| `path-to-document`     | _required_ |  provide full URL `https://<clafile>` to the document which shall be signed by the contributor(s)  It can be any file e.g. inside the repository or it can be a gist. | https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md |
 | `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. | signatures/version1/cla.json |
 | `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`.  | master | 
 | `allowlist`   | _optional_ | You can specify users and bots to be [added in allowlist](https://github.com/cla-assistant/github-action#5-allowlist-users-and-bots).  | user1,user2,bot* | 
