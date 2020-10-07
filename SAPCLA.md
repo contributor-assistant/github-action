@@ -63,4 +63,4 @@ to be unenforceable, the remaining portions hereof shall remain in full force an
 
 
 **Assignment.** You agree that SAP may assign this Agreement, and all of its rights, obligations and licenses
-hereunder
+hereunder.
