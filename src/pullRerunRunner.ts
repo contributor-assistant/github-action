@@ -14,13 +14,14 @@ export async function reRunLastWorkFlowIfRequired() {
     core.debug(`reRunLastWorkFlowIfRequired is called`)
     
     const branch = await getBranchOfPullRequest()
-    core.debug(`reRunLastWorkFlowIfRequired is called 2`)
+    core.debug(`reRunLastWorkFlowIfRequired is called 2 ${branch}`)
     const workflowId = await getSelfWorkflowId()
-    core.debug(`reRunLastWorkFlowIfRequired is called 3`)
+    core.debug(`reRunLastWorkFlowIfRequired is called 3 ${workflowId}`)
     const runs = await listWorkflowRunsInBranch(branch, workflowId)
-    core.debug(`reRunLastWorkFlowIfRequired is called 4`)
-
+    core.debug(`reRunLastWorkFlowIfRequired is called 4 ${JSON.stringify(runs, null, 2 )}`)
+    
     if (runs.data.total_count > 0) {
+        core.debug(`runs.data.total_count > 0`)
         const run = runs.data.workflow_runs[0].id
 
         const isLastWorkFlowFailed: boolean = await checkIfLastWorkFlowFailed(run)
