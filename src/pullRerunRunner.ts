@@ -48,7 +48,9 @@ async function getSelfWorkflowId(): Promise<number> {
         owner: context.repo.owner,
         repo: context.repo.repo,
     });
-
+    console.warn(JSON.stringify(workflowList, null , 3))
+    console.warn(`middleeee`)
+    console.warn(context.workflow)
     const workflow = workflowList.data.workflows
         .find(w => w.name == context.workflow)
 
@@ -59,7 +61,6 @@ async function getSelfWorkflowId(): Promise<number> {
 }
 
 async function listWorkflowRunsInBranch(branch: string, workflowId: number): Promise<any> {
-    console.debug(branch)
     const runs = await octokit.actions.listWorkflowRuns({
         owner: context.repo.owner,
         repo: context.repo.repo,
