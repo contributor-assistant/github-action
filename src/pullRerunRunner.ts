@@ -11,21 +11,15 @@ export async function reRunLastWorkFlowIfRequired() {
         core.debug(`rerun not required for event - pull_request`)
         return
     }
-    core.debug(`reRunLastWorkFlowIfRequired is called`)
     
     const branch = await getBranchOfPullRequest()
-    core.debug(`reRunLastWorkFlowIfRequired is called 2 ${branch}`)
     const workflowId = await getSelfWorkflowId()
-    core.debug(`reRunLastWorkFlowIfRequired is called 3 ${workflowId}`)
     const runs = await listWorkflowRunsInBranch(branch, workflowId)
-    core.debug(`reRunLastWorkFlowIfRequired is called 4 ${JSON.stringify(runs, null, 2 )}`)
     
     if (runs.data.total_count > 0) {
-        core.debug(`runs.data.total_count > 0`)
         const run = runs.data.workflow_runs[0].id
 
         const isLastWorkFlowFailed: boolean = await checkIfLastWorkFlowFailed(run)
-        core.debug(`Rerunning build run ${run}: ${isLastWorkFlowFailed}`)
         if (isLastWorkFlowFailed) {
             core.debug(`Rerunning build run ${run}`)
             await reRunWorkflow(run).catch(error => core.error(`Error occurred when re-running the workflow: ${error}`))
@@ -48,9 +42,6 @@ async function getSelfWorkflowId(): Promise<number> {
         owner: context.repo.owner,
         repo: context.repo.repo,
     });
-    console.warn(JSON.stringify(workflowList, null , 3))
-    console.warn(`middleeee`)
-    console.warn(context.workflow)
     const workflow = workflowList.data.workflows
         .find(w => w.name == context.workflow)
 
@@ -73,8 +64,6 @@ async function listWorkflowRunsInBranch(branch: string, workflowId: number): Pro
 
 async function reRunWorkflow(run: number): Promise<any> {
     // Personal Access token with repo scope is required to access this api - https://github.community/t/bug-rerun-workflow-api-not-working/126742
-    core.warning(run.toString())
-    core.warning(`reRunworkflow`)
     await octokitUsingPAT.actions.reRunWorkflow({
         owner: context.repo.owner,
         repo: context.repo.repo,
@@ -88,7 +77,6 @@ async function checkIfLastWorkFlowFailed(run: number): Promise<boolean> {
         repo: context.repo.repo,
         run_id: run
     })
-    core.debug(`checkIfLastWorkFlowFailed build run ${run}:`)
     return response.data.conclusion == 'failure'
 
 
