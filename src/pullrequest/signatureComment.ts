@@ -7,7 +7,6 @@ import * as core from '@actions/core'
 
 export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
 
-    core.warning(`signatureWithPRComment ----> ${getUseDcoFlag()}`)
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
     let prResponse = await octokit.issues.listComments({
