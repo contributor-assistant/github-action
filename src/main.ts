@@ -2,7 +2,7 @@ import { context } from '@actions/github'
 import { setupClaCheck } from './setupClaCheck'
 import { lockPullRequest } from './pullrequest/pullRequestLock'
 
-import * as figlet from 'figlet'
+var figlet = require('figlet')
 
 import * as core from '@actions/core'
 
