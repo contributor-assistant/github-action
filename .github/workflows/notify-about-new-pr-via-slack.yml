@@ -3,7 +3,7 @@
 name: "Notification regarding New Pull Request via Slack"
 on:
   issue_comment: 
-    - created
+    types: [opened] 
   
 #  pull_request_target: 
 #    types: [opened] 
