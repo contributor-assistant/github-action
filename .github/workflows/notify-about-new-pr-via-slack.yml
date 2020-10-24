@@ -1,6 +1,6 @@
 # To get a Slack Webhook URL, follow instruction here: https://api.slack.com/messaging/webhooks
 
-name: "Notification regarding New Pull Request via Slack"
+name: "Notification regarding New Pull Request via Slack App"
 on:
   pull_request_target: 
     types: [opened] 
