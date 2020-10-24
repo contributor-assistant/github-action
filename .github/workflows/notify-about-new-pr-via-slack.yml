@@ -2,8 +2,11 @@
 
 name: "Notification regarding New Pull Request via Slack"
 on:
-  pull_request_target: 
-    types: [opened] 
+  issue_comment: 
+    - created
+  
+#  pull_request_target: 
+#    types: [opened] 
 jobs:
   notifyViaSlack:
     runs-on: ubuntu-latest
