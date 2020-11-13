@@ -8,7 +8,7 @@ import * as core from '@actions/core'
 
 export async function run() {
   try {
-    core.info(`CLA Assistant GitHub Action bot has started the process - test content`)
+    core.info(`CLA Assistant GitHub Action bot has started the process`)
 
     if (context.payload.action === 'closed') {
       return lockPullRequest()
