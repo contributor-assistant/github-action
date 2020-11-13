@@ -12,16 +12,7 @@ import * as core from '@actions/core'
 export async function run() {
   try {
     const text = await figlet('CLA ASSISTANT')
-    console.log(text)
-  //   figlet('Cla Assistant', function(err, data) {
-  //     if (err) {
-  //         console.log('Something went wrong...');
-  //         console.dir(err);
-  //         return;
-  //     }
-  //     console.log(data)
-  // });
-    core.info(`CLA Assistant GitHub Action bot has started the process`)
+    core.info(text)
 
     if (context.payload.action === 'closed') {
       return lockPullRequest()
