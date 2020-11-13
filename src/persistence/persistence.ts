@@ -1,9 +1,12 @@
 
 import { octokit, octokitUsingPAT } from '../octokit'
 import { context } from '@actions/github'
+import { ReactedCommitterMap } from '../interfaces'
 
 import * as input from '../shared/getInputs'
-import { ReactedCommitterMap } from '../interfaces'
+import * as core from '@actions/core'
+
+
 
 let octokitInstance
 if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
@@ -38,15 +41,30 @@ export async function updateFile(sha: string, claFileContent, reactedCommitters:
     claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
     let contentString = JSON.stringify(claFileContent, null, 2)
     let contentBinary = Buffer.from(contentString).toString("base64")
-    await octokitInstance.repos.createOrUpdateFileContents({
-        owner: input.getRemoteOrgName() || context.repo.owner,
-        repo: input.getRemoteRepoName() || context.repo.repo,
-        path: input.getPathToSignatures(),
-        sha,
-        message: input.getSignedCommitMessage() ?
-            input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', context.issue.number.toString()) :
-            `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
-        content: contentBinary,
-        branch: input.getBranch()
-    })
+    let attemptCounter = 0
+    const maxRetryAttempts = 4
+    let attemptsRemaining = (maxRetryAttempts - attemptCounter) - 1
+
+    while (attemptCounter <= maxRetryAttempts) {
+        try {
+            await octokitInstance.repos.createOrUpdateFileContents({
+                owner: input.getRemoteOrgName() || context.repo.owner,
+                repo: input.getRemoteRepoName() || context.repo.repo,
+                path: input.getPathToSignatures(),
+                sha,
+                message: input.getSignedCommitMessage() ?
+                    input.getSignedCommitMessage().replace('$contributorName', context.actor).replace('$pullRequestNo', context.issue.number.toString()) :
+                    `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
+                content: contentBinary,
+                branch: input.getBranch()
+            })
+            break
+        } catch (error) {
+            if (attemptCounter === maxRetryAttempts) {
+                core.setFailed(`Updating signature file is failed after ${attemptCounter} attempts with the following error: ${error} `)
+            }
+            core.warning(`updating the signature file failed, Will try again ... attempts remaining ${attemptsRemaining} `)
+        }
+        attemptCounter++
+    }
 }
