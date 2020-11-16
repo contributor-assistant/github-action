@@ -28,4 +28,4 @@ export const getCustomAllSignedPrComment = (): string => core.getInput('custom-a
 
 export const getUseDcoFlag = (): string => core.getInput('use-dco-flag', { required: false })
 
-
+export const getCustomPrSignComment = (): string => core.getInput('custom-pr-sign-comment', { required: false })
