@@ -72,6 +72,8 @@ If the contributor has already signed the CLA, then the PR status will pass with
 
 After the contributor signed a CLA, the contributor's signature with metadata will be stored in a JSON file inside the repository like below screenshot and you can specify the custom path to this file with `path-to-signatures` input in the workflow. <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`
 
+**NOTE:** You do not need to create this file manually. Our workflow will create the signature file if it does not already exist. Manually creating this file will cause the workflow to fail.
+
 ![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
 
 #### 5. Users and bots in allowlist 
