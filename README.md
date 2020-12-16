@@ -39,7 +39,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-cla-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md' # e.g. a CLA or a DCO document
+          path-to-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md' # e.g. a CLA or a DCO document
           # branch should not be protected
           branch: 'master'
           allowlist: user1,bot*
@@ -93,17 +93,17 @@ If a GitHub username is included in the allowlist, they will not be required to 
 
 | Name                  | Requirement | Description | Example |
 | --------------------- | ----------- | ----------- | ------- |
-| `path-to-cla-document`     | _required_ |  provide full URL `https://<clafile>` to the document which shall be signed by the contributor(s)  It can be any file e.g. inside the repository or it can be a gist. | https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md |
+| `path-to-document`     | _required_ |  provide full URL `https://<clafile>` to the document which shall be signed by the contributor(s)  It can be any file e.g. inside the repository or it can be a gist. | https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md |
 | `path-to-signatures`       | _optional_ |  Path to the JSON file where  all the signatures of the contributors will be stored inside the repository. | signatures/version1/cla.json |
 | `branch`   | _optional_ |  Branch in which all the signatures of the contributors will be stored and Default branch is `master`.  | master |
-| `allowlist`   | _optional_ | You can specify users and bots to be [added in allowlist](https://github.com/cla-assistant/github-action#5-allowlist-users-and-bots).  | user1,user2,bot* |
+| `allowlist`   | _optional_ | You can specify users and bots to be [added in allowlist](https://github.com/cla-assistant/github-action#5-users-and-bots-in-allowlist).  | user1,user2,bot* |
 | `remote-repository-name`   | _optional_ | provide the remote repository name where all the signatures should be stored . | remote repository name |
 | `remote-organization-name`   | _optional_ | provide the remote organization name where all the signatures should be stored. | remote organization name |
 | `create-file-commit-message`   | _optional_ |Commit message when a new CLA file is created. | Creating file for storing CLA Signatures. |
 | `signed-commit-message`   | _optional_ | Commit message when a new contributor signs the CLA in a Pull Request. |  $contributorName has signed the CLA in $pullRequestNo |
 | `custom-notsigned-prcomment`   | _optional_ | Introductory Pull Request comment to ask new contributors to sign. | Thank you for your contribution and please kindly read and sign our $pathToCLADocument |
 | `custom-pr-sign-comment`   | _optional_ | The signature to be committed in order to sign the CLA. | I have read the Developer Terms Document and I hereby accept the Terms |
-| ` custom-allsigned-prcomment`   | _optional_ | pull request comment when everyone has signed | All Contributors have signed the CLA. |
+| `custom-allsigned-prcomment`   | _optional_ | pull request comment when everyone has signed | All Contributors have signed the CLA. |
 
 ## License
 
