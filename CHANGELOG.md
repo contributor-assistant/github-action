@@ -1,4 +1,7 @@
 # Change Log
+## [v2.0.2-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.2-alpha) (2021-01-21)
+**New features:**
+- Trim the signature comment to allow dealing with new lines.  [Issue#57](https://github.com/cla-assistant/github-action/issues/57) [PullRequest#69](https://github.com/cla-assistant/github-action/pull/69) Credits: [Yahav Itzhak](https://github.com/yahavi)
 
 ## [v2.0.1-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.1-alpha) (2020-08-25)
 
