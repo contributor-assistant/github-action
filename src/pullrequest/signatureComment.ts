@@ -1,13 +1,12 @@
 import { octokit } from '../octokit'
 import { context } from '@actions/github'
 import { CommitterMap, CommittersDetails, CommentedCommitterMap } from '../interfaces'
-import { getUseDcoFlag,getCustomPrSignComment } from '../shared/getInputs'
+import { getUseDcoFlag, getCustomPrSignComment } from '../shared/getInputs'
 
 import * as core from '@actions/core'
 
 export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
 
-    core.warning(`signatureWithPRComment ----> ${getUseDcoFlag()}`)
     let repoId = context.payload.repository!.id
     let commentedCommitterMap = {} as CommentedCommitterMap
     let prResponse = await octokit.issues.listComments({
@@ -59,11 +58,11 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
 
 }
 
-function isCommentSignedByUser(comment:string, commentAuthor: string):boolean{
+function isCommentSignedByUser(comment: string, commentAuthor: string): boolean {
     if (commentAuthor === 'github-actions[bot]') {
         return false
     }
-    if(getCustomPrSignComment() !== ""){
+    if (getCustomPrSignComment() !== "") {
         return getCustomPrSignComment().toLowerCase() === comment
     }
     // using a `string` true or false purposely as github action input cannot have a boolean value
@@ -74,5 +73,5 @@ function isCommentSignedByUser(comment:string, commentAuthor: string):boolean{
             return comment.match(/^.*i \s*have \s*read \s*the \s*cla \s*document \s*and \s*i \s*hereby \s*sign \s*the \s*cla.*$/) !== null
         default:
             return false
-        }
+    }
 }
