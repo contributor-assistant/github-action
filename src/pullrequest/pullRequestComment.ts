@@ -9,7 +9,6 @@ import {
 } from '../interfaces'
 import { getUseDcoFlag } from '../shared/getInputs'
 
-import * as core from '@actions/core'
 
 
 export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
