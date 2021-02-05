@@ -9,11 +9,14 @@ import {
 } from '../interfaces'
 import { getUseDcoFlag } from '../shared/getInputs'
 
+import * as core from '@actions/core'
+
 
 export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
   try {
     const claBotComment = await getComment()
-    if (!claBotComment) {
+    if (!claBotComment && !signed) {
+      core.warning(`------>signed ${signed}`)
       return createComment(signed, committerMap)
     } else if (claBotComment?.id) {
       if (signed) {
