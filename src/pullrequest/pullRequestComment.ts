@@ -10,10 +10,11 @@ import {
 import { getUseDcoFlag } from '../shared/getInputs'
 
 
+
 export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
   try {
     const claBotComment = await getComment()
-    if (!claBotComment) {
+    if (!claBotComment && !signed) {
       return createComment(signed, committerMap)
     } else if (claBotComment?.id) {
       if (signed) {
