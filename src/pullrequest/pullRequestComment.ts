@@ -16,7 +16,6 @@ export default async function prCommentSetup(signed: boolean, committerMap: Comm
   try {
     const claBotComment = await getComment()
     if (!claBotComment && !signed) {
-      core.warning(`------>signed ${signed}`)
       return createComment(signed, committerMap)
     } else if (claBotComment?.id) {
       if (signed) {
