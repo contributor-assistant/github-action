@@ -1,4 +1,8 @@
 # Change Log
+## [v2.0.4-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.4-alpha) (2021-02-05)
+**Improvements:**
+- removed unwanted logging comments
+
 ## [v2.0.3-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.3-alpha) (2021-01-21)
 **New features:**
 - Trim the signature comment to allow dealing with new lines.  [Issue#57](https://github.com/cla-assistant/github-action/issues/57) [PullRequest#69](https://github.com/cla-assistant/github-action/pull/69) Credits: [Yahav Itzhak](https://github.com/yahavi)
@@ -24,7 +28,7 @@
 **Improvements:**
 - complete refactoring of all the files to make the bot more efficient and more readable
 - updated content in README file
-- Changed from using Whitelist to allow list 
+- Changed from using Whitelist to allow list
 
 **Fixed Bugs:**
 - CLA check not updated to success when all the contributors have the signed the CLA [Issue#39](https://github.com/cla-assistant/github-action/issues/39)
