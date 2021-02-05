@@ -1,4 +1,9 @@
 # Change Log
+
+## [v2.1.0-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.4-alpha) (2021-02-05)
+**Improvements:**
+
+- skip posting comment in every PR if the contributor has already signed [Issue#68](https://github.com/cla-assistant/github-action/issues/68)
 ## [v2.0.4-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.4-alpha) (2021-02-05)
 **Improvements:**
 - removed unwanted logging comments
