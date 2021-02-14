@@ -55,7 +55,7 @@ jobs:
 
 
 ```
-
+![add-cla-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/add-cla-file.gif?raw=true)
 #### 2. Pull Request event triggers CLA Workflow
 
 CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed`. This workflow will always run in the base repository and thats why we are making use of the [pull_request_target](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target) event.
