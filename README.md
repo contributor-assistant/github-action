@@ -66,7 +66,7 @@ CLA workflow creates a comment on Pull Request asking contributors who have not 
 If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/>
 
 <img width="685" alt="Screen Shot 2020-08-21 at 15 07 28" src="https://user-images.githubusercontent.com/33329946/90894332-b8179280-e3c0-11ea-9700-44d31a77b857.png">
-![signature-process](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-process.gif?raw=true)
+![signature-process](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/adding-clafile.gif?raw=true)
 
 <br/>
 
