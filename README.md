@@ -66,6 +66,7 @@ CLA workflow creates a comment on Pull Request asking contributors who have not 
 If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/>
 
 <img width="685" alt="Screen Shot 2020-08-21 at 15 07 28" src="https://user-images.githubusercontent.com/33329946/90894332-b8179280-e3c0-11ea-9700-44d31a77b857.png">
+![signature-process](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-process.gif?raw=true)
 
 <br/>
 
@@ -77,9 +78,14 @@ After the contributor signed a CLA, the contributor's signature with metadata wi
 
 ![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
 
+![signature-storage-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-storage-file.gif?raw=true)
 #### 5. Users and bots in allowlist
 
 If a GitHub username is included in the allowlist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to add them in `allowlist`. You can do so by adding their names in a comma separated string to the `allowlist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to allow all bot users something like `bot*`.
+
+#### 6. Adding Personal Access Token as a Secret
+![personalaccesstoken](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/personalaccesstoken.gif?raw=true)
+
 
 ### Environmental Variables :
 
