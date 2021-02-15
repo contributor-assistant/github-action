@@ -55,7 +55,7 @@ jobs:
 
 
 ```
-##### Demo for step 1 
+##### Demo for step 1
 
 ![add-cla-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/adding-clafile.gif?raw=true)
 #### 2. Pull Request event triggers CLA Workflow
@@ -75,11 +75,11 @@ If the contributor has already signed the CLA, then the PR status will pass with
 
 #### 4. Signatures stored in a JSON file
 
-After the contributor signed a CLA, the contributor's signature with metadata will be stored in a JSON file inside the repository and you can specify the custom path to this file with `path-to-signatures` input in the workflow. <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`. 
+After the contributor signed a CLA, the contributor's signature with metadata will be stored in a JSON file inside the repository and you can specify the custom path to this file with `path-to-signatures` input in the workflow. <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`.
 
 The signature can be also stored in a remote repository which can be done by enabling the optional inputs `remote-organization-name`: `<your org name>`
-and `remote-repository-name`: `<your repo name>` in your CLA workflow file. 
- 
+and `remote-repository-name`: `<your repo name>` in your CLA workflow file.
+
 **NOTE:** You do not need to create this file manually. Our workflow will create the signature file if it does not already exist. Manually creating this file will cause the workflow to fail.
 
 ##### Demo for step 4
@@ -89,6 +89,10 @@ and `remote-repository-name`: `<your repo name>` in your CLA workflow file.
 #### 5. Users and bots in allowlist
 
 If a GitHub username is included in the allowlist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to add them in `allowlist`. You can do so by adding their names in a comma separated string to the `allowlist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to allow all bot users something like `bot*`.
+
+##### Demo for step 5
+
+![allowlist](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/allowlist.gif?raw=true)
 
 #### 6. Adding Personal Access Token as a Secret
 
