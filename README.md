@@ -78,7 +78,8 @@ If the contributor has already signed the CLA, then the PR status will pass with
 After the contributor signed a CLA, the contributor's signature with metadata will be stored in a JSON file inside the repository and you can specify the custom path to this file with `path-to-signatures` input in the workflow. <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`. 
 
 The signature can be also stored in a remote repository which can be done by enabling the optional inputs `remote-organization-name`: `<your org name>`
- and `remote-repository-name`: `<your repo name>`. 
+and `remote-repository-name`: `<your repo name>` in your CLA workflow file. 
+ 
 **NOTE:** You do not need to create this file manually. Our workflow will create the signature file if it does not already exist. Manually creating this file will cause the workflow to fail.
 
 ##### Demo for step 4
@@ -90,6 +91,7 @@ The signature can be also stored in a remote repository which can be done by ena
 If a GitHub username is included in the allowlist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to add them in `allowlist`. You can do so by adding their names in a comma separated string to the `allowlist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to allow all bot users something like `bot*`.
 
 #### 6. Adding Personal Access Token as a Secret
+
 ![personal-access-token](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/personal-access-token.gif?raw=true)
 
 
