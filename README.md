@@ -55,7 +55,7 @@ jobs:
 
 
 ```
-##### Demo for step 1. 
+##### Demo for step 1 
 
 ![add-cla-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/adding-clafile.gif?raw=true)
 #### 2. Pull Request event triggers CLA Workflow
@@ -67,7 +67,7 @@ CLA action workflow will be triggered on all Pull Request `opened, synchronize, 
 CLA workflow creates a comment on Pull Request asking contributors who have not signed  CLA to sign and also fails the pull request status check with a `failure`. The contributors are requested to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
 If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/>
 
-<img width="685" alt="Screen Shot 2020-08-21 at 15 07 28" src="https://user-images.githubusercontent.com/33329946/90894332-b8179280-e3c0-11ea-9700-44d31a77b857.png">
+##### Demo for step 2 and 3
 
 ![signature-process](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-process.gif?raw=true)
 
