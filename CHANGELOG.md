@@ -2,6 +2,8 @@
 ## [v2.1.1-beta](https://github.com/cla-assistant/github-action/tree/v2.1.1-beta) (2021-02-20)
 **New features:**
 - new beta release
+
+
 **Improvements:**
 - updated the Readme content
 
