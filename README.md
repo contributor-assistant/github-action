@@ -1,8 +1,8 @@
 
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
-# Handling CLAs and DCOs via GitHub Action (Alpha)
+# Handling CLAs and DCOs via GitHub Action
 
-Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant gitHub action enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository**
+Streamline your workflow and let this GitHub Action(a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant gitHub action enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository** which can be even a private repository.
 
 ### Features
 1. decentralized data storage
@@ -55,7 +55,9 @@ jobs:
 
 
 ```
+##### Demo for step 1
 
+![add-cla-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/adding-clafile.gif?raw=true)
 #### 2. Pull Request event triggers CLA Workflow
 
 CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed`. This workflow will always run in the base repository and thats why we are making use of the [pull_request_target](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target) event.
@@ -65,21 +67,41 @@ CLA action workflow will be triggered on all Pull Request `opened, synchronize, 
 CLA workflow creates a comment on Pull Request asking contributors who have not signed  CLA to sign and also fails the pull request status check with a `failure`. The contributors are requested to sign the CLA within the pull request by copy and pasting **"I have read the CLA Document and I hereby sign the CLA"** as a Pull Request comment like below.
 If the contributor has already signed the CLA, then the PR status will pass with `success`. <br/>
 
-<img width="685" alt="Screen Shot 2020-08-21 at 15 07 28" src="https://user-images.githubusercontent.com/33329946/90894332-b8179280-e3c0-11ea-9700-44d31a77b857.png">
+##### Demo for step 2 and 3
+
+![signature-process](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-process.gif?raw=true)
 
 <br/>
 
 #### 4. Signatures stored in a JSON file
 
-After the contributor signed a CLA, the contributor's signature with metadata will be stored in a JSON file inside the repository like below screenshot and you can specify the custom path to this file with `path-to-signatures` input in the workflow. <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`
+After the contributor signed a CLA, the contributor's signature with metadata will be stored in a JSON file inside the repository and you can specify the custom path to this file with `path-to-signatures` input in the workflow. <br/> The default path is `path-to-signatures: 'signatures/version1/cla.json'`.
+
+The signature can be also stored in a remote repository which can be done by enabling the optional inputs `remote-organization-name`: `<your org name>`
+and `remote-repository-name`: `<your repo name>` in your CLA workflow file.
 
 **NOTE:** You do not need to create this file manually. Our workflow will create the signature file if it does not already exist. Manually creating this file will cause the workflow to fail.
 
-![Screenshot 2020-01-07 at 16 13 43](https://user-images.githubusercontent.com/33329946/71905595-c33aec80-3168-11ea-8a08-c78f13cb0dcb.png)
+##### Demo for step 4
+
+![signature-storage-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-storage-file.gif?raw=true)
 
 #### 5. Users and bots in allowlist
 
 If a GitHub username is included in the allowlist, they will not be required to sign a CLA. You can make use of this feature If you don't want your colleagues working in the same team/organisation to sign a CLA. And also, since there's no way for bot users (such as Dependabot or Greenkeeper) to sign a CLA, you may want to add them in `allowlist`. You can do so by adding their names in a comma separated string to the `allowlist` input in the CLA  workflow file(in this case `dependabot-preview[bot],greenkeeper[bot]`). You can also use wildcard symbol in case you want to allow all bot users something like `bot*`.
+
+##### Demo for step 5
+
+![allowlist](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/allowlist.gif?raw=true)
+
+#### 6. Adding Personal Access Token as a Secret
+
+you have to create a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo scope` and store in the repository's [secrets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets) with the name `PERSONAL_ACCESS_TOKEN`. This token is required for consuming the  [Actions re-run API](https://docs.github.com/en/rest/reference/actions#re-run-a-workflow) to automatically re-run the last failed workflow and also for storing the signatures in a remote repository if required.
+
+##### Demo for step 6
+
+![personal-access-token](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/personal-access-token.gif?raw=true)
+
 
 ### Environmental Variables :
 
