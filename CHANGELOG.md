@@ -1,6 +1,11 @@
 # Change Log
+## [v2.1.1-beta](https://github.com/cla-assistant/github-action/tree/v2.1.1-beta) (2021-02-20)
+**New features:**
+- new beta release
+**Improvements:**
+- updated the Readme content
 
-## [v2.1.0-alpha](https://github.com/cla-assistant/github-action/tree/v2.0.4-alpha) (2021-02-05)
+## [v2.1.0-alpha](https://github.com/cla-assistant/github-action/tree/v2.1.0-alpha) (2021-02-05)
 **Improvements:**
 
 - skip posting comment in every PR if the contributor has already signed [Issue#68](https://github.com/cla-assistant/github-action/issues/68)
