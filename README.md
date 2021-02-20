@@ -57,7 +57,7 @@ jobs:
 ```
 ##### Demo for step 1
 
-![add-cla-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/adding-clafile.gif?raw=true)
+![add-cla-file](https://github.com/cla-assistant/github-action/blob/master/images/adding-clafile.gif?raw=true)
 #### 2. Pull Request event triggers CLA Workflow
 
 CLA action workflow will be triggered on all Pull Request `opened, synchronize, closed`. This workflow will always run in the base repository and thats why we are making use of the [pull_request_target](https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target) event.
@@ -69,7 +69,7 @@ If the contributor has already signed the CLA, then the PR status will pass with
 
 ##### Demo for step 2 and 3
 
-![signature-process](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-process.gif?raw=true)
+![signature-process](https://github.com/cla-assistant/github-action/blob/master/images/signature-process.gif?raw=true)
 
 <br/>
 
@@ -84,7 +84,7 @@ and `remote-repository-name`: `<your repo name>` in your CLA workflow file.
 
 ##### Demo for step 4
 
-![signature-storage-file](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/signature-storage-file.gif?raw=true)
+![signature-storage-file](https://github.com/cla-assistant/github-action/blob/master/images/signature-storage-file.gif?raw=true)
 
 #### 5. Users and bots in allowlist
 
@@ -92,7 +92,7 @@ If a GitHub username is included in the allowlist, they will not be required to 
 
 ##### Demo for step 5
 
-![allowlist](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/allowlist.gif?raw=true)
+![allowlist](https://github.com/cla-assistant/github-action/blob/master/images/allowlist.gif?raw=true)
 
 #### 6. Adding Personal Access Token as a Secret
 
@@ -100,7 +100,7 @@ you have to create a [Personal Access Token](https://docs.github.com/en/github/a
 
 ##### Demo for step 6
 
-![personal-access-token](https://github.com/cla-assistant/github-action/blob/readme-refactor/images/personal-access-token.gif?raw=true)
+![personal-access-token](https://github.com/cla-assistant/github-action/blob/master/images/personal-access-token.gif?raw=true)
 
 
 ### Environmental Variables :
