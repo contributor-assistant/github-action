@@ -131,7 +131,7 @@ you have to create a [Personal Access Token](https://docs.github.com/en/github/a
 
 Contributor License Agreement assistant
 
-Copyright (c) 2020 [SAP SE](http://www.sap.com) or an SAP affiliate company. All rights reserved.
+Copyright (c) 2021 [SAP SE](http://www.sap.com) or an SAP affiliate company. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
