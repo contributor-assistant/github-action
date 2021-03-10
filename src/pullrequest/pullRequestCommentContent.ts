@@ -30,7 +30,7 @@ function dco(signed: boolean, committerMap: CommitterMap): string {
     let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Developer Certificate of Origin](${input.getPathToDocument()}) before we can accept your contribution. You can sign the DCO by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you)
     let text = `**DCO Assistant Lite bot:** ${lineOne}
    - - -
-   ***${input.getCustomPrSignComment() || "I have read the DCO Document and I hereby sign the DCO"} ***
+   ${input.getCustomPrSignComment() || "I have read the DCO Document and I hereby sign the DCO"}
    - - -
    `
 
@@ -72,7 +72,7 @@ function cla(signed: boolean, committerMap: CommitterMap): string {
     let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement](${input.getPathToDocument()}) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you)
     let text = `**CLA Assistant Lite bot:** ${lineOne}
    - - -
-   ***${input.getCustomPrSignComment() || "I have read the CLA Document and I hereby sign the CLA"}***
+   ${input.getCustomPrSignComment() || "I have read the CLA Document and I hereby sign the CLA"}
    - - -
    `
 
