@@ -1,8 +1,11 @@
 # Change Log
+
+## [v2.1.2-beta](https://github.com/cla-assistant/github-action/tree/v2.1.2-beta) (2021-03-20)
+**New features:**
+- Added optional flag for locking pull request [PullRequest#78](https://github.com/cla-assistant/github-action/pull/78) [Issue#77](https://github.com/cla-assistant/github-action/issues/77)
 ## [v2.1.1-beta](https://github.com/cla-assistant/github-action/tree/v2.1.1-beta) (2021-02-20)
 **New features:**
 - new beta release
-
 
 **Improvements:**
 - updated the Readme content
