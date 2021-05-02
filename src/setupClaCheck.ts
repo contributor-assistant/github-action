@@ -38,7 +38,7 @@ export async function setupClaCheck() {
       await updateFile(sha, claFileContent, reactedCommitters)
     }
     if (reactedCommitters?.allSignedFlag || (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0)) {
-      core.info(`All contributors have signed the CLA ✍️ ✅ `)
+      core.info(`All contributors have signed the CLA :writing_hand: ✅ `)
       return reRunLastWorkFlowIfRequired()
     } else {
       core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
