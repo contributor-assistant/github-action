@@ -11,7 +11,15 @@ import { getUseDcoFlag } from '../shared/getInputs'
 
 
 
-export default async function prCommentSetup(signed: boolean, committerMap: CommitterMap, committers: CommittersDetails[]) {
+export default async function prCommentSetup(committerMap: CommitterMap, committers: CommittersDetails[]) {
+  const signed = committerMap?.notSigned && committerMap?.notSigned.length === 0
+  console.log(signed)
+  // let signed = false
+
+  // if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
+  //   signed = true
+  // }
+
   try {
     const claBotComment = await getComment()
     if (!claBotComment && !signed) {
@@ -66,7 +74,6 @@ async function getComment() {
       return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/))
     } else if (getUseDcoFlag() === 'false') {
       return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
-
     }
   } catch (error) {
     throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`)
