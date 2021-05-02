@@ -21,11 +21,12 @@ export async function setupClaCheck() {
   let committers = await getCommitters()
   committers = checkAllowList(committers)
 
-  let response = await getCLAFileContentandSHA(committers, committerMap).catch((error) => {
-    core.setFailed(error)
-    core.debug(`I am called: ${error}`)
-    return
-  }) as ClafileContentAndSha
+  let response = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
+  // let response = await getCLAFileContentandSHA(committers, committerMap).catch((error) => {
+  //   core.setFailed(error)
+  //   core.debug(`I am called: ${error}`)
+  //   return
+  // }) as ClafileContentAndSha
 
   console.table(response)
 
@@ -33,7 +34,7 @@ export async function setupClaCheck() {
   const sha: string = response?.sha
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
-  console.table(committerMap)
+  console.log('committerMap :>> ', committerMap)
 
   if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
     signed = true
