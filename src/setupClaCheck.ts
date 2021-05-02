@@ -21,7 +21,10 @@ export async function setupClaCheck() {
   let committers = await getCommitters()
   committers = checkAllowList(committers)
 
-  let response = await getCLAFileContentandSHA(committers, committerMap).catch(error => core.setFailed(error)) as ClafileContentAndSha
+  let response = await getCLAFileContentandSHA(committers, committerMap).catch((error) => {
+    core.setFailed(error)
+    return
+  }) as ClafileContentAndSha
 
   console.table(response)
 
