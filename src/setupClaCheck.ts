@@ -38,10 +38,10 @@ export async function setupClaCheck() {
       await updateFile(sha, claFileContent, reactedCommitters)
     }
     if (reactedCommitters?.allSignedFlag || (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0)) {
-      core.info(`All contributors have signed the CLA :writing_hand: ✅ `)
+      core.info(`All contributors have signed the CLA 📝 ✅ `)
       return reRunLastWorkFlowIfRequired()
     } else {
-      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
+      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`)
     }
 
     // if (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0) {
