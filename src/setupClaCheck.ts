@@ -23,6 +23,7 @@ export async function setupClaCheck() {
 
   let response = await getCLAFileContentandSHA(committers, committerMap).catch((error) => {
     core.setFailed(error)
+    core.debug(`I am called: ${error}`)
     return
   }) as ClafileContentAndSha
 
