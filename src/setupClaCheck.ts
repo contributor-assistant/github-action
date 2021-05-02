@@ -29,6 +29,7 @@ export async function setupClaCheck() {
   const sha: string = response?.sha
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
+  console.table(committerMap)
 
   if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
     signed = true
@@ -104,10 +105,10 @@ function prepareCommiterMap(committers: CommittersDetails[], claFileContent): Co
   let committerMap = getInitialCommittersMap()
 
   committerMap.notSigned = committers.filter(
-    committer => !claFileContent.signedContributors.some(cla => committer.id === cla.id)
+    committer => !claFileContent?.signedContributors.some(cla => committer.id === cla.id)
   )
   committerMap.signed = committers.filter(committer =>
-    claFileContent.signedContributors.some(cla => committer.id === cla.id)
+    claFileContent?.signedContributors.some(cla => committer.id === cla.id)
   )
   committers.map(committer => {
     if (!committer.id) {
