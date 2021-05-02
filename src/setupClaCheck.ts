@@ -17,16 +17,14 @@ export async function setupClaCheck() {
     core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
     return
   }
-  let signed: boolean = false, response
-  let committers = await getCommitters() as CommittersDetails[]
-  committers = checkAllowList(committers) as CommittersDetails[]
+  let signed: boolean = false
+  let committers = await getCommitters()
+  committers = checkAllowList(committers)
 
-  try {
-    response = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
-  } catch (error) {
-    core.setFailed(error)
-    return
-  }
+  let response = await getCLAFileContentandSHA(committers, committerMap).catch(error => core.setFailed(error)) as ClafileContentAndSha
+
+  console.table(response)
+
   const claFileContent = response?.claFileContent
   const sha: string = response?.sha
 
@@ -63,14 +61,13 @@ export async function setupClaCheck() {
 
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<any> {
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void | ClafileContentAndSha> {
   let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
   } catch (error) {
     if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap)
-      return
+      return createClaFileAndPRComment(committers, committerMap)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
@@ -78,10 +75,10 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
   sha = result?.data?.sha
   claFileContentString = Buffer.from(result.data.content, 'base64').toString()
   claFileContent = JSON.parse(claFileContentString)
-  return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
+  return { claFileContent, sha }
 }
 
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap): Promise<any> {
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void> {
   const signed = false
   committerMap.notSigned = committers
   committerMap.signed = []
@@ -99,7 +96,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
     `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
   ))
   await prCommentSetup(signed, committerMap, committers)
-  throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+  core.setFailed(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
 function prepareCommiterMap(committers: CommittersDetails[], claFileContent): CommitterMap {

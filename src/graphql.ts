@@ -4,7 +4,7 @@ import { CommittersDetails } from './interfaces'
 
 
 
-export default async function getCommitters() {
+export default async function getCommitters(): Promise<CommittersDetails[]> {
     try {
         let committers: CommittersDetails[] = []
         let filteredCommitters: CommittersDetails[] = []
@@ -52,7 +52,7 @@ export default async function getCommitters() {
             cursor: ''
         })
         response.repository.pullRequest.commits.edges.forEach(edge => {
-            let committer = extractUserFromCommit(edge.node.commit)
+            const committer = extractUserFromCommit(edge.node.commit)
             let user = {
                 name: committer.login || committer.name,
                 id: committer.databaseId || '',
@@ -70,7 +70,7 @@ export default async function getCommitters() {
         return filteredCommitters
 
     } catch (e) {
-        throw new Error('graphql call to get the committers details failed:' + e)
+        throw new Error(`graphql call to get the committers details failed: ${e}`)
     }
 
 }
