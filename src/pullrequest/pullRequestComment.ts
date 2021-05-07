@@ -30,11 +30,9 @@ export default async function prCommentSetup(committerMap: CommitterMap, committ
       }
 
       // reacted committers are contributors who have newly signed by posting the Pull Request comment
-      const reactedCommitters: ReactedCommitterMap = (await signatureWithPRComment(committerMap, committers)) as ReactedCommitterMap
-      if (reactedCommitters) {
-        if (reactedCommitters.onlyCommitters) {
+      const reactedCommitters = await signatureWithPRComment(committerMap, committers)
+      if (reactedCommitters?.onlyCommitters) {
           reactedCommitters.allSignedFlag = prepareAllSignedCommitters(committerMap, reactedCommitters.onlyCommitters, committers)
-        }
       }
       committerMap = prepareCommiterMap(committerMap, reactedCommitters)
       await updateComment(reactedCommitters.allSignedFlag, committerMap, claBotComment)
@@ -61,7 +59,7 @@ async function updateComment(signed: boolean, committerMap: CommitterMap, claBot
     repo: context.repo.repo,
     comment_id: claBotComment.id,
     body: commentContent(signed, committerMap)
-  }).catch(error => { throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`) })
+  }).catch(error => { throw new Error(`Error occured when updating the pull request comment: ${error.message}`) })
 }
 
 async function getComment() {
@@ -95,12 +93,13 @@ function prepareCommiterMap(committerMap: CommitterMap, reactedCommitters) {
 function prepareAllSignedCommitters(committerMap: CommitterMap, signedInPrCommitters: CommittersDetails[], committers: CommittersDetails[]): boolean {
   let allSignedCommitters = [] as CommittersDetails[]
   /*
-1) already signed committers in the file 2) signed committers in the PR comment
-    */
-  let ids = new Set(signedInPrCommitters.map(committer => committer.id))
+   * 1) already signed committers in the file 2) signed committers in the PR comment
+  */
+  const ids = new Set(signedInPrCommitters.map(committer => committer.id))
   allSignedCommitters = [...signedInPrCommitters, ...committerMap.signed!.filter(signedCommitter => !ids.has(signedCommitter.id))]
-
-  //checking if all the unsigned committers have reacted to the PR comment (this is needed for changing the content of the PR comment to "All committers have signed the CLA")
+  /*
+  * checking if all the unsigned committers have reacted to the PR comment (this is needed for changing the content of the PR comment to "All committers have signed the CLA")
+  */
   let allSignedFlag: boolean = committers.every(committer => allSignedCommitters.some(reactedCommitter => committer.id === reactedCommitter.id))
   return allSignedFlag
 }

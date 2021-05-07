@@ -1,14 +1,14 @@
 import { octokit } from '../octokit'
 import { context } from '@actions/github'
-import { CommitterMap, CommittersDetails, CommentedCommitterMap } from '../interfaces'
+import { CommitterMap, CommittersDetails, ReactedCommitterMap } from '../interfaces'
 import { getUseDcoFlag, getCustomPrSignComment } from '../shared/getInputs'
 
 import * as core from '@actions/core'
 
-export default async function signatureWithPRComment(committerMap: CommitterMap, committers) {
+export default async function signatureWithPRComment(committerMap: CommitterMap, committers): Promise<ReactedCommitterMap> {
 
     let repoId = context.payload.repository!.id
-    let commentedCommitterMap = {} as CommentedCommitterMap
+    // let commentedCommitterMap = {} as CommentedCommitterMap
     let prResponse = await octokit.issues.listComments({
         owner: context.repo.owner,
         repo: context.repo.repo,
@@ -36,24 +36,23 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
     for (var i = 0; i < filteredListOfPRComments.length; i++) {
         delete filteredListOfPRComments[i].body
     }
-    //checking if the reacted committers are not the signed committers(not in the storage file) and filtering only the unsigned committers
-    commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
-    // if (context.eventName === 'issue_comment') {
-    //     //Do empty commit only when the contributor signs the CLA with the PR comment and then check if the comment is from the newsigned contributor
-    //     if (input.getEmptyCommitFlag() == 'true') {
-    //         if (commentedCommitterMap.newSigned.some(contributor => contributor.id === context?.payload?.comment?.user.id)) {
-    //             await addEmptyCommit()
-    //         }
-    //     }
-    // }
+    /*
+    *checking if the reacted committers are not the signed committers(not in the storage file) and filtering only the unsigned committers
+    */
+    const newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
+    // commentedCommitterMap.newSigned = filteredListOfPRComments.filter(commentedCommitter => committerMap.notSigned!.some(notSignedCommitter => commentedCommitter.id === notSignedCommitter.id))
 
-    // if (blockChainFlag == 'true' && commentedCommitterMap.newSigned) {
-    //     await blockChainWebhook(commentedCommitterMap.newSigned)
-    // }
+    /*
+    * checking if the commented users are only the contributors who has committed in the same PR (This is needed for the PR Comment and changing the status to success when all the contributors has reacted to the PR)
+    */
+    const onlyCommitters = committers.filter(committer => filteredListOfPRComments.some(commentedCommitter => committer.id == commentedCommitter.id))
+    // commentedCommitterMap.onlyCommitters = committers.filter(committer => filteredListOfPRComments.some(commentedCommitter => committer.id == commentedCommitter.id))
+    let commentedCommitterMap: ReactedCommitterMap = {
+        newSigned,
+        onlyCommitters,
+        allSignedFlag: false
+    }
 
-
-    //checking if the commented users are only the contributors who has committed in the same PR (This is needed for the PR Comment and changing the status to success when all the contributors has reacted to the PR)
-    commentedCommitterMap.onlyCommitters = committers.filter(committer => filteredListOfPRComments.some(commentedCommitter => committer.id == commentedCommitter.id))
     return commentedCommitterMap
 
 }

@@ -27,7 +27,7 @@ export async function setupClaCheck() {
   console.log('committerMap :>> ', committerMap)
 
   try {
-    const reactedCommitters = await prCommentSetup(committerMap, committers) as ReactedCommitterMap
+    const reactedCommitters = await prCommentSetup(committerMap, committers) as ReactedCommitterMap 
 
     // if (signed) {
     //   core.info(`All committers have signed the CLA`)
