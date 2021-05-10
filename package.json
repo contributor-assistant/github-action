@@ -28,7 +28,7 @@
     "@octokit/rest": "^16.0.0",
     "actions-toolkit": "^2.1.0",
     "husky": "^4.3.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
