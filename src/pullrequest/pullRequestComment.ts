@@ -4,7 +4,6 @@ import signatureWithPRComment from './signatureComment'
 import { commentContent } from './pullRequestCommentContent'
 import {
   CommitterMap,
-  ReactedCommitterMap,
   CommittersDetails
 } from '../interfaces'
 import { getUseDcoFlag } from '../shared/getInputs'
@@ -13,12 +12,6 @@ import { getUseDcoFlag } from '../shared/getInputs'
 
 export default async function prCommentSetup(committerMap: CommitterMap, committers: CommittersDetails[]) {
   const signed = committerMap?.notSigned && committerMap?.notSigned.length === 0
-  console.log(signed)
-  // let signed = false
-
-  // if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
-  //   signed = true
-  // }
 
   try {
     const claBotComment = await getComment()

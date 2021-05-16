@@ -17,22 +17,17 @@ export async function setupClaCheck() {
     core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
     return
   }
-  // let signed: boolean = false
+
   let committers = await getCommitters()
   committers = checkAllowList(committers)
 
   const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
-  console.log('committerMap :>> ', committerMap)
 
   try {
     const reactedCommitters = await prCommentSetup(committerMap, committers) as ReactedCommitterMap 
 
-    // if (signed) {
-    //   core.info(`All committers have signed the CLA`)
-    //   return reRunLastWorkFlowIfRequired()
-    // }
     if (reactedCommitters?.newSigned.length) {
       /* pushing the recently signed  contributors to the CLA Json File */
       await updateFile(sha, claFileContent, reactedCommitters)
@@ -43,11 +38,6 @@ export async function setupClaCheck() {
     } else {
       core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`)
     }
-
-    // if (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0) {
-    //   core.info(`All contributors have signed the CLA2`)
-    //   return reRunLastWorkFlowIfRequired()
-    // } 
 
   } catch (err) {
     core.setFailed(`Could not update the JSON file: ${err.message}`)
