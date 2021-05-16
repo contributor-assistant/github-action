@@ -3,19 +3,16 @@ export interface CommitterMap {
     notSigned: CommittersDetails[],
     unknown: CommittersDetails[]
 }
-
 export interface ReactedCommitterMap {
     newSigned: CommittersDetails[],
     onlyCommitters?: CommittersDetails[],
     allSignedFlag: boolean
 }
-
 export interface CommentedCommitterMap {
     newSigned: CommittersDetails[],
     onlyCommitters?: CommittersDetails[],
     allSignedFlag: boolean
 }
-
 export interface CommittersDetails {
     name: string,
     id: number,
@@ -26,12 +23,10 @@ export interface CommittersDetails {
     body?: string,
     repoId?: string
 }
-
 export interface LabelName {
     current_name: string,
     name: string
 }
-
 export interface CommittersCommentDetails {
     name: string,
     id: number,
@@ -40,7 +35,6 @@ export interface CommittersCommentDetails {
     created_at: string,
     updated_at: string
 }
-
 export interface ClafileContentAndSha {
     claFileContent: any,
     sha: string

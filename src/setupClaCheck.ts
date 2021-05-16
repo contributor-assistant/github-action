@@ -17,60 +17,41 @@ export async function setupClaCheck() {
     core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
     return
   }
-  let signed: boolean = false, response
-  let committers = await getCommitters() as CommittersDetails[]
-  committers = checkAllowList(committers) as CommittersDetails[]
 
-  try {
-    response = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
-  } catch (error) {
-    core.setFailed(error)
-    return
-  }
-  const claFileContent = response?.claFileContent
-  const sha: string = response?.sha
+  let committers = await getCommitters()
+  committers = checkAllowList(committers)
+
+  const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
-  if (committerMap?.notSigned && committerMap?.notSigned.length === 0) {
-    signed = true
-  }
   try {
-    const reactedCommitters: ReactedCommitterMap = (await prCommentSetup(signed, committerMap, committers)) as ReactedCommitterMap
+    const reactedCommitters = await prCommentSetup(committerMap, committers) as ReactedCommitterMap 
 
-    if (signed) {
-      core.info(`All committers have signed the CLA`)
-      return reRunLastWorkFlowIfRequired()
-    }
     if (reactedCommitters?.newSigned.length) {
       /* pushing the recently signed  contributors to the CLA Json File */
       await updateFile(sha, claFileContent, reactedCommitters)
     }
-    if (reactedCommitters?.allSignedFlag) {
-      core.info(`All contributors have signed the CLA`)
-      return reRunLastWorkFlowIfRequired()
-    }
-
-    if (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0) {
-      core.info(`All contributors have signed the CLA`)
+    if (reactedCommitters?.allSignedFlag || (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0)) {
+      core.info(`All contributors have signed the CLA 📝 ✅ `)
       return reRunLastWorkFlowIfRequired()
     } else {
-      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA`)
+      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`)
     }
+
   } catch (err) {
     core.setFailed(`Could not update the JSON file: ${err.message}`)
   }
 
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<any> {
+async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void | ClafileContentAndSha> {
   let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
   } catch (error) {
     if (error.status === 404) {
-      await createClaFileAndPRComment(committers, committerMap)
-      return
+      return createClaFileAndPRComment(committers, committerMap)
     } else {
       core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
     }
@@ -78,11 +59,10 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
   sha = result?.data?.sha
   claFileContentString = Buffer.from(result.data.content, 'base64').toString()
   claFileContent = JSON.parse(claFileContentString)
-  return { claFileContent: claFileContent, sha: sha } as ClafileContentAndSha
+  return { claFileContent, sha }
 }
 
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap): Promise<any> {
-  const signed = false
+async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void> {
   committerMap.notSigned = committers
   committerMap.signed = []
   committers.map(committer => {
@@ -98,7 +78,7 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
   await createFile(initialContentBinary).catch(error => core.setFailed(
     `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
   ))
-  await prCommentSetup(signed, committerMap, committers)
+  await prCommentSetup(committerMap, committers)
   throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
 }
 
@@ -107,10 +87,10 @@ function prepareCommiterMap(committers: CommittersDetails[], claFileContent): Co
   let committerMap = getInitialCommittersMap()
 
   committerMap.notSigned = committers.filter(
-    committer => !claFileContent.signedContributors.some(cla => committer.id === cla.id)
+    committer => !claFileContent?.signedContributors.some(cla => committer.id === cla.id)
   )
   committerMap.signed = committers.filter(committer =>
-    claFileContent.signedContributors.some(cla => committer.id === cla.id)
+    claFileContent?.signedContributors.some(cla => committer.id === cla.id)
   )
   committers.map(committer => {
     if (!committer.id) {
