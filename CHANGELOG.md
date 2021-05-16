@@ -2,7 +2,7 @@
 
 ## [v2.1.3-beta](https://github.com/cla-assistant/github-action/tree/v2.1.3-beta) (2021-05-16)
 **Improvements:**
-- refactoring [PullRequest#79](https://github.com/cla-assistant/github-action/pull/79)
+- refactoring [PullRequest#87](https://github.com/cla-assistant/github-action/pull/87)
 ## [v2.1.2-beta](https://github.com/cla-assistant/github-action/tree/v2.1.2-beta) (2021-03-20)
 **New features:**
 - Added optional flag for locking pull request [PullRequest#78](https://github.com/cla-assistant/github-action/pull/78) [Issue#77](https://github.com/cla-assistant/github-action/issues/77)
