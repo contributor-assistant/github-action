@@ -40,4 +40,6 @@ inputs:
     default: true
 runs:
   using: "node12"
-  main: "lib/main.js"
+  main: "lib/main.js" 
+    - isim: CLA yardımcısı lite
+  kullanır: katkıda bulunan-asistan/github-action@v2.1.3-beta
