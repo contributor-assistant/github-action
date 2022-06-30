@@ -11,11 +11,6 @@ import { isPersonalAccessTokenPresent } from './octokit';
 export async function run() {
   try {
     core.info(`CLA Assistant GitHub Action bot has started the process`)
-    if (!isPersonalAccessTokenPresent()) {
-      core.warning(`Test warning----`)
-      core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
-      return
-    }
 
     /*
     * using a `string` true or false purposely as github action input cannot have a boolean value
@@ -26,7 +21,13 @@ export async function run() {
       await setupClaCheck()
     }
   } catch (error) {
-    core.setFailed(error.message)
+    core.warning(`I am inside catch`)
+    if (!isPersonalAccessTokenPresent()) {
+      core.warning(`Test warning----`)
+      core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
+      return
+    }
+   // core.setFailed(error.message)
   }
 }
 
