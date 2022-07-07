@@ -5,7 +5,7 @@ import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAnd
 import { context } from '@actions/github'
 import { createFile, getFileContent, updateFile } from './persistence/persistence'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
-import { isPersonalAccessTokenPresent } from './octokit'
+import { isAppPrivateKeyPresent, isPersonalAccessTokenPresent } from './octokit'
 
 import * as _ from 'lodash'
 import * as core from '@actions/core'
@@ -13,8 +13,8 @@ import * as core from '@actions/core'
 export async function setupClaCheck() {
 
   let committerMap = getInitialCommittersMap()
-  if (!isPersonalAccessTokenPresent()) {
-    core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
+  if (!isPersonalAccessTokenPresent() && !isAppPrivateKeyPresent()) {
+    core.setFailed('Please enter a personal access token or app private key as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
     return
   }
 

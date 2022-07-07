@@ -1,18 +1,26 @@
 
-import { octokit, octokitUsingPAT } from '../octokit'
+import { isPersonalAccessTokenPresent, isAppPrivateKeyPresent, octokit, octokitUsingPAT, getOctokitByAppSecret } from '../octokit'
 import { context } from '@actions/github'
 
 import * as input from '../shared/getInputs'
 import { ReactedCommitterMap } from '../interfaces'
 
 let octokitInstance
-if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    octokitInstance = octokitUsingPAT
-} else {
-    octokitInstance = octokit
+
+async function initOctokitInstance() {
+    if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
+        if (isPersonalAccessTokenPresent()) {
+            octokitInstance = octokitUsingPAT
+        } else if (isAppPrivateKeyPresent()) {
+            octokitInstance = await getOctokitByAppSecret()
+        }
+    } else {
+        octokitInstance = octokit
+    }
 }
 
 export async function getFileContent(): Promise<any> {
+    if (octokitInstance === undefined) await initOctokitInstance()
     const result = await octokitInstance.repos.getContent({
         owner: input.getRemoteOrgName() || context.repo.owner,
         repo: input.getRemoteRepoName() || context.repo.repo,
@@ -23,6 +31,7 @@ export async function getFileContent(): Promise<any> {
 }
 
 export async function createFile(contentBinary): Promise<any> {
+    if (octokitInstance === undefined) await initOctokitInstance()
     return octokitInstance.repos.createOrUpdateFileContents({
         owner: input.getRemoteOrgName() || context.repo.owner,
         repo: input.getRemoteRepoName() || context.repo.repo,
@@ -38,6 +47,7 @@ export async function updateFile(sha: string, claFileContent, reactedCommitters:
     claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
     let contentString = JSON.stringify(claFileContent, null, 2)
     let contentBinary = Buffer.from(contentString).toString("base64")
+    if (octokitInstance === undefined) await initOctokitInstance()
     await octokitInstance.repos.createOrUpdateFileContents({
         owner: input.getRemoteOrgName() || context.repo.owner,
         repo: input.getRemoteRepoName() || context.repo.repo,
