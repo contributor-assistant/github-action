@@ -14,7 +14,7 @@ export async function setupClaCheck() {
 
   let committerMap = getInitialCommittersMap()
   if (!isPersonalAccessTokenPresent()) {
-    core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
+    core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/contributor-assistant/github-action documentation')
     return
   }
 
