@@ -9,6 +9,7 @@ export const octokitUsingPAT = isPersonalAccessTokenPresent() ? getOctokit(perso
 
 export function isPersonalAccessTokenPresent(): boolean {
 
-    return (typeof personalAccessToken !== "undefined" || personalAccessToken !== "")
+   // return (typeof personalAccessToken !== "undefined" || personalAccessToken !== "")
+    return  personalAccessToken !== ""
 }
 
