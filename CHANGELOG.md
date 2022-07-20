@@ -1,5 +1,14 @@
 # Change Log
 
+
+## [v2.1.3-beta](https://github.com/contributor-assistant/github-action/tree/v2.2.0) (2022-07-20)
+**Improvements:**
+- better error handling when PR is from fork [PullRequest#107](https://github.com/contributor-assistant/github-action/pull/107) [Issue#77](https://github.com/cla-assistant/github-action/issues/77) [Issue#103]([https://github.com/cla-assistant/github-action/pull/87](https://github.com/contributor-assistant/github-action/issues/103))
+## [v2.1.2-beta](https://github.com/cla-assistant/github-action/tree/v2.1.2-beta) (2021-03-20)
+**New features:**
+- Added optional flag for locking pull request [PullRequest#78](https://github.com/cla-assistant/github-action/pull/78) [Issue#77](https://github.com/cla-assistant/github-action/issues/77)
+
+
 ## [v2.1.3-beta](https://github.com/cla-assistant/github-action/tree/v2.1.3-beta) (2021-05-16)
 **Improvements:**
 - refactoring [PullRequest#87](https://github.com/cla-assistant/github-action/pull/87)
