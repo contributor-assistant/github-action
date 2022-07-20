@@ -11,8 +11,6 @@ import * as input from './shared/getInputs'
 export async function run() {
   try {
     core.info(`CLA Assistant GitHub Action bot has started the process`)
-
-    console.log(JSON.stringify(context, null, 4))
     
     /*
     * using a `string` true or false purposely as github action input cannot have a boolean value
