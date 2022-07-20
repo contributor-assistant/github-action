@@ -16,7 +16,6 @@ export async function run() {
     if (process.env.PERSONAL_ACCESS_TOKEN == undefined || process.env.PERSONAL_ACCESS_TOKEN == "" ) {
       core.warning(`I am called`)
     }
-    //const octokit = getOctokit(process.env.PERSONAL_ACCESS_TOKEN as string)
     if (!isPersonalAccessTokenPresent()) {
       core.warning(`Test warning----`)
       core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/cla-assistant/github-action documentation')
