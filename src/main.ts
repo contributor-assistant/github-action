@@ -1,6 +1,7 @@
 import { context } from '@actions/github'
 import { setupClaCheck } from './setupClaCheck'
 import { lockPullRequest } from './pullrequest/pullRequestLock'
+import { octokit } from './octokit'
 
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
@@ -10,6 +11,8 @@ import * as input from './shared/getInputs'
 export async function run() {
   try {
     core.info(`CLA Assistant GitHub Action bot has started the process`)
+
+    console.log(JSON.stringify(context, null, 4))
     
     /*
     * using a `string` true or false purposely as github action input cannot have a boolean value
