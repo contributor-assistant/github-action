@@ -11,9 +11,9 @@ import { isPersonalAccessTokenPresent } from './octokit';
 
 export async function run() {
   try {
-    core.info(`CLA Assistant GitHub Action bot has started the process---`)
+    core.info(`CLA Assistant GitHub Action bot has started the process`)
 
-    if (process.env.PERSONAL_ACCESS_TOKEN == undefined ) {
+    if (process.env.PERSONAL_ACCESS_TOKEN == undefined || process.env.PERSONAL_ACCESS_TOKEN == "" ) {
       core.warning(`I am called`)
     }
     //const octokit = getOctokit(process.env.PERSONAL_ACCESS_TOKEN as string)
