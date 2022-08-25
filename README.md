@@ -100,7 +100,8 @@ If a GitHub username is included in the allowlist, they will not be required to 
 
 #### 6. Adding Personal Access Token as a Secret
 
-you have to create a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo scope` and store in the repository's [secrets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets) with the name `PERSONAL_ACCESS_TOKEN`. This token is required for consuming the  [Actions re-run API](https://docs.github.com/en/rest/reference/actions#re-run-a-workflow) to automatically re-run the last failed workflow and also for storing the signatures in a remote repository if required.
+You have to create a [Repository Secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) with the name `PERSONAL_ACCESS_TOKEN` and a value of your choice.  
+This token is required for consuming the [Actions re-run API](https://docs.github.com/en/rest/reference/actions#re-run-a-workflow) to automatically re-run the last failed workflow and also for storing the signatures in a remote repository if required.
 
 ##### Demo for step 6
 
