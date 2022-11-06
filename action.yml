@@ -39,5 +39,5 @@ inputs:
     description: "Will lock the pull request after merge so that the signature the contributors cannot revoke their signature comments after merge"
     default: true
 runs:
-  using: "node12"
+  using: "node16"
   main: "lib/main.js"
