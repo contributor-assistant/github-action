@@ -1,15 +1,14 @@
+import { octokit } from "../octokit"
+import { context } from "@actions/github"
 
-import { octokit, octokitUsingPAT } from '../octokit'
-import { context } from '@actions/github'
-
-import * as input from '../shared/getInputs'
-import { ReactedCommitterMap } from '../interfaces'
+import * as input from "../shared/getInputs"
+import { ReactedCommitterMap } from "../interfaces"
 
 let octokitInstance
 if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    octokitInstance = octokitUsingPAT
+  // octokitInstance = octokit
 } else {
-    octokitInstance = octokit
+  octokitInstance = octokit
 }
 
 export async function getFileContent(): Promise<any> {

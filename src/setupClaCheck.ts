@@ -1,48 +1,64 @@
-import { checkAllowList } from './checkAllowList'
-import getCommitters from './graphql'
-import prCommentSetup from './pullrequest/pullRequestComment'
-import { CommitterMap, CommittersDetails, ReactedCommitterMap, ClafileContentAndSha } from './interfaces'
-import { context } from '@actions/github'
-import { createFile, getFileContent, updateFile } from './persistence/persistence'
-import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
-import { isPersonalAccessTokenPresent } from './octokit'
-
-import * as _ from 'lodash'
-import * as core from '@actions/core'
+import { checkAllowList } from "./checkAllowList"
+import getCommitters from "./graphql"
+import prCommentSetup from "./pullrequest/pullRequestComment"
+import {
+  ClafileContentAndSha,
+  CommitterMap,
+  CommittersDetails,
+  ReactedCommitterMap
+} from "./interfaces"
+import { context } from "@actions/github"
+import {
+  createFile,
+  getFileContent,
+  updateFile
+} from "./persistence/persistence"
+import { reRunLastWorkFlowIfRequired } from "./pullRerunRunner"
+//import { isPersonalAccessTokenPresent } from './octokit'
+import * as core from "@actions/core"
 
 export async function setupClaCheck() {
-
   let committerMap = getInitialCommittersMap()
-  if (!isPersonalAccessTokenPresent()) {
+  /*  if (!isPersonalAccessTokenPresent()) {
     core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/contributor-assistant/github-action documentation')
     return
-  }
+  }*/
 
   let committers = await getCommitters()
   committers = checkAllowList(committers)
 
-  const { claFileContent, sha } = await getCLAFileContentandSHA(committers, committerMap) as ClafileContentAndSha
+  const { claFileContent, sha } = (await getCLAFileContentandSHA(
+    committers,
+    committerMap
+  )) as ClafileContentAndSha
 
   committerMap = prepareCommiterMap(committers, claFileContent) as CommitterMap
 
   try {
-    const reactedCommitters = await prCommentSetup(committerMap, committers) as ReactedCommitterMap 
+    const reactedCommitters = (await prCommentSetup(
+      committerMap,
+      committers
+    )) as ReactedCommitterMap
 
     if (reactedCommitters?.newSigned.length) {
       /* pushing the recently signed  contributors to the CLA Json File */
       await updateFile(sha, claFileContent, reactedCommitters)
     }
-    if (reactedCommitters?.allSignedFlag || (committerMap?.notSigned === undefined || committerMap.notSigned.length === 0)) {
+    if (
+      reactedCommitters?.allSignedFlag ||
+      committerMap?.notSigned === undefined ||
+      committerMap.notSigned.length === 0
+    ) {
       core.info(`All contributors have signed the CLA 📝 ✅ `)
       return reRunLastWorkFlowIfRequired()
     } else {
-      core.setFailed(`committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`)
+      core.setFailed(
+        `committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`
+      )
     }
-
   } catch (err) {
     core.setFailed(`Could not update the JSON file: ${err.message}`)
   }
-
 }
 
 async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void | ClafileContentAndSha> {

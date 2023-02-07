@@ -1,7 +1,7 @@
-import { context } from '@actions/github'
-import { octokit, octokitUsingPAT } from './octokit'
+import { context } from '@actions/github';
+import { octokit } from './octokit';
 
-import * as core from '@actions/core'
+import * as core from '@actions/core';
 
 
 // Note: why this  re-run of the last failed CLA workflow status check is explained this issue https://github.com/cla-assistant/github-action/issues/39
@@ -66,7 +66,7 @@ async function listWorkflowRunsInBranch(branch: string, workflowId: number): Pro
 
 async function reRunWorkflow(run: number): Promise<any> {
     // Personal Access token with repo scope is required to access this api - https://github.community/t/bug-rerun-workflow-api-not-working/126742
-    await octokitUsingPAT.actions.reRunWorkflow({
+    await octokit.actions.reRunWorkflow({
         owner: context.repo.owner,
         repo: context.repo.repo,
         run_id: run
