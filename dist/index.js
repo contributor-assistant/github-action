@@ -161,9 +161,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.octokitUsingPAT = exports.octokit = void 0;
 const github_1 = __webpack_require__(469);
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
-//const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN as string
+const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-exports.octokitUsingPAT = (0, github_1.getOctokit)(githubActionsDefaultToken);
+exports.octokitUsingPAT = (0, github_1.getOctokit)(personalAccessToken);
 /*export function isPersonalAccessTokenPresent(): boolean {
   if (personalAccessToken != "") {
     console.log("I am called")
