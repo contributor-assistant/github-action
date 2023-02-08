@@ -195,7 +195,7 @@ exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 }*/
 function getPATOctokit() {
     if (!isPersonalAccessTokenPresent()) {
-        core.setFailed(`Please add a personal access token as an environment variable for writing signatures in a remote repository/org`);
+        core.setFailed(`Please add a personal access token as an environment variable for writing signatures in a remote repository/organization as mentioned in the README.md file`);
     }
     return (0, github_1.getOctokit)(personalAcessToken);
 }

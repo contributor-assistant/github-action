@@ -16,7 +16,7 @@ export const octokit = getOctokit(githubActionsDefaultToken as string)
 export function getPATOctokit() {
   if (!isPersonalAccessTokenPresent()) {
     core.setFailed(
-      `Please add a personal access token as an environment variable for writing signatures in a remote repository/org`
+      `Please add a personal access token as an environment variable for writing signatures in a remote repository/organization as mentioned in the README.md file`
     )
   }
   return getOctokit(personalAcessToken)
