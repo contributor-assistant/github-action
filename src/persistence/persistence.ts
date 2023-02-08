@@ -1,13 +1,13 @@
-import { context, getOctokit } from '@actions/github'
+import { context } from '@actions/github'
 
-import * as input from '../shared/getInputs'
 import { ReactedCommitterMap } from '../interfaces'
 import { GitHub } from '@actions/github/lib/utils'
+import { getPATOctokit } from '../octokit'
+
+import * as input from '../shared/getInputs'
 
 export async function getFileContent(): Promise<any> {
-  const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
-    process.env.GITHUB_TOKEN as string
-  )
+  const octokitInstance: InstanceType<typeof GitHub> = getPATOctokit()
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -18,9 +18,7 @@ export async function getFileContent(): Promise<any> {
 }
 
 export async function createFile(contentBinary): Promise<any> {
-  const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
-    process.env.PERSONAL_ACCESS_TOKEN as string
-  )
+  const octokitInstance: InstanceType<typeof GitHub> = getPATOctokit()
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -38,9 +36,7 @@ export async function updateFile(
   claFileContent,
   reactedCommitters: ReactedCommitterMap
 ): Promise<any> {
-  const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
-    process.env.PERSONAL_ACCESS_TOKEN as string
-  )
+  const octokitInstance: InstanceType<typeof GitHub> = getPATOctokit()
   const pullRequestNo = context.issue.number
   claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
   let contentString = JSON.stringify(claFileContent, null, 2)

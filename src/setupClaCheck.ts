@@ -49,7 +49,7 @@ export async function setupClaCheck() {
       return reRunLastWorkFlowIfRequired()
     } else {
       core.setFailed(
-        `committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`
+        `Committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`
       )
     }
   } catch (err) {
