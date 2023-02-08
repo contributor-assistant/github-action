@@ -158,23 +158,10 @@ exports.default = _default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPersonalAccessTokenNotPresent = exports.octokit = exports.personalAccessToken = void 0;
+exports.octokit = void 0;
 const github_1 = __webpack_require__(469);
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
-exports.personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-function isPersonalAccessTokenNotPresent() {
-    if (!process.env.PERSONAL_ACCESS_TOKEN) {
-        console.log(process.env.PERSONAL_ACCESS_TOKEN);
-        return true;
-    }
-    return false;
-}
-exports.isPersonalAccessTokenNotPresent = isPersonalAccessTokenNotPresent;
-/*export function isPersonalAccessTokenPresent(): boolean {
-  console.log(process.env.PERSONAL_ACCESS_TOKEN)
-  return personalAccessToken !== ''
-}*/
 
 
 /***/ }),
@@ -1842,27 +1829,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateFile = exports.createFile = exports.getFileContent = void 0;
-const octokit_1 = __webpack_require__(28);
 const github_1 = __webpack_require__(469);
 const input = __importStar(__webpack_require__(555));
-const core = __importStar(__webpack_require__(470));
-function getOctokitInstance() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
-            if ((0, octokit_1.isPersonalAccessTokenNotPresent)()) {
-                console.log('IamisPersonalAccessTokenNotPresent');
-                core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
-            }
-            return (0, github_1.getOctokit)(octokit_1.personalAccessToken);
-        }
-        else {
-            return octokit_1.octokit;
-        }
-    });
-}
 function getFileContent() {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance = yield getOctokitInstance();
+        const octokitInstance = (0, github_1.getOctokit)(process.env.PERSONAL_ACCESS_TOKEN);
         const result = yield octokitInstance.repos.getContent({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1875,7 +1846,7 @@ function getFileContent() {
 exports.getFileContent = getFileContent;
 function createFile(contentBinary) {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance = yield getOctokitInstance();
+        const octokitInstance = (0, github_1.getOctokit)(process.env.PERSONAL_ACCESS_TOKEN);
         return octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1890,7 +1861,7 @@ function createFile(contentBinary) {
 exports.createFile = createFile;
 function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance = yield getOctokitInstance();
+        const octokitInstance = (0, github_1.getOctokit)(process.env.PERSONAL_ACCESS_TOKEN);
         const pullRequestNo = github_1.context.issue.number;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);

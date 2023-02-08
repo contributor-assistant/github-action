@@ -1,30 +1,13 @@
-import {
-  isPersonalAccessTokenNotPresent,
-  octokit,
-  personalAccessToken
-} from '../octokit'
 import { context, getOctokit } from '@actions/github'
 
 import * as input from '../shared/getInputs'
 import { ReactedCommitterMap } from '../interfaces'
-import * as core from '@actions/core'
-
-async function getOctokitInstance() {
-  if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    if (isPersonalAccessTokenNotPresent()) {
-      console.log('IamisPersonalAccessTokenNotPresent')
-      core.setFailed(
-        'Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!'
-      )
-    }
-    return getOctokit(personalAccessToken)
-  } else {
-    return octokit
-  }
-}
+import { GitHub } from '@actions/github/lib/utils'
 
 export async function getFileContent(): Promise<any> {
-  let octokitInstance = await getOctokitInstance()
+  const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
+    process.env.PERSONAL_ACCESS_TOKEN as string
+  )
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -35,7 +18,9 @@ export async function getFileContent(): Promise<any> {
 }
 
 export async function createFile(contentBinary): Promise<any> {
-  let octokitInstance = await getOctokitInstance()
+  const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
+    process.env.PERSONAL_ACCESS_TOKEN as string
+  )
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -53,7 +38,9 @@ export async function updateFile(
   claFileContent,
   reactedCommitters: ReactedCommitterMap
 ): Promise<any> {
-  let octokitInstance = await getOctokitInstance()
+  const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
+    process.env.PERSONAL_ACCESS_TOKEN as string
+  )
   const pullRequestNo = context.issue.number
   claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
   let contentString = JSON.stringify(claFileContent, null, 2)
