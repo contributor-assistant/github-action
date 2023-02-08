@@ -158,17 +158,18 @@ exports.default = _default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.octokit = void 0;
+exports.isPersonalAccessTokenPresent = exports.octokitUsingPAT = exports.octokit = void 0;
 const github_1 = __webpack_require__(469);
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
-//const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN as string
+const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-/*export const octokitUsingPAT = isPersonalAccessTokenPresent()
-  ? getOctokit(personalAccessToken as string)
-  : octokit*/
-/*export function isPersonalAccessTokenPresent(): boolean {
-  return personalAccessToken !== ""
-}*/
+exports.octokitUsingPAT = isPersonalAccessTokenPresent()
+    ? (0, github_1.getOctokit)(personalAccessToken)
+    : exports.octokit;
+function isPersonalAccessTokenPresent() {
+    return personalAccessToken !== "";
+}
+exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
 
 
 /***/ }),
