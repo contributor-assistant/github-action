@@ -6,7 +6,7 @@ import { GitHub } from '@actions/github/lib/utils'
 
 export async function getFileContent(): Promise<any> {
   const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
-    process.env.PERSONAL_ACCESS_TOKEN as string
+    process.env.GITHUB_TOKEN as string
   )
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName() || context.repo.owner,
@@ -19,7 +19,7 @@ export async function getFileContent(): Promise<any> {
 
 export async function createFile(contentBinary): Promise<any> {
   const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
-    process.env.PERSONAL_ACCESS_TOKEN as string
+    process.env.GITHUB_TOKEN as string
   )
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName() || context.repo.owner,
@@ -39,7 +39,7 @@ export async function updateFile(
   reactedCommitters: ReactedCommitterMap
 ): Promise<any> {
   const octokitInstance: InstanceType<typeof GitHub> = getOctokit(
-    process.env.PERSONAL_ACCESS_TOKEN as string
+    process.env.GITHUB_TOKEN as string
   )
   const pullRequestNo = context.issue.number
   claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
