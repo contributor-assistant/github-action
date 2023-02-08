@@ -1864,18 +1864,20 @@ const octokit_1 = __webpack_require__(28);
 const github_1 = __webpack_require__(469);
 const input = __importStar(__webpack_require__(555));
 function getOctokitInstance() {
-    let octokitInstance;
-    if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
-        (0, octokit_1.isPersonalAccessTokenPresent)();
-        return (0, github_1.getOctokit)(octokit_1.personalAccessToken);
-    }
-    else {
-        return octokit_1.octokit;
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        let octokitInstance;
+        if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
+            (0, octokit_1.isPersonalAccessTokenPresent)();
+            return (0, github_1.getOctokit)(octokit_1.personalAccessToken);
+        }
+        else {
+            return octokit_1.octokit;
+        }
+    });
 }
 function getFileContent() {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance = getOctokitInstance();
+        let octokitInstance = yield getOctokitInstance();
         const result = yield octokitInstance.repos.getContent({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1888,7 +1890,7 @@ function getFileContent() {
 exports.getFileContent = getFileContent;
 function createFile(contentBinary) {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance = getOctokitInstance();
+        let octokitInstance = yield getOctokitInstance();
         return octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1903,7 +1905,7 @@ function createFile(contentBinary) {
 exports.createFile = createFile;
 function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance = getOctokitInstance();
+        let octokitInstance = yield getOctokitInstance();
         const pullRequestNo = github_1.context.issue.number;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
