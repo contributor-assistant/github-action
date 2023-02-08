@@ -167,6 +167,9 @@ exports.octokitUsingPAT = isPersonalAccessTokenPresent()
     ? (0, github_1.getOctokit)(personalAccessToken)
     : exports.octokit;
 function isPersonalAccessTokenPresent() {
+    if (personalAccessToken != "") {
+        console.log("I am called");
+    }
     return personalAccessToken !== "";
 }
 exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
