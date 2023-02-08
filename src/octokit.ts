@@ -1,5 +1,4 @@
 import { getOctokit } from '@actions/github'
-import * as core from '@actions/core'
 
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN
 const personalAcessToken = process.env.PERSONAL_ACCESS_TOKEN as string
@@ -12,9 +11,11 @@ export async function getOctokitClient() {
   }
   return octokit
 }
-export async function getPATOctokit() {
+export function getPATOctokit() {
   if (!isPersonalAccessTokenPresent()) {
-    core.setFailed('I am failed')
+    throw new Error(
+      `Please add a personal access token as an environment variable for writing signatures in a remote repository/org`
+    )
   }
   return getOctokit(personalAcessToken)
 }
