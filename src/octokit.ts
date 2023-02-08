@@ -11,7 +11,9 @@ export const octokitUsingPAT = isPersonalAccessTokenPresent()
 export function isPersonalAccessTokenPresent(): boolean {
   let isPersonalAccessTokenPresent = true
 
-  if (personalAccessToken != '') {
+  console.log(typeof personalAccessToken)
+
+  if (!personalAccessToken) {
     isPersonalAccessTokenPresent = false
     return isPersonalAccessTokenPresent
   }

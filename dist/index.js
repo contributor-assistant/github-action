@@ -168,7 +168,8 @@ exports.octokitUsingPAT = isPersonalAccessTokenPresent()
     : exports.octokit;
 function isPersonalAccessTokenPresent() {
     let isPersonalAccessTokenPresent = true;
-    if (personalAccessToken != '') {
+    console.log(typeof personalAccessToken);
+    if (!personalAccessToken) {
         isPersonalAccessTokenPresent = false;
         return isPersonalAccessTokenPresent;
     }
