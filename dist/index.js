@@ -206,11 +206,11 @@ function getOctokitClient() {
 }
 exports.getOctokitClient = getOctokitClient;
 function getPATOctokit() {
-    console.log('I am called2');
     if (!isPersonalAccessTokenPresent()) {
+        console.log('I am called2');
         core.setFailed('I am failed');
     }
-    console.log('I am called2');
+    console.log('I am called3');
     return (0, github_1.getOctokit)(personalAcessToken);
 }
 exports.getPATOctokit = getPATOctokit;
