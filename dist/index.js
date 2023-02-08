@@ -198,8 +198,8 @@ exports.personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 function isPersonalAccessTokenPresent() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (process.env.PERSONAL_ACCESS_TOKEN == undefined) {
-            console.log('Iam called');
+        if (!process.env.PERSONAL_ACCESS_TOKEN) {
+            console.log(process.env.PERSONAL_ACCESS_TOKEN);
             core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
         }
     });
