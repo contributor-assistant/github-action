@@ -1,19 +1,25 @@
-import { octokit } from '../octokit'
-import { context } from '@actions/github'
+import {
+  isPersonalAccessTokenPresent,
+  octokit,
+  personalAccessToken
+} from '../octokit'
+import { context, getOctokit } from '@actions/github'
 
 import * as input from '../shared/getInputs'
 import { ReactedCommitterMap } from '../interfaces'
 
-let octokitInstance
-
-if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-  // isPersonalAccessTokenPresent()
-  //octokitInstance = octokitUsingPAT
-} else {
-  octokitInstance = octokit
+function getOctokitInstance() {
+  let octokitInstance
+  if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
+    isPersonalAccessTokenPresent()
+    return getOctokit(personalAccessToken)
+  } else {
+    return octokit
+  }
 }
 
 export async function getFileContent(): Promise<any> {
+  let octokitInstance = getOctokitInstance()
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -24,6 +30,7 @@ export async function getFileContent(): Promise<any> {
 }
 
 export async function createFile(contentBinary): Promise<any> {
+  let octokitInstance = getOctokitInstance()
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -41,6 +48,7 @@ export async function updateFile(
   claFileContent,
   reactedCommitters: ReactedCommitterMap
 ): Promise<any> {
+  let octokitInstance = getOctokitInstance()
   const pullRequestNo = context.issue.number
   claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
   let contentString = JSON.stringify(claFileContent, null, 2)
