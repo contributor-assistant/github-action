@@ -1,22 +1,16 @@
 import { getOctokit } from '@actions/github'
+import * as core from '@actions/core'
 
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN
-const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN as string
+export const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN as string
 
 export const octokit = getOctokit(githubActionsDefaultToken as string)
-export const octokitUsingPAT = isPersonalAccessTokenPresent()
-  ? getOctokit(personalAccessToken as string)
-  : octokit
+export const octokitUsingPAT = getOctokit(personalAccessToken as string)
 
-export function isPersonalAccessTokenPresent(): boolean {
-  let isPersonalAccessTokenPresent = true
-
-  console.log(typeof personalAccessToken)
-
-  if (!personalAccessToken) {
-    isPersonalAccessTokenPresent = false
-    return isPersonalAccessTokenPresent
+export function isPersonalAccessTokenPresent() {
+  if (!process.env.PERSONAL_ACCESS_TOKEN) {
+    core.setFailed(
+      'Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!'
+    )
   }
-
-  return isPersonalAccessTokenPresent
 }

@@ -157,23 +157,41 @@ exports.default = _default;
 
 "use strict";
 
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPersonalAccessTokenPresent = exports.octokitUsingPAT = exports.octokit = void 0;
-const github_1 = __webpack_require__(469);
-const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
-const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
-exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-exports.octokitUsingPAT = isPersonalAccessTokenPresent()
-    ? (0, github_1.getOctokit)(personalAccessToken)
-    : exports.octokit;
-function isPersonalAccessTokenPresent() {
-    let isPersonalAccessTokenPresent = true;
-    console.log(typeof personalAccessToken);
-    if (!personalAccessToken) {
-        isPersonalAccessTokenPresent = false;
-        return isPersonalAccessTokenPresent;
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
-    return isPersonalAccessTokenPresent;
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isPersonalAccessTokenPresent = exports.octokitUsingPAT = exports.octokit = exports.personalAccessToken = void 0;
+const github_1 = __webpack_require__(469);
+const core = __importStar(__webpack_require__(470));
+const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
+exports.personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
+exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
+exports.octokitUsingPAT = (0, github_1.getOctokit)(exports.personalAccessToken);
+function isPersonalAccessTokenPresent() {
+    if (!process.env.PERSONAL_ACCESS_TOKEN) {
+        core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
+    }
 }
 exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
 
@@ -1848,7 +1866,8 @@ const github_1 = __webpack_require__(469);
 const input = __importStar(__webpack_require__(555));
 let octokitInstance;
 if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
-    // octokitInstance = octokit
+    (0, octokit_1.isPersonalAccessTokenPresent)();
+    octokitInstance = octokit_1.octokitUsingPAT;
 }
 else {
     octokitInstance = octokit_1.octokit;
@@ -1871,7 +1890,8 @@ function createFile(contentBinary) {
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
             path: input.getPathToSignatures(),
-            message: input.getCreateFileCommitMessage() || 'Creating file for storing CLA Signatures',
+            message: input.getCreateFileCommitMessage() ||
+                'Creating file for storing CLA Signatures',
             content: contentBinary,
             branch: input.getBranch()
         });
@@ -1883,15 +1903,18 @@ function updateFile(sha, claFileContent, reactedCommitters) {
         const pullRequestNo = github_1.context.issue.number;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
-        let contentBinary = Buffer.from(contentString).toString("base64");
+        let contentBinary = Buffer.from(contentString).toString('base64');
         yield octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
             path: input.getPathToSignatures(),
             sha,
-            message: input.getSignedCommitMessage() ?
-                input.getSignedCommitMessage().replace('$contributorName', github_1.context.actor).replace('$pullRequestNo', github_1.context.issue.number.toString()) :
-                `@${github_1.context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
+            message: input.getSignedCommitMessage()
+                ? input
+                    .getSignedCommitMessage()
+                    .replace('$contributorName', github_1.context.actor)
+                    .replace('$pullRequestNo', github_1.context.issue.number.toString())
+                : `@${github_1.context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
             content: contentBinary,
             branch: input.getBranch()
         });
@@ -2179,10 +2202,6 @@ const core = __importStar(__webpack_require__(470));
 function setupClaCheck() {
     return __awaiter(this, void 0, void 0, function* () {
         let committerMap = getInitialCommittersMap();
-        /*  if (!isPersonalAccessTokenPresent()) {
-          core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/contributor-assistant/github-action documentation')
-          return
-        }*/
         let committers = yield (0, graphql_1.default)();
         committers = (0, checkAllowList_1.checkAllowList)(committers);
         const { claFileContent, sha } = (yield getCLAFileContentandSHA(committers, committerMap));
@@ -4463,11 +4482,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.lockPullRequestAfterMerge = exports.getCustomPrSignComment = exports.getUseDcoFlag = exports.getCustomAllSignedPrComment = exports.getCustomNotSignedPrComment = exports.getCreateFileCommitMessage = exports.getSignedCommitMessage = exports.getEmptyCommitFlag = exports.getAllowListItem = exports.getBranch = exports.getPathToDocument = exports.getPathToSignatures = exports.getRemoteOrgName = exports.getRemoteRepoName = void 0;
 const core = __importStar(__webpack_require__(470));
-//export const getRemoteRepoName = (): string => { return core.getInput('remote-repository-name', { required: false }) || context.repo.repo }
-const getRemoteRepoName = () => { return core.getInput('remote-repository-name', { required: false }); };
+const getRemoteRepoName = () => {
+    return core.getInput('remote-repository-name', { required: false });
+};
 exports.getRemoteRepoName = getRemoteRepoName;
-//export const getRemoteOrgName = (): string => { return core.getInput('remote-organization-name', { required: false }) || context.repo.owner }
-const getRemoteOrgName = () => { return core.getInput('remote-organization-name', { required: false }); };
+const getRemoteOrgName = () => {
+    return core.getInput('remote-organization-name', { required: false });
+};
 exports.getRemoteOrgName = getRemoteOrgName;
 const getPathToSignatures = () => core.getInput('path-to-signatures', { required: false });
 exports.getPathToSignatures = getPathToSignatures;

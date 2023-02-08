@@ -1,28 +1,24 @@
-import { checkAllowList } from "./checkAllowList"
-import getCommitters from "./graphql"
-import prCommentSetup from "./pullrequest/pullRequestComment"
+import { checkAllowList } from './checkAllowList'
+import getCommitters from './graphql'
+import prCommentSetup from './pullrequest/pullRequestComment'
 import {
   ClafileContentAndSha,
   CommitterMap,
   CommittersDetails,
   ReactedCommitterMap
-} from "./interfaces"
-import { context } from "@actions/github"
+} from './interfaces'
+import { context } from '@actions/github'
 import {
   createFile,
   getFileContent,
   updateFile
-} from "./persistence/persistence"
-import { reRunLastWorkFlowIfRequired } from "./pullRerunRunner"
+} from './persistence/persistence'
+import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 //import { isPersonalAccessTokenPresent } from './octokit'
-import * as core from "@actions/core"
+import * as core from '@actions/core'
 
 export async function setupClaCheck() {
   let committerMap = getInitialCommittersMap()
-  /*  if (!isPersonalAccessTokenPresent()) {
-    core.setFailed('Please enter a personal access token as a environment variable in the CLA workflow file as described in the https://github.com/contributor-assistant/github-action documentation')
-    return
-  }*/
 
   let committers = await getCommitters()
   committers = checkAllowList(committers)
@@ -61,7 +57,10 @@ export async function setupClaCheck() {
   }
 }
 
-async function getCLAFileContentandSHA(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void | ClafileContentAndSha> {
+async function getCLAFileContentandSHA(
+  committers: CommittersDetails[],
+  committerMap: CommitterMap
+): Promise<void | ClafileContentAndSha> {
   let result, claFileContentString, claFileContent, sha
   try {
     result = await getFileContent()
@@ -69,7 +68,11 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
     if (error.status === 404) {
       return createClaFileAndPRComment(committers, committerMap)
     } else {
-      core.setFailed(`Could not retrieve repository contents: ${error.message}. Status: ${error.status || 'unknown'}`)
+      core.setFailed(
+        `Could not retrieve repository contents: ${error.message}. Status: ${
+          error.status || 'unknown'
+        }`
+      )
     }
   }
   sha = result?.data?.sha
@@ -78,7 +81,10 @@ async function getCLAFileContentandSHA(committers: CommittersDetails[], committe
   return { claFileContent, sha }
 }
 
-async function createClaFileAndPRComment(committers: CommittersDetails[], committerMap: CommitterMap): Promise<void> {
+async function createClaFileAndPRComment(
+  committers: CommittersDetails[],
+  committerMap: CommitterMap
+): Promise<void> {
   committerMap.notSigned = committers
   committerMap.signed = []
   committers.map(committer => {
@@ -89,21 +95,31 @@ async function createClaFileAndPRComment(committers: CommittersDetails[], commit
 
   const initialContent = { signedContributors: [] }
   const initialContentString = JSON.stringify(initialContent, null, 3)
-  const initialContentBinary = Buffer.from(initialContentString).toString('base64')
+  const initialContentBinary =
+    Buffer.from(initialContentString).toString('base64')
 
-  await createFile(initialContentBinary).catch(error => core.setFailed(
-    `Error occurred when creating the signed contributors file: ${error.message || error}. Make sure the branch where signatures are stored is NOT protected.`
-  ))
+  await createFile(initialContentBinary).catch(error =>
+    core.setFailed(
+      `Error occurred when creating the signed contributors file: ${
+        error.message || error
+      }. Make sure the branch where signatures are stored is NOT protected.`
+    )
+  )
   await prCommentSetup(committerMap, committers)
-  throw new Error(`Committers of pull request ${context.issue.number} have to sign the CLA`)
+  throw new Error(
+    `Committers of pull request ${context.issue.number} have to sign the CLA`
+  )
 }
 
-function prepareCommiterMap(committers: CommittersDetails[], claFileContent): CommitterMap {
-
+function prepareCommiterMap(
+  committers: CommittersDetails[],
+  claFileContent
+): CommitterMap {
   let committerMap = getInitialCommittersMap()
 
   committerMap.notSigned = committers.filter(
-    committer => !claFileContent?.signedContributors.some(cla => committer.id === cla.id)
+    committer =>
+      !claFileContent?.signedContributors.some(cla => committer.id === cla.id)
   )
   committerMap.signed = committers.filter(committer =>
     claFileContent?.signedContributors.some(cla => committer.id === cla.id)
