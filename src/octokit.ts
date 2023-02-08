@@ -8,7 +8,7 @@ export const octokitUsingPAT = isPersonalAccessTokenPresent()
   ? getOctokit(personalAccessToken as string)
   : octokit
 
-export function isPersonalAccessTokenPresent(): boolean {
+/*export function isPersonalAccessTokenPresent(): boolean {
   let isPersonalAccessTokenPresent = true
   if (personalAccessToken != "") {
     console.log("I am called")
@@ -17,4 +17,8 @@ export function isPersonalAccessTokenPresent(): boolean {
   }
   console.log("I am called2")
   return isPersonalAccessTokenPresent
+}*/
+
+export function isPersonalAccessTokenPresent(): boolean {
+  return personalAccessToken !== ""
 }

@@ -166,15 +166,18 @@ exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 exports.octokitUsingPAT = isPersonalAccessTokenPresent()
     ? (0, github_1.getOctokit)(personalAccessToken)
     : exports.octokit;
+/*export function isPersonalAccessTokenPresent(): boolean {
+  let isPersonalAccessTokenPresent = true
+  if (personalAccessToken != "") {
+    console.log("I am called")
+    isPersonalAccessTokenPresent = false
+    return isPersonalAccessTokenPresent
+  }
+  console.log("I am called2")
+  return isPersonalAccessTokenPresent
+}*/
 function isPersonalAccessTokenPresent() {
-    let isPersonalAccessTokenPresent = true;
-    if (personalAccessToken != "") {
-        console.log("I am called");
-        isPersonalAccessTokenPresent = false;
-        return isPersonalAccessTokenPresent;
-    }
-    console.log("I am called2");
-    return isPersonalAccessTokenPresent;
+    return personalAccessToken !== "";
 }
 exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
 
