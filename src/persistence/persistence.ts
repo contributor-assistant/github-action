@@ -1,8 +1,4 @@
-import {
-  isPersonalAccessTokenPresent,
-  octokit,
-  octokitUsingPAT
-} from '../octokit'
+import { octokit, octokitUsingPAT } from '../octokit'
 import { context } from '@actions/github'
 
 import * as input from '../shared/getInputs'
@@ -11,7 +7,7 @@ import { ReactedCommitterMap } from '../interfaces'
 let octokitInstance
 
 if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-  isPersonalAccessTokenPresent()
+  // isPersonalAccessTokenPresent()
   octokitInstance = octokitUsingPAT
 } else {
   octokitInstance = octokit

@@ -1866,7 +1866,7 @@ const github_1 = __webpack_require__(469);
 const input = __importStar(__webpack_require__(555));
 let octokitInstance;
 if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
-    (0, octokit_1.isPersonalAccessTokenPresent)();
+    // isPersonalAccessTokenPresent()
     octokitInstance = octokit_1.octokitUsingPAT;
 }
 else {
