@@ -9,7 +9,6 @@ import * as input from '../shared/getInputs'
 import { ReactedCommitterMap } from '../interfaces'
 
 async function getOctokitInstance() {
-  let octokitInstance
   if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
     isPersonalAccessTokenPresent()
     return getOctokit(personalAccessToken)

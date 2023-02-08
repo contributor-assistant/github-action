@@ -190,7 +190,6 @@ exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 function isPersonalAccessTokenPresent() {
     if (!process.env.PERSONAL_ACCESS_TOKEN) {
         core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
-        return;
     }
 }
 exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
@@ -1866,7 +1865,6 @@ const github_1 = __webpack_require__(469);
 const input = __importStar(__webpack_require__(555));
 function getOctokitInstance() {
     return __awaiter(this, void 0, void 0, function* () {
-        let octokitInstance;
         if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
             (0, octokit_1.isPersonalAccessTokenPresent)();
             return (0, github_1.getOctokit)(octokit_1.personalAccessToken);
