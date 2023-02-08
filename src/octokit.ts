@@ -11,5 +11,6 @@ export function isPersonalAccessTokenPresent() {
     core.setFailed(
       'Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!'
     )
+    return
   }
 }
