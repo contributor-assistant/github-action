@@ -181,13 +181,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPersonalAccessTokenPresent = exports.octokit = exports.personalAccessToken = void 0;
+exports.isPersonalAccessTokenPresent = exports.octokitUsingPAT = exports.octokit = exports.personalAccessToken = void 0;
 const github_1 = __webpack_require__(469);
 const core = __importStar(__webpack_require__(470));
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
 exports.personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-/*export const octokitUsingPAT = getOctokit(personalAccessToken as string)*/
+exports.octokitUsingPAT = (0, github_1.getOctokit)(exports.personalAccessToken);
 function isPersonalAccessTokenPresent() {
     if (!process.env.PERSONAL_ACCESS_TOKEN) {
         core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
