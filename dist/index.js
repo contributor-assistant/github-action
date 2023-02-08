@@ -1875,7 +1875,6 @@ function updateFile(sha, claFileContent, reactedCommitters) {
                 ? input
                     .getSignedCommitMessage()
                     .replace('$contributorName', github_1.context.actor)
-                    .replace('$pullRequestNo', pullRequestNo.toString())
                 : `@${github_1.context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
             content: contentBinary,
             branch: input.getBranch()

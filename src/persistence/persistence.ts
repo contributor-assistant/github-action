@@ -54,7 +54,6 @@ export async function updateFile(
       ? input
           .getSignedCommitMessage()
           .replace('$contributorName', context.actor)
-          .replace('$pullRequestNo', pullRequestNo.toString())
       : `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
     content: contentBinary,
     branch: input.getBranch()
