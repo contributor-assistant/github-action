@@ -12,12 +12,10 @@ export async function getOctokitClient() {
   }
   return octokit
 }
-export function getPATOctokit() {
+export async function getPATOctokit() {
   if (!isPersonalAccessTokenPresent()) {
-    console.log('I am called2')
     core.setFailed('I am failed')
   }
-  console.log('I am called3')
   return getOctokit(personalAcessToken)
 }
 

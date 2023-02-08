@@ -206,12 +206,12 @@ function getOctokitClient() {
 }
 exports.getOctokitClient = getOctokitClient;
 function getPATOctokit() {
-    if (!isPersonalAccessTokenPresent()) {
-        console.log('I am called2');
-        core.setFailed('I am failed');
-    }
-    console.log('I am called3');
-    return (0, github_1.getOctokit)(personalAcessToken);
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!isPersonalAccessTokenPresent()) {
+            core.setFailed('I am failed');
+        }
+        return (0, github_1.getOctokit)(personalAcessToken);
+    });
 }
 exports.getPATOctokit = getPATOctokit;
 function isPersonalAccessTokenPresent() {
@@ -1890,7 +1890,7 @@ const octokit_1 = __webpack_require__(28);
 const input = __importStar(__webpack_require__(555));
 function getFileContent() {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, octokit_1.getPATOctokit)();
+        const octokitInstance = yield (0, octokit_1.getPATOctokit)();
         const result = yield octokitInstance.repos.getContent({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1903,7 +1903,7 @@ function getFileContent() {
 exports.getFileContent = getFileContent;
 function createFile(contentBinary) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, octokit_1.getPATOctokit)();
+        const octokitInstance = yield (0, octokit_1.getPATOctokit)();
         return octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1918,7 +1918,7 @@ function createFile(contentBinary) {
 exports.createFile = createFile;
 function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, octokit_1.getPATOctokit)();
+        const octokitInstance = yield (0, octokit_1.getPATOctokit)();
         const pullRequestNo = github_1.context.issue.number;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
