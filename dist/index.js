@@ -180,6 +180,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isPersonalAccessTokenPresent = exports.octokit = exports.personalAccessToken = void 0;
 const github_1 = __webpack_require__(469);
@@ -188,9 +197,11 @@ const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
 exports.personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 function isPersonalAccessTokenPresent() {
-    if (!process.env.PERSONAL_ACCESS_TOKEN) {
-        core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
-    }
+    return __awaiter(this, void 0, void 0, function* () {
+        if (!process.env.PERSONAL_ACCESS_TOKEN) {
+            core.setFailed('Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!');
+        }
+    });
 }
 exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
 
@@ -1866,7 +1877,7 @@ const input = __importStar(__webpack_require__(555));
 function getOctokitInstance() {
     return __awaiter(this, void 0, void 0, function* () {
         if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
-            (0, octokit_1.isPersonalAccessTokenPresent)();
+            yield (0, octokit_1.isPersonalAccessTokenPresent)();
             return (0, github_1.getOctokit)(octokit_1.personalAccessToken);
         }
         else {

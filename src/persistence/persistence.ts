@@ -10,7 +10,7 @@ import { ReactedCommitterMap } from '../interfaces'
 
 async function getOctokitInstance() {
   if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    isPersonalAccessTokenPresent()
+    await isPersonalAccessTokenPresent()
     return getOctokit(personalAccessToken)
   } else {
     return octokit
