@@ -5,7 +5,7 @@
   "main": "lib/main.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc",
+    "build": "tsc && ncc build",
     "buildAndAdd": "npm run build && git add ."
   },
   "husky": {
