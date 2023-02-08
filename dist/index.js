@@ -1846,7 +1846,7 @@ function getFileContent() {
 exports.getFileContent = getFileContent;
 function createFile(contentBinary) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
+        const octokitInstance = (0, github_1.getOctokit)(process.env.PERSONAL_ACCESS_TOKEN);
         return octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1861,7 +1861,7 @@ function createFile(contentBinary) {
 exports.createFile = createFile;
 function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN);
+        const octokitInstance = (0, github_1.getOctokit)(process.env.PERSONAL_ACCESS_TOKEN);
         const pullRequestNo = github_1.context.issue.number;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
