@@ -157,33 +157,45 @@ exports.default = _default;
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPersonalAccessTokenPresent = exports.getPATOctokit = exports.getOctokitClient = exports.octokit = void 0;
+exports.isPersonalAccessTokenPresent = exports.getPATOctokit = exports.octokit = void 0;
 const github_1 = __webpack_require__(469);
+const core = __importStar(__webpack_require__(470));
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
 const personalAcessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-function getOctokitClient() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (isPersonalAccessTokenPresent()) {
-            return getPATOctokit();
-        }
-        return exports.octokit;
-    });
-}
-exports.getOctokitClient = getOctokitClient;
+/*export async function getOctokitClient() {
+  if (isPersonalAccessTokenPresent()) {
+    return getPATOctokit()
+  }
+  return octokit
+}*/
 function getPATOctokit() {
     if (!isPersonalAccessTokenPresent()) {
-        throw new Error(`Please add a personal access token as an environment variable for writing signatures in a remote repository/org`);
+        core.setFailed(`Please add a personal access token as an environment variable for writing signatures in a remote repository/org`);
     }
     return (0, github_1.getOctokit)(personalAcessToken);
 }
@@ -2189,7 +2201,6 @@ const pullRequestComment_1 = __importDefault(__webpack_require__(825));
 const github_1 = __webpack_require__(469);
 const persistence_1 = __webpack_require__(362);
 const pullRerunRunner_1 = __webpack_require__(633);
-//import { isPersonalAccessTokenPresent } from './octokit'
 const core = __importStar(__webpack_require__(470));
 function setupClaCheck() {
     return __awaiter(this, void 0, void 0, function* () {
@@ -22021,7 +22032,7 @@ const core = __importStar(__webpack_require__(470));
 // Note: why this  re-run of the last failed CLA workflow status check is explained this issue https://github.com/cla-assistant/github-action/issues/39
 function reRunLastWorkFlowIfRequired() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (github_1.context.eventName === "pull_request") {
+        if (github_1.context.eventName === 'pull_request') {
             core.debug(`rerun not required for event - pull_request`);
             return;
         }
@@ -22053,12 +22064,11 @@ function getSelfWorkflowId() {
     return __awaiter(this, void 0, void 0, function* () {
         const workflowList = yield octokit_1.octokit.actions.listRepoWorkflows({
             owner: github_1.context.repo.owner,
-            repo: github_1.context.repo.repo,
+            repo: github_1.context.repo.repo
         });
-        const workflow = workflowList.data.workflows
-            .find(w => w.name == github_1.context.workflow);
+        const workflow = workflowList.data.workflows.find(w => w.name == github_1.context.workflow);
         if (!workflow) {
-            throw new Error(`Unable to locate this workflow's ID in this repository, can't retrigger job..`);
+            throw new Error(`Unable to locate this workflow's ID in this repository, can't trigger job..`);
         }
         return workflow.id;
     });

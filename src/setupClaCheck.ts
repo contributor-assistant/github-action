@@ -14,7 +14,6 @@ import {
   updateFile
 } from './persistence/persistence'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
-//import { isPersonalAccessTokenPresent } from './octokit'
 import * as core from '@actions/core'
 
 export async function setupClaCheck() {
