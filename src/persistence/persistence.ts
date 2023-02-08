@@ -1,5 +1,5 @@
 import {
-  isPersonalAccessTokenPresent,
+  isPersonalAccessTokenNotPresent,
   octokit,
   personalAccessToken
 } from '../octokit'
@@ -7,10 +7,16 @@ import { context, getOctokit } from '@actions/github'
 
 import * as input from '../shared/getInputs'
 import { ReactedCommitterMap } from '../interfaces'
+import * as core from '@actions/core'
 
 async function getOctokitInstance() {
   if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
-    isPersonalAccessTokenPresent()
+    if (isPersonalAccessTokenNotPresent()) {
+      console.log('IamisPersonalAccessTokenNotPresent')
+      core.setFailed(
+        'Please enter a personal access token "PERSONAL_ACCESS_TOKEN" as a environment variable with repo scope for storing signatures in a remote repository!'
+      )
+    }
     return getOctokit(personalAccessToken)
   } else {
     return octokit
