@@ -1,4 +1,4 @@
-import { octokit, octokitUsingPAT } from '../octokit'
+import { octokit } from '../octokit'
 import { context } from '@actions/github'
 
 import * as input from '../shared/getInputs'
@@ -8,7 +8,7 @@ let octokitInstance
 
 if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
   // isPersonalAccessTokenPresent()
-  octokitInstance = octokitUsingPAT
+  //octokitInstance = octokitUsingPAT
 } else {
   octokitInstance = octokit
 }
