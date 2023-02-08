@@ -5,7 +5,7 @@ const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN as string
 
 export const octokit = getOctokit(githubActionsDefaultToken as string)
 export const octokitUsingPAT = isPersonalAccessTokenPresent()
-  ? getOctokit(githubActionsDefaultToken as string)
+  ? getOctokit(personalAccessToken as string)
   : octokit
 
 export function isPersonalAccessTokenPresent(): boolean {

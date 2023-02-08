@@ -164,7 +164,7 @@ const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
 const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 exports.octokitUsingPAT = isPersonalAccessTokenPresent()
-    ? (0, github_1.getOctokit)(githubActionsDefaultToken)
+    ? (0, github_1.getOctokit)(personalAccessToken)
     : exports.octokit;
 function isPersonalAccessTokenPresent() {
     let isPersonalAccessTokenPresent = true;
