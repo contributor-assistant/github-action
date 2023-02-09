@@ -181,18 +181,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isPersonalAccessTokenPresent = exports.getPATOctokit = exports.octokit = void 0;
+exports.isPersonalAccessTokenPresent = exports.getPATOctokit = exports.getDefaultOctokitClient = exports.octokit = void 0;
 const github_1 = __webpack_require__(469);
 const core = __importStar(__webpack_require__(470));
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
 const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
-/*export async function getOctokitClient() {
-  if (isPersonalAccessTokenPresent()) {
-    return getPATOctokit()
-  }
-  return octokit
-}*/
+function getDefaultOctokitClient() {
+    return (0, github_1.getOctokit)(githubActionsDefaultToken);
+}
+exports.getDefaultOctokitClient = getDefaultOctokitClient;
 function getPATOctokit() {
     if (!isPersonalAccessTokenPresent()) {
         core.setFailed(`Please add a personal access token as an environment variable for writing signatures in a remote repository/organization as mentioned in the README.md file`);
@@ -1876,7 +1874,7 @@ const octokit_1 = __webpack_require__(28);
 const input = __importStar(__webpack_require__(555));
 function getFileContent() {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, octokit_1.getPATOctokit)();
+        const octokitInstance = isRemoteRepoOrOrgConfigured() ? (0, octokit_1.getPATOctokit)() : (0, octokit_1.getDefaultOctokitClient)();
         const result = yield octokitInstance.repos.getContent({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1889,7 +1887,7 @@ function getFileContent() {
 exports.getFileContent = getFileContent;
 function createFile(contentBinary) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, octokit_1.getPATOctokit)();
+        const octokitInstance = isRemoteRepoOrOrgConfigured() ? (0, octokit_1.getPATOctokit)() : (0, octokit_1.getDefaultOctokitClient)();
         return octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -1904,7 +1902,7 @@ function createFile(contentBinary) {
 exports.createFile = createFile;
 function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
-        const octokitInstance = (0, octokit_1.getPATOctokit)();
+        const octokitInstance = isRemoteRepoOrOrgConfigured() ? (0, octokit_1.getPATOctokit)() : (0, octokit_1.getDefaultOctokitClient)();
         const pullRequestNo = github_1.context.issue.number;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
@@ -1925,6 +1923,14 @@ function updateFile(sha, claFileContent, reactedCommitters) {
     });
 }
 exports.updateFile = updateFile;
+function isRemoteRepoOrOrgConfigured() {
+    let isRemoteRepoOrOrgConfigured = false;
+    if ((input === null || input === void 0 ? void 0 : input.getRemoteRepoName()) || input.getRemoteOrgName()) {
+        isRemoteRepoOrOrgConfigured = true;
+        return isRemoteRepoOrOrgConfigured;
+    }
+    return isRemoteRepoOrOrgConfigured;
+}
 
 
 /***/ }),
