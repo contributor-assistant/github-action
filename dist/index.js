@@ -1925,7 +1925,13 @@ function updateFile(sha, claFileContent, reactedCommitters) {
             content: contentBinary,
             branch: input.getBranch()
         });
-        console.log(input.getSignedCommitMessage());
+        const test = input
+            .getSignedCommitMessage()
+            .replace('$contributorName', github_1.context.actor)
+            .replace('$pullRequestNo', pullRequestNo.toString())
+            .replace('$owner', github_1.context.issue.owner)
+            .replace('$repo', github_1.context.issue.repo);
+        console.log(test);
     });
 }
 exports.updateFile = updateFile;

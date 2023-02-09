@@ -65,7 +65,13 @@ export async function updateFile(
     content: contentBinary,
     branch: input.getBranch()
   })
-  console.log(input.getSignedCommitMessage())
+  const test = input
+    .getSignedCommitMessage()
+    .replace('$contributorName', context.actor)
+    .replace('$pullRequestNo', pullRequestNo.toString())
+    .replace('$owner', context.issue.owner)
+    .replace('$repo', context.issue.repo)
+  console.log(test)
 }
 
 function isRemoteRepoOrOrgConfigured(): boolean {
