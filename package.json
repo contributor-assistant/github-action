@@ -5,7 +5,7 @@
   "main": "lib/main.js",
   "scripts": {
     "test": "jest",
-    "build": "ncc build ./src/main.ts -o ./lib -m && mv ./lib/index.js ./lib/main.js",
+    "build": "tsc && ncc build",
     "buildAndAdd": "npm run build && git add ."
   },
   "husky": {
@@ -23,20 +23,20 @@
     "setup"
   ],
   "dependencies": {
-    "@actions/core": "^1.2.6",
+    "@actions/core": "^1.10.0",
     "@actions/github": "^4.0.0",
-    "@octokit/rest": "^16.0.0",
+    "@octokit/rest": "^16.43.2",
     "actions-toolkit": "^2.1.0",
-    "husky": "^4.3.0",
+    "husky": "^4.3.8",
     "lodash": "^4.17.21",
-    "node-fetch": "^3.1.1"
+    "node-fetch": "^3.3.0"
   },
   "devDependencies": {
-    "@octokit/types": "5.0.1",
-    "@types/node": "^12.0.4",
+    "@octokit/types": "8.1.1",
+    "@types/node": "^18.11.18",
     "@zeit/ncc": "^0.21.1",
-    "ts-jest": "^24.2.0",
-    "typescript": "^3.8.3"
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.9.4"
   },
   "author": "ibakshay",
   "license": "Apache-2.0",
