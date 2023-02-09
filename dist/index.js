@@ -185,7 +185,7 @@ exports.isPersonalAccessTokenPresent = exports.getPATOctokit = exports.octokit =
 const github_1 = __webpack_require__(469);
 const core = __importStar(__webpack_require__(470));
 const githubActionsDefaultToken = process.env.GITHUB_TOKEN;
-const personalAcessToken = process.env.PERSONAL_ACCESS_TOKEN;
+const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN;
 exports.octokit = (0, github_1.getOctokit)(githubActionsDefaultToken);
 /*export async function getOctokitClient() {
   if (isPersonalAccessTokenPresent()) {
@@ -197,11 +197,11 @@ function getPATOctokit() {
     if (!isPersonalAccessTokenPresent()) {
         core.setFailed(`Please add a personal access token as an environment variable for writing signatures in a remote repository/organization as mentioned in the README.md file`);
     }
-    return (0, github_1.getOctokit)(personalAcessToken);
+    return (0, github_1.getOctokit)(personalAccessToken);
 }
 exports.getPATOctokit = getPATOctokit;
 function isPersonalAccessTokenPresent() {
-    return personalAcessToken !== undefined && personalAcessToken !== '';
+    return personalAccessToken !== undefined && personalAccessToken !== '';
 }
 exports.isPersonalAccessTokenPresent = isPersonalAccessTokenPresent;
 
