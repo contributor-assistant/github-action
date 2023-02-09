@@ -1904,6 +1904,7 @@ function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokitInstance = isRemoteRepoOrOrgConfigured() ? (0, octokit_1.getPATOctokit)() : (0, octokit_1.getDefaultOctokitClient)();
         const pullRequestNo = github_1.context.issue.number;
+        console.log(input.getSignedCommitMessage());
         console.log(JSON.stringify(github_1.context.issue, null, 3));
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
@@ -1917,13 +1918,14 @@ function updateFile(sha, claFileContent, reactedCommitters) {
                 ? input
                     .getSignedCommitMessage()
                     .replace('$contributorName', github_1.context.actor)
-                    .replace('$pullRequestNo', github_1.context.issue.number.toString())
+                    .replace('$pullRequestNo', pullRequestNo.toString())
                     .replace('$owner', github_1.context.issue.owner)
                     .replace('$repo', github_1.context.issue.repo)
                 : `@${github_1.context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
             content: contentBinary,
             branch: input.getBranch()
         });
+        console.log(input.getSignedCommitMessage());
     });
 }
 exports.updateFile = updateFile;

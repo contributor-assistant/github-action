@@ -44,6 +44,7 @@ export async function updateFile(
     isRemoteRepoOrOrgConfigured() ? getPATOctokit() : getDefaultOctokitClient()
 
   const pullRequestNo = context.issue.number
+  console.log(input.getSignedCommitMessage())
   console.log(JSON.stringify(context.issue, null, 3))
   claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
   let contentString = JSON.stringify(claFileContent, null, 2)
@@ -57,13 +58,14 @@ export async function updateFile(
       ? input
           .getSignedCommitMessage()
           .replace('$contributorName', context.actor)
-          .replace('$pullRequestNo', context.issue.number.toString())
+          .replace('$pullRequestNo', pullRequestNo.toString())
           .replace('$owner', context.issue.owner)
           .replace('$repo', context.issue.repo)
       : `@${context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
     content: contentBinary,
     branch: input.getBranch()
   })
+  console.log(input.getSignedCommitMessage())
 }
 
 function isRemoteRepoOrOrgConfigured(): boolean {
