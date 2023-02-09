@@ -48,7 +48,7 @@ jobs:
           #remote-organization-name: enter the remote organization name where the signatures should be stored (Default is storing the signatures in the same repository)
           #remote-repository-name: enter the  remote repository name where the signatures should be stored (Default is storing the signatures in the same repository)
           #create-file-commit-message: 'For example: Creating file for storing CLA Signatures'
-          #signed-commit-message: 'For example: $contributorName has signed the CLA'
+          #signed-commit-message: 'For example: $contributorName has signed the CLA in $owner/$repo#$pullRequestNo'
           #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
           #custom-pr-sign-comment: 'The signature to be committed in order to sign the CLA'
           #custom-allsigned-prcomment: 'pull request comment when all contributors has signed, defaults to **CLA Assistant Lite bot** All Contributors have signed the CLA.'
