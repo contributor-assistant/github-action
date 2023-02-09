@@ -1904,8 +1904,8 @@ function updateFile(sha, claFileContent, reactedCommitters) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokitInstance = isRemoteRepoOrOrgConfigured() ? (0, octokit_1.getPATOctokit)() : (0, octokit_1.getDefaultOctokitClient)();
         const pullRequestNo = github_1.context.issue.number;
-        console.log(input.getSignedCommitMessage());
-        console.log(JSON.stringify(github_1.context.issue, null, 3));
+        const owner = github_1.context.issue.owner;
+        const repo = github_1.context.issue.repo;
         claFileContent === null || claFileContent === void 0 ? void 0 : claFileContent.signedContributors.push(...reactedCommitters.newSigned);
         let contentString = JSON.stringify(claFileContent, null, 2);
         let contentBinary = Buffer.from(contentString).toString('base64');
@@ -1918,20 +1918,13 @@ function updateFile(sha, claFileContent, reactedCommitters) {
                 ? input
                     .getSignedCommitMessage()
                     .replace('$contributorName', github_1.context.actor)
-                    .replace('$pullRequestNo', pullRequestNo.toString())
-                    .replace('$owner', github_1.context.issue.owner)
-                    .replace('$repo', github_1.context.issue.repo)
-                : `@${github_1.context.actor} has signed the CLA from Pull Request #${pullRequestNo}`,
+                    // .replace('$pullRequestNo', pullRequestNo.toString())
+                    .replace('$owner', owner)
+                    .replace('$repo', repo)
+                : `@${github_1.context.actor} has signed the CLA in ${owner}/${repo}#${pullRequestNo}`,
             content: contentBinary,
             branch: input.getBranch()
         });
-        const test = input
-            .getSignedCommitMessage()
-            .replace('$contributorName', github_1.context.actor)
-            .replace('$pullRequestNo', pullRequestNo.toString())
-            .replace('$owner', github_1.context.issue.owner)
-            .replace('$repo', github_1.context.issue.repo);
-        console.log(test);
     });
 }
 exports.updateFile = updateFile;
