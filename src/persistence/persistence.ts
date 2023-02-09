@@ -2,12 +2,14 @@ import { context } from '@actions/github'
 
 import { ReactedCommitterMap } from '../interfaces'
 import { GitHub } from '@actions/github/lib/utils'
-import { getPATOctokit } from '../octokit'
+import { getDefaultOctokitClient, getPATOctokit } from '../octokit'
 
 import * as input from '../shared/getInputs'
 
 export async function getFileContent(): Promise<any> {
-  const octokitInstance: InstanceType<typeof GitHub> = getPATOctokit()
+  const octokitInstance: InstanceType<typeof GitHub> =
+    isRemoteRepoOrOrgConfigured() ? getPATOctokit() : getDefaultOctokitClient()
+
   const result = await octokitInstance.repos.getContent({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -18,7 +20,9 @@ export async function getFileContent(): Promise<any> {
 }
 
 export async function createFile(contentBinary): Promise<any> {
-  const octokitInstance: InstanceType<typeof GitHub> = getPATOctokit()
+  const octokitInstance: InstanceType<typeof GitHub> =
+    isRemoteRepoOrOrgConfigured() ? getPATOctokit() : getDefaultOctokitClient()
+
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName() || context.repo.owner,
     repo: input.getRemoteRepoName() || context.repo.repo,
@@ -32,7 +36,9 @@ export async function createFile(contentBinary): Promise<any> {
 }
 
 export async function updateFile(sha: string, claFileContent, reactedCommitters: ReactedCommitterMap): Promise<any> {
-    const octokitInstance: InstanceType<typeof GitHub> = getPATOctokit()
+
+    const octokitInstance: InstanceType<typeof GitHub> =
+    isRemoteRepoOrOrgConfigured() ? getPATOctokit() : getDefaultOctokitClient()
     const pullRequestNo = context.issue.number
     claFileContent?.signedContributors.push(...reactedCommitters.newSigned)
     let contentString = JSON.stringify(claFileContent, null, 2)
@@ -53,4 +59,13 @@ export async function updateFile(sha: string, claFileContent, reactedCommitters:
         content: contentBinary,
         branch: input.getBranch()
     })
+}
+
+function isRemoteRepoOrOrgConfigured(): boolean {
+  let isRemoteRepoOrOrgConfigured = false
+  if (input?.getRemoteRepoName() || input.getRemoteOrgName()) {
+    isRemoteRepoOrOrgConfigured = true
+    return isRemoteRepoOrOrgConfigured
+  }
+  return isRemoteRepoOrOrgConfigured
 }

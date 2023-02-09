@@ -7,12 +7,9 @@ const personalAccessToken = process.env.PERSONAL_ACCESS_TOKEN as string
 
 export const octokit = getOctokit(githubActionsDefaultToken as string)
 
-/*export async function getOctokitClient() {
-  if (isPersonalAccessTokenPresent()) {
-    return getPATOctokit()
-  }
-  return octokit
-}*/
+export function getDefaultOctokitClient() {
+  return getOctokit(githubActionsDefaultToken as string)
+}
 export function getPATOctokit() {
   if (!isPersonalAccessTokenPresent()) {
     core.setFailed(
