@@ -25,6 +25,13 @@ on:
   pull_request_target:
     types: [opened,closed,synchronize]
 
+# explicitly configure permissions, in case your GITHUB_TOKEN workflow permissions are set to read-only in repository settings
+permissions:
+  actions: write
+  contents: write
+  pull-requests: write
+  statuses: write
+
 jobs:
   CLAAssistant:
     runs-on: ubuntu-latest
