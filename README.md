@@ -135,6 +135,159 @@ This PAT should have repo scope and is only required if you have configured to s
 ## Contributors
 
 <!-- readme: collaborators,contributors -start -->
+<table>
+<tr>
+    <td align="center">
+        <a href="https://github.com/michael-spengler">
+            <img src="https://avatars.githubusercontent.com/u/43786652?v=4" width="100;" alt="michael-spengler"/>
+            <br />
+            <sub><b>Michael Spengler</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ibakshay">
+            <img src="https://avatars.githubusercontent.com/u/33329946?v=4" width="100;" alt="ibakshay"/>
+            <br />
+            <sub><b>Akshay Iyyadurai Balasundaram</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/AnandChowdhary">
+            <img src="https://avatars.githubusercontent.com/u/2841780?v=4" width="100;" alt="AnandChowdhary"/>
+            <br />
+            <sub><b>Anand Chowdhary</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Writhe">
+            <img src="https://avatars.githubusercontent.com/u/2022097?v=4" width="100;" alt="Writhe"/>
+            <br />
+            <sub><b>Filip Moroz</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/manifestinteractive">
+            <img src="https://avatars.githubusercontent.com/u/508411?v=4" width="100;" alt="manifestinteractive"/>
+            <br />
+            <sub><b>Peter Schmalfeldt</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/mattrosno">
+            <img src="https://avatars.githubusercontent.com/u/1691245?v=4" width="100;" alt="mattrosno"/>
+            <br />
+            <sub><b>Matt Rosno</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/Or-Geva">
+            <img src="https://avatars.githubusercontent.com/u/9606235?v=4" width="100;" alt="Or-Geva"/>
+            <br />
+            <sub><b>Or Geva</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/ScottBrenner">
+            <img src="https://avatars.githubusercontent.com/u/416477?v=4" width="100;" alt="ScottBrenner"/>
+            <br />
+            <sub><b>Scott Brenner</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/silviogutierrez">
+            <img src="https://avatars.githubusercontent.com/u/92824?v=4" width="100;" alt="silviogutierrez"/>
+            <br />
+            <sub><b>Silvio</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/alohr51">
+            <img src="https://avatars.githubusercontent.com/u/3623618?v=4" width="100;" alt="alohr51"/>
+            <br />
+            <sub><b>Andrew Lohr</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/fishcharlie">
+            <img src="https://avatars.githubusercontent.com/u/860375?v=4" width="100;" alt="fishcharlie"/>
+            <br />
+            <sub><b>Charlie Fish</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/janczizikow">
+            <img src="https://avatars.githubusercontent.com/u/13835666?v=4" width="100;" alt="janczizikow"/>
+            <br />
+            <sub><b>Jan Czizikow</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/nwalters512">
+            <img src="https://avatars.githubusercontent.com/u/1476544?v=4" width="100;" alt="nwalters512"/>
+            <br />
+            <sub><b>Nathan Walters</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/shunkakinoki">
+            <img src="https://avatars.githubusercontent.com/u/39187513?v=4" width="100;" alt="shunkakinoki"/>
+            <br />
+            <sub><b>Shun Kakinoki</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/simonmeggle">
+            <img src="https://avatars.githubusercontent.com/u/1897410?v=4" width="100;" alt="simonmeggle"/>
+            <br />
+            <sub><b>Simon Meggle</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/t8">
+            <img src="https://avatars.githubusercontent.com/u/20846869?v=4" width="100;" alt="t8"/>
+            <br />
+            <sub><b>Tate Berenbaum</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/Krinkle">
+            <img src="https://avatars.githubusercontent.com/u/156867?v=4" width="100;" alt="Krinkle"/>
+            <br />
+            <sub><b>Timo Tijhof</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/AndrewGable">
+            <img src="https://avatars.githubusercontent.com/u/2838819?v=4" width="100;" alt="AndrewGable"/>
+            <br />
+            <sub><b>Andrew Gable</b></sub>
+        </a>
+    </td></tr>
+<tr>
+    <td align="center">
+        <a href="https://github.com/knanao">
+            <img src="https://avatars.githubusercontent.com/u/50069775?v=4" width="100;" alt="knanao"/>
+            <br />
+            <sub><b>Knanao</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/woxiwangshunlibiye">
+            <img src="https://avatars.githubusercontent.com/u/106640041?v=4" width="100;" alt="woxiwangshunlibiye"/>
+            <br />
+            <sub><b>Woyaoshunlibiye </b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/yahavi">
+            <img src="https://avatars.githubusercontent.com/u/11367982?v=4" width="100;" alt="yahavi"/>
+            <br />
+            <sub><b>Yahav Itzhak</b></sub>
+        </a>
+    </td></tr>
+</table>
 <!-- readme: collaborators,contributors -end -->
 
 ## License
