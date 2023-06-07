@@ -27,7 +27,7 @@ jobs:
       uses: green-coding-berlin/eco-ci-energy-estimation@v1
       with:
         task: get-measurement
-        label: 'repo checkout'
+        label: 'repository checkout'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
