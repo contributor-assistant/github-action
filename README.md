@@ -1,5 +1,5 @@
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
-
+[![Energy Used](https://api.green-coding.berlin/v1/ci/measurement/get?repo=contributor-assistant%2Fgithub-action&branch=master&workflow=349797)](https://metrics.green-coding.berlin/ci.html?repo=contributor-assistant%2Fgithub-action&branch=master&workflow=349797)
 # Handling CLAs and DCOs via GitHub Action
 
 Streamline your workflow and let this GitHub Action (a lite version of [CLA Assistant](https://github.com/cla-assistant/cla-assistant)) handle the legal side of contributions to a repository for you. CLA assistant GitHub action enables contributors to sign CLAs from within a pull request. With this GitHub Action we could get rid of the need for a centrally managed database by **storing the contributor's signature data** in a decentralized way - **in the same repository's file system** or **in a remote repository** which can be even a private repository.
