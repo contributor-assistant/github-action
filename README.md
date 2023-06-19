@@ -1,4 +1,5 @@
 ![build](https://github.com/cla-assistant/github-action/workflows/build/badge.svg)
+
 [![Energy Used](https://api.green-coding.berlin/v1/ci/measurement/get?repo=contributor-assistant%2Fgithub-action&branch=master&workflow=349797)](https://metrics.green-coding.berlin/ci.html?repo=contributor-assistant%2Fgithub-action&branch=master&workflow=349797)
 # Handling CLAs and DCOs via GitHub Action
 
