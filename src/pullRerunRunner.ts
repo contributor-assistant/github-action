@@ -38,21 +38,33 @@ async function getBranchOfPullRequest(): Promise<string> {
 }
 
 async function getSelfWorkflowId(): Promise<number> {
-  const workflowList = await octokit.actions.listRepoWorkflows({
-    owner: context.repo.owner,
-    repo: context.repo.repo
-  })
+  const perPage = 30
+  let hasNextPage = true
 
-  const workflow = workflowList.data.workflows.find(
-    w => w.name == context.workflow
-  )
+  for (let page = 1; hasNextPage === true; page++) {
+    const workflowList = await octokit.actions.listRepoWorkflows({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      per_page: perPage,
+      page
+    })
 
-  if (!workflow) {
-    throw new Error(
-      `Unable to locate this workflow's ID in this repository, can't trigger job..`
+    if (workflowList.data.total_count < page * perPage) {
+      hasNextPage = false
+    }
+
+    const workflow = workflowList.data.workflows.find(
+      w => w.name == context.workflow
     )
+
+    if (workflow) {
+      return workflow.id
+    }
   }
-  return workflow.id
+
+  throw new Error(
+    `Unable to locate this workflow's ID in this repository, can't trigger job..`
+  )
 }
 
 async function listWorkflowRunsInBranch(
