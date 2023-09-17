@@ -223,10 +223,10 @@ This PAT should have repo scope and is only required if you have configured to s
         </a>
     </td>
     <td align="center">
-        <a href="https://github.com/janczizikow">
-            <img src="https://avatars.githubusercontent.com/u/13835666?v=4" width="100;" alt="janczizikow"/>
+        <a href="https://github.com/darrellwarde">
+            <img src="https://avatars.githubusercontent.com/u/8117355?v=4" width="100;" alt="darrellwarde"/>
             <br />
-            <sub><b>Jan Czizikow</b></sub>
+            <sub><b>Darrell Warde</b></sub>
         </a>
     </td></tr>
 <tr>
