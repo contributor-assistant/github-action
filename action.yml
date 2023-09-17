@@ -1,4 +1,4 @@
-#name: "CLA assistant lite"
+name: "CLA assistant lite"
 description: "An action to handle the Contributor License Agreement (CLA) and Developer Certificate of Orgin (DCO)"
 author: "SAP"
 branding:
