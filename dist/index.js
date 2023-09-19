@@ -592,10 +592,10 @@ function getComment() {
             //TODO: check the below regex
             // using a `string` true or false purposely as github action input cannot have a boolean value
             if ((0, getInputs_1.getUseDcoFlag)() === 'true') {
-                return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/));
+                return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/m));
             }
             else if ((0, getInputs_1.getUseDcoFlag)() === 'false') {
-                return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/));
+                return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/m));
             }
         }
         catch (error) {
@@ -670,7 +670,7 @@ exports.commentContent = commentContent;
 function dco(signed, committerMap) {
     if (signed) {
         const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the DCO  ✍️ ✅`;
-        const text = `****DCO Assistant Lite bot**** ${line1}`;
+        const text = `${line1}<br/><sub>Posted by the ****DCO Assistant Lite bot****.</sub>`;
         return text;
     }
     let committersCount = 1;
@@ -679,7 +679,7 @@ function dco(signed, committerMap) {
     }
     let you = committersCount > 1 ? `you all` : `you`;
     let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Developer Certificate of Origin](${input.getPathToDocument()}) before we can accept your contribution. You can sign the DCO by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you);
-    let text = `**DCO Assistant Lite bot:** ${lineOne}
+    let text = `${lineOne}
    - - -
    ${input.getCustomPrSignComment() || "I have read the DCO Document and I hereby sign the DCO"}
    - - -
@@ -698,13 +698,13 @@ function dco(signed, committerMap) {
         text += `**${committerNames.join(", ")}** ${seem} not to be a GitHub user.`;
         text += ' You need a GitHub account to be able to sign the DCO. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>';
     }
-    text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request</sub>';
+    text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request. Posted by the ****DCO Assistant Lite bot****.</sub>';
     return text;
 }
 function cla(signed, committerMap) {
     if (signed) {
         const line1 = input.getCustomAllSignedPrComment() || `All contributors have signed the CLA  ✍️ ✅`;
-        const text = `****CLA Assistant Lite bot**** ${line1}`;
+        const text = `${line1}<br/><sub>Posted by the ****CLA Assistant Lite bot****.</sub>`;
         return text;
     }
     let committersCount = 1;
@@ -713,7 +713,7 @@ function cla(signed, committerMap) {
     }
     let you = committersCount > 1 ? `you all` : `you`;
     let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement](${input.getPathToDocument()}) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you);
-    let text = `**CLA Assistant Lite bot:** ${lineOne}
+    let text = `${lineOne}
    - - -
    ${input.getCustomPrSignComment() || "I have read the CLA Document and I hereby sign the CLA"}
    - - -
@@ -732,7 +732,7 @@ function cla(signed, committerMap) {
         text += `**${committerNames.join(", ")}** ${seem} not to be a GitHub user.`;
         text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>';
     }
-    text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request</sub>';
+    text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request. Posted by the **CLA Assistant Lite bot**.</sub>';
     return text;
 }
 

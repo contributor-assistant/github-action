@@ -62,9 +62,9 @@ async function getComment() {
     //TODO: check the below regex
     // using a `string` true or false purposely as github action input cannot have a boolean value
     if (getUseDcoFlag() === 'true') {
-      return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/))
+      return response.data.find(comment => comment.body.match(/.*DCO Assistant Lite bot.*/m))
     } else if (getUseDcoFlag() === 'false') {
-      return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/))
+      return response.data.find(comment => comment.body.match(/.*CLA Assistant Lite bot.*/m))
     }
   } catch (error) {
     throw new Error(`Error occured when getting  all the comments of the pull request: ${error.message}`)
