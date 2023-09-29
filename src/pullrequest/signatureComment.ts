@@ -4,6 +4,7 @@ import { CommitterMap, CommittersDetails, ReactedCommitterMap } from '../interfa
 import { getUseDcoFlag, getCustomPrSignComment } from '../shared/getInputs'
 
 import * as core from '@actions/core'
+import { getPrNumber } from '../shared/getInputs'
 
 export default async function signatureWithPRComment(committerMap: CommitterMap, committers): Promise<ReactedCommitterMap> {
 
@@ -11,7 +12,7 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
     let prResponse = await octokit.issues.listComments({
         owner: context.repo.owner,
         repo: context.repo.repo,
-        issue_number: context.issue.number
+        issue_number: getPrNumber(context.issue.number)
     })
     let listOfPRComments = [] as CommittersDetails[]
     let filteredListOfPRComments = [] as CommittersDetails[]
@@ -24,7 +25,7 @@ export default async function signatureWithPRComment(committerMap: CommitterMap,
             body: prComment.body.trim().toLowerCase(),
             created_at: prComment.created_at,
             repoId: repoId,
-            pullRequestNo: context.issue.number
+            pullRequestNo: getPrNumber(context.issue.number)
         })
     })
     listOfPRComments.map(comment => {

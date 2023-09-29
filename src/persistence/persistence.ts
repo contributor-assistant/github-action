@@ -43,7 +43,7 @@ export async function updateFile(
   const octokitInstance: InstanceType<typeof GitHub> =
     isRemoteRepoOrOrgConfigured() ? getPATOctokit() : getDefaultOctokitClient()
 
-  const pullRequestNo = context.issue.number
+  const pullRequestNo = input.getPrNumber(context.issue.number)
   const owner = context.issue.owner
   const repo = context.issue.repo
 

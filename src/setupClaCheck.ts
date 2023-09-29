@@ -15,6 +15,7 @@ import {
 } from './persistence/persistence'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
 import * as core from '@actions/core'
+import { getPrNumber } from './shared/getInputs'
 
 export async function setupClaCheck() {
   let committerMap = getInitialCommittersMap()
@@ -48,7 +49,7 @@ export async function setupClaCheck() {
       return reRunLastWorkFlowIfRequired()
     } else {
       core.setFailed(
-        `Committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`
+        `Committers of Pull Request number ${getPrNumber(context.issue.number)} have to sign the CLA 📝`
       )
     }
   } catch (err) {
@@ -106,7 +107,7 @@ async function createClaFileAndPRComment(
   )
   await prCommentSetup(committerMap, committers)
   throw new Error(
-    `Committers of pull request ${context.issue.number} have to sign the CLA`
+    `Committers of pull request ${getPrNumber(context.issue.number)} have to sign the CLA`
   )
 }
 

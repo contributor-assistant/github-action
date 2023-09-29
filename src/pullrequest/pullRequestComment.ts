@@ -6,8 +6,7 @@ import {
   CommitterMap,
   CommittersDetails
 } from '../interfaces'
-import { getUseDcoFlag } from '../shared/getInputs'
-
+import { getUseDcoFlag, getPrNumber } from '../shared/getInputs'
 
 
 export default async function prCommentSetup(committerMap: CommitterMap, committers: CommittersDetails[]) {
@@ -41,7 +40,7 @@ async function createComment(signed: boolean, committerMap: CommitterMap): Promi
   await octokit.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    issue_number: context.issue.number,
+    issue_number: getPrNumber(context.issue.number),
     body: commentContent(signed, committerMap)
   }).catch(error => { throw new Error(`Error occured when creating a pull request comment: ${error.message}`) })
 }
@@ -57,7 +56,7 @@ async function updateComment(signed: boolean, committerMap: CommitterMap, claBot
 
 async function getComment() {
   try {
-    const response = await octokit.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: context.issue.number })
+    const response = await octokit.issues.listComments({ owner: context.repo.owner, repo: context.repo.repo, issue_number: getPrNumber(context.issue.number) })
 
     //TODO: check the below regex
     // using a `string` true or false purposely as github action input cannot have a boolean value

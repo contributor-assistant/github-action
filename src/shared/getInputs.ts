@@ -43,3 +43,8 @@ export const getCustomPrSignComment = (): string =>
 
 export const lockPullRequestAfterMerge = (): string =>
   core.getInput('lock-pullrequest-aftermerge', { required: false })
+
+export const getPrNumber = (prNumberFromContext: number): number =>
+  prNumberFromContext ?
+    prNumberFromContext :
+    Number(core.getInput('pr-number', { required: false }))

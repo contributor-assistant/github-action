@@ -1,5 +1,6 @@
 import { context } from '@actions/github'
 import { octokit } from './octokit'
+import { getPrNumber } from './shared/getInputs'
 
 import * as core from '@actions/core'
 
@@ -31,7 +32,7 @@ async function getBranchOfPullRequest(): Promise<string> {
   const pullRequest = await octokit.pulls.get({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    pull_number: context.issue.number
+    pull_number: getPrNumber(context.issue.number)
   })
 
   return pullRequest.data.head.ref
