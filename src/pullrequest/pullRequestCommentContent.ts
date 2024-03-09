@@ -2,6 +2,7 @@ import {
     CommitterMap
 } from '../interfaces'
 import * as input from '../shared/getInputs'
+import { getPrSignComment } from '../shared/pr-sign-comment'
 
 export function commentContent(signed: boolean, committerMap: CommitterMap): string {
     // using a `string` true or false purposely as github action input cannot have a boolean value
@@ -72,7 +73,7 @@ function cla(signed: boolean, committerMap: CommitterMap): string {
     let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement](${input.getPathToDocument()}) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you)
     let text = `**CLA Assistant Lite bot:** ${lineOne}
    - - -
-   ${input.getCustomPrSignComment() || "I have read the CLA Document and I hereby sign the CLA"}
+   ${getPrSignComment()}
    - - -
    `
 

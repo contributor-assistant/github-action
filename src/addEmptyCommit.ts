@@ -3,6 +3,7 @@ import { context } from '@actions/github'
 
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
+import { getPrSignComment } from './shared/pr-sign-comment'
 
 
 export async function addEmptyCommit() {
@@ -11,8 +12,8 @@ export async function addEmptyCommit() {
 
     if (context.payload.comment) {
 
-        //Do empty commit only when the contributor signs the CLA with the PR comment 
-        if (context.payload.comment.body === 'I have read the CLA Document and I hereby sign the CLA') {
+        //Do empty commit only when the contributor signs the CLA with the PR comment
+        if (context.payload.comment.body.toLowerCase().trim() === getPrSignComment().toLowerCase().trim()) {
             try {
                 const message = input.getSignedCommitMessage() ?
                     input.getSignedCommitMessage().replace('$contributorName', contributorName) :
