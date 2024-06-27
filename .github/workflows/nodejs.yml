@@ -22,7 +22,7 @@ jobs:
       with:
         task: start-measurement
     - name: "Checkout repository"
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Checkout Repo Measurement
       uses: green-coding-berlin/eco-ci-energy-estimation@v1
       with:
