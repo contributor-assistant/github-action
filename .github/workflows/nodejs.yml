@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x, 20.x]
     steps:
     - name: Initialize Energy Estimation
       uses: green-coding-berlin/eco-ci-energy-estimation@v1
