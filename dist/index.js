@@ -58,6 +58,29 @@ exports.checkAllowList = checkAllowList;
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -68,15 +91,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const octokit_1 = __nccwpck_require__(3258);
+const octokit = __importStar(__nccwpck_require__(3258));
 const github_1 = __nccwpck_require__(5438);
+const core = __importStar(__nccwpck_require__(2186));
 function getCommitters() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            let client = (octokit.isPersonalAccessTokenPresent()) ? octokit.getPATOctokit() : octokit.octokit;
             let committers = [];
-            let filteredCommitters = [];
-            let response = yield octokit_1.octokit.graphql(`
+            let desiredSignatories = [];
+            let response = yield client.graphql(`
         query($owner:String! $name:String! $number:Int! $cursor:String!){
+            organization(login: $owner) {
+                membersWithRole(first: 100) {
+                    edges {
+                        node {
+                            login
+                        }
+                    }
+                }
+            }
             repository(owner: $owner, name: $name) {
             pullRequest(number: $number) {
                 commits(first: 100, after: $cursor) {
@@ -91,6 +125,11 @@ function getCommitters() {
                                         id
                                         databaseId
                                         login
+                                        organizations(first: 100) {
+                                            nodes {
+                                                login
+                                            }
+                                        }
                                     }
                                 }
                                 committer {
@@ -99,6 +138,11 @@ function getCommitters() {
                                         id
                                         databaseId
                                         login
+                                        organizations(first: 100) {
+                                            nodes {
+                                                login
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -119,11 +163,15 @@ function getCommitters() {
                 cursor: ''
             });
             response.repository.pullRequest.commits.edges.forEach(edge => {
+                core.debug(JSON.stringify(response.organization, undefined, 2));
                 const committer = extractUserFromCommit(edge.node.commit);
                 let user = {
                     name: committer.login || committer.name,
                     id: committer.databaseId || '',
-                    pullRequestNo: github_1.context.issue.number
+                    pullRequestNo: github_1.context.issue.number,
+                    orgLogins: committer.organizations.nodes.map(org => {
+                        return org.login;
+                    })
                 };
                 if (committers.length === 0 || committers.map((c) => {
                     return c.name;
@@ -131,10 +179,29 @@ function getCommitters() {
                     committers.push(user);
                 }
             });
-            filteredCommitters = committers.filter((committer) => {
-                return committer.id !== 41898282;
+            desiredSignatories = committers.filter((committer) => {
+                if (committer.id === 41898282) { // Filter this one out.
+                    return false;
+                }
+                if (core.getInput('exemptRepoOrgMembers')) {
+                    // The `exemptRepoOrgMembers` input determines whether
+                    // we automatically "allowlist" the members of the org
+                    // owning the repository we are working in. If so, we
+                    // can filter those committers here, thus allowing them
+                    // to bypass the check informing them they need to sign
+                    // the CLA.
+                    let members = response.organization.membersWithRole.edges.map(edge => {
+                        return edge.node.login;
+                    });
+                    core.debug("Filtering based on these members:");
+                    core.debug(JSON.stringify(members, undefined, 2));
+                    core.debug("Current committer name to check for filtering:");
+                    return !members.includes(committer.name); // Negate so `includes()` filters out, not in.
+                }
+                return true;
             });
-            return filteredCommitters;
+            core.debug(JSON.stringify(desiredSignatories, undefined, 2));
+            return desiredSignatories;
         }
         catch (e) {
             throw new Error(`graphql call to get the committers details failed: ${e}`);
@@ -657,6 +724,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.commentContent = void 0;
 const input = __importStar(__nccwpck_require__(3611));
+const pr_sign_comment_1 = __nccwpck_require__(6718);
 function commentContent(signed, committerMap) {
     // using a `string` true or false purposely as github action input cannot have a boolean value
     if (input.getUseDcoFlag() == 'true') {
@@ -715,7 +783,7 @@ function cla(signed, committerMap) {
     let lineOne = (input.getCustomNotSignedPrComment() || `<br/>Thank you for your submission, we really appreciate it. Like many open-source projects, we ask that $you sign our [Contributor License Agreement](${input.getPathToDocument()}) before we can accept your contribution. You can sign the CLA by just posting a Pull Request Comment same as the below format.<br/>`).replace('$you', you);
     let text = `${lineOne}
    - - -
-   ${input.getCustomPrSignComment() || "I have read the CLA Document and I hereby sign the CLA"}
+   ${(0, pr_sign_comment_1.getPrSignComment)()}
    - - -
    `;
     if (committersCount > 1 && committerMap && committerMap.signed && committerMap.notSigned) {
@@ -1087,6 +1155,45 @@ const getCustomPrSignComment = () => core.getInput('custom-pr-sign-comment', { r
 exports.getCustomPrSignComment = getCustomPrSignComment;
 const lockPullRequestAfterMerge = () => core.getInput('lock-pullrequest-aftermerge', { required: false });
 exports.lockPullRequestAfterMerge = lockPullRequestAfterMerge;
+
+
+/***/ }),
+
+/***/ 6718:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getPrSignComment = void 0;
+const input = __importStar(__nccwpck_require__(3611));
+function getPrSignComment() {
+    return input.getCustomPrSignComment() || "I have read the CLA Document and I hereby sign the CLA";
+}
+exports.getPrSignComment = getPrSignComment;
 
 
 /***/ }),
