@@ -43,3 +43,6 @@ export const getCustomPrSignComment = (): string =>
 
 export const lockPullRequestAfterMerge = (): string =>
   core.getInput('lock-pullrequest-aftermerge', { required: false })
+
+export const suggestRecheck = (): string =>
+  core.getInput('suggest-recheck', { required: false })

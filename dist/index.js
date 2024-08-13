@@ -698,7 +698,9 @@ function dco(signed, committerMap) {
         text += `**${committerNames.join(", ")}** ${seem} not to be a GitHub user.`;
         text += ' You need a GitHub account to be able to sign the DCO. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>';
     }
-    text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request. Posted by the ****DCO Assistant Lite bot****.</sub>';
+    if (input.suggestRecheck() == 'true') {
+        text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request. Posted by the ****DCO Assistant Lite bot****.</sub>';
+    }
     return text;
 }
 function cla(signed, committerMap) {
@@ -1053,7 +1055,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.lockPullRequestAfterMerge = exports.getCustomPrSignComment = exports.getUseDcoFlag = exports.getCustomAllSignedPrComment = exports.getCustomNotSignedPrComment = exports.getCreateFileCommitMessage = exports.getSignedCommitMessage = exports.getEmptyCommitFlag = exports.getAllowListItem = exports.getBranch = exports.getPathToDocument = exports.getPathToSignatures = exports.getRemoteOrgName = exports.getRemoteRepoName = void 0;
+exports.suggestRecheck = exports.lockPullRequestAfterMerge = exports.getCustomPrSignComment = exports.getUseDcoFlag = exports.getCustomAllSignedPrComment = exports.getCustomNotSignedPrComment = exports.getCreateFileCommitMessage = exports.getSignedCommitMessage = exports.getEmptyCommitFlag = exports.getAllowListItem = exports.getBranch = exports.getPathToDocument = exports.getPathToSignatures = exports.getRemoteOrgName = exports.getRemoteRepoName = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const getRemoteRepoName = () => {
     return core.getInput('remote-repository-name', { required: false });
@@ -1087,7 +1089,8 @@ const getCustomPrSignComment = () => core.getInput('custom-pr-sign-comment', { r
 exports.getCustomPrSignComment = getCustomPrSignComment;
 const lockPullRequestAfterMerge = () => core.getInput('lock-pullrequest-aftermerge', { required: false });
 exports.lockPullRequestAfterMerge = lockPullRequestAfterMerge;
-
+const suggestRecheck = () => core.getInput('suggest-recheck', { required: false });
+exports.suggestRecheck = suggestRecheck;
 
 /***/ }),
 
