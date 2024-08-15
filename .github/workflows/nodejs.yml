@@ -15,14 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x, 20.x]
     steps:
     - name: Initialize Energy Estimation
       uses: green-coding-berlin/eco-ci-energy-estimation@v1
       with:
         task: start-measurement
     - name: "Checkout repository"
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Checkout Repo Measurement
       uses: green-coding-berlin/eco-ci-energy-estimation@v1
       with:
