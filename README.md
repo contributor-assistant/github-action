@@ -238,6 +238,13 @@ This PAT should have repo scope and is only required if you have configured to s
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/Tropicao">
+            <img src="https://avatars.githubusercontent.com/u/4692087?v=4" width="100;" alt="Tropicao"/>
+            <br />
+            <sub><b>Alexis Lothoré</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/alohr51">
             <img src="https://avatars.githubusercontent.com/u/3623618?v=4" width="100;" alt="alohr51"/>
             <br />
@@ -264,15 +271,15 @@ This PAT should have repo scope and is only required if you have configured to s
             <br />
             <sub><b>Jan Holthuis</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/nwalters512">
             <img src="https://avatars.githubusercontent.com/u/1476544?v=4" width="100;" alt="nwalters512"/>
             <br />
             <sub><b>Nathan Walters</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/rokups">
             <img src="https://avatars.githubusercontent.com/u/19151258?v=4" width="100;" alt="rokups"/>
@@ -307,15 +314,15 @@ This PAT should have repo scope and is only required if you have configured to s
             <br />
             <sub><b>Timo Tijhof</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/AndrewGable">
             <img src="https://avatars.githubusercontent.com/u/2838819?v=4" width="100;" alt="AndrewGable"/>
             <br />
             <sub><b>Andrew Gable</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/knanao">
             <img src="https://avatars.githubusercontent.com/u/50069775?v=4" width="100;" alt="knanao"/>
