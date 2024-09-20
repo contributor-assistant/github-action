@@ -1,7 +1,7 @@
 import { context } from '@actions/github'
 
-import { ReactedCommitterMap } from '../interfaces'
 import { GitHub } from '@actions/github/lib/utils'
+import { ReactedCommitterMap } from '../interfaces'
 import { getDefaultOctokitClient, getPATOctokit } from '../octokit'
 
 import * as input from '../shared/getInputs'
@@ -22,6 +22,8 @@ export async function getFileContent(): Promise<any> {
 export async function createFile(contentBinary): Promise<any> {
   const octokitInstance: InstanceType<typeof GitHub> =
     isRemoteRepoOrOrgConfigured() ? getPATOctokit() : getDefaultOctokitClient()
+
+    console.log('createFile contentBinary', contentBinary)
 
   return octokitInstance.repos.createOrUpdateFileContents({
     owner: input.getRemoteOrgName() || context.repo.owner,

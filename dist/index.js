@@ -330,6 +330,7 @@ exports.getFileContent = getFileContent;
 function createFile(contentBinary) {
     return __awaiter(this, void 0, void 0, function* () {
         const octokitInstance = isRemoteRepoOrOrgConfigured() ? (0, octokit_1.getPATOctokit)() : (0, octokit_1.getDefaultOctokitClient)();
+        console.log('createFile contentBinary', contentBinary);
         return octokitInstance.repos.createOrUpdateFileContents({
             owner: input.getRemoteOrgName() || github_1.context.repo.owner,
             repo: input.getRemoteRepoName() || github_1.context.repo.repo,
@@ -532,11 +533,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const octokit_1 = __nccwpck_require__(3258);
 const github_1 = __nccwpck_require__(5438);
-const signatureComment_1 = __importDefault(__nccwpck_require__(1905));
-const pullRequestCommentContent_1 = __nccwpck_require__(3621);
+const octokit_1 = __nccwpck_require__(3258);
 const getInputs_1 = __nccwpck_require__(3611);
+const pullRequestCommentContent_1 = __nccwpck_require__(3621);
+const signatureComment_1 = __importDefault(__nccwpck_require__(1905));
 function prCommentSetup(committerMap, committers) {
     return __awaiter(this, void 0, void 0, function* () {
         const signed = (committerMap === null || committerMap === void 0 ? void 0 : committerMap.notSigned) && (committerMap === null || committerMap === void 0 ? void 0 : committerMap.notSigned.length) === 0;
@@ -555,6 +556,7 @@ function prCommentSetup(committerMap, committers) {
                     reactedCommitters.allSignedFlag = prepareAllSignedCommitters(committerMap, reactedCommitters.onlyCommitters, committers);
                 }
                 committerMap = prepareCommiterMap(committerMap, reactedCommitters);
+                console.log('committerMap', committerMap);
                 yield updateComment(reactedCommitters.allSignedFlag, committerMap, claBotComment);
                 return reactedCommitters;
             }

@@ -1,12 +1,12 @@
-import { octokit } from '../octokit'
 import { context } from '@actions/github'
-import signatureWithPRComment from './signatureComment'
-import { commentContent } from './pullRequestCommentContent'
 import {
   CommitterMap,
   CommittersDetails
 } from '../interfaces'
+import { octokit } from '../octokit'
 import { getUseDcoFlag } from '../shared/getInputs'
+import { commentContent } from './pullRequestCommentContent'
+import signatureWithPRComment from './signatureComment'
 
 
 
@@ -28,6 +28,7 @@ export default async function prCommentSetup(committerMap: CommitterMap, committ
           reactedCommitters.allSignedFlag = prepareAllSignedCommitters(committerMap, reactedCommitters.onlyCommitters, committers)
       }
       committerMap = prepareCommiterMap(committerMap, reactedCommitters)
+      console.log('committerMap', committerMap)
       await updateComment(reactedCommitters.allSignedFlag, committerMap, claBotComment)
       return reactedCommitters
     }
