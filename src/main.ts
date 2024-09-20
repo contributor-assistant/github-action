@@ -1,12 +1,13 @@
-import {context} from '@actions/github'
-import {setupClaCheck} from './setupClaCheck'
-import {lockPullRequest} from './pullrequest/pullRequestLock'
+import { context } from '@actions/github'
+import { lockPullRequest } from './pullrequest/pullRequestLock'
+import { setupClaCheck } from './setupClaCheck'
 
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
 
 export async function run() {
   try {
+    core.info(`test logs`)
     core.info(`CLA Assistant GitHub Action bot has started the process`)
 
     /*
