@@ -979,7 +979,7 @@ function getCLAFileContentandSHA(committers, committerMap) {
                 return createClaFileAndPRComment(committers, committerMap);
             }
             else {
-                core.info(`error status: ${error.status}`);
+                core.info(`error status: ${error.status} with type ${typeof (error.status)}`);
                 throw new Error(`Could not retrieve repository contents. Status: ${error.status || 'unknown'}`);
             }
         }
