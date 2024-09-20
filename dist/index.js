@@ -975,7 +975,7 @@ function getCLAFileContentandSHA(committers, committerMap) {
             result = yield (0, persistence_1.getFileContent)();
         }
         catch (error) {
-            if (error.status === "400") {
+            if (error.status == "404") {
                 return createClaFileAndPRComment(committers, committerMap);
             }
             else {
