@@ -1,20 +1,20 @@
+import * as core from '@actions/core'
+import { context } from '@actions/github'
 import { checkAllowList } from './checkAllowList'
 import getCommitters from './graphql'
-import prCommentSetup from './pullrequest/pullRequestComment'
 import {
   ClafileContentAndSha,
   CommitterMap,
   CommittersDetails,
   ReactedCommitterMap
 } from './interfaces'
-import { context } from '@actions/github'
 import {
   createFile,
   getFileContent,
   updateFile
 } from './persistence/persistence'
+import prCommentSetup from './pullrequest/pullRequestComment'
 import { reRunLastWorkFlowIfRequired } from './pullRerunRunner'
-import * as core from '@actions/core'
 
 export async function setupClaCheck() {
   let committerMap = getInitialCommittersMap()
@@ -67,6 +67,7 @@ async function getCLAFileContentandSHA(
     if (error.status === 404) {
       return createClaFileAndPRComment(committers, committerMap)
     } else {
+      core.info(`error status: ${error.status}`)
       throw new Error(
         `Could not retrieve repository contents. Status: ${
           error.status || 'unknown'

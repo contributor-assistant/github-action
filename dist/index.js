@@ -194,7 +194,6 @@ const input = __importStar(__nccwpck_require__(3611));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info(`test logs`);
             core.info(`CLA Assistant GitHub Action bot has started the process`);
             /*
              * using a `string` true or false purposely as github action input cannot have a boolean value
@@ -932,13 +931,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setupClaCheck = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const github_1 = __nccwpck_require__(5438);
 const checkAllowList_1 = __nccwpck_require__(3661);
 const graphql_1 = __importDefault(__nccwpck_require__(5157));
-const pullRequestComment_1 = __importDefault(__nccwpck_require__(3326));
-const github_1 = __nccwpck_require__(5438);
 const persistence_1 = __nccwpck_require__(5802);
+const pullRequestComment_1 = __importDefault(__nccwpck_require__(3326));
 const pullRerunRunner_1 = __nccwpck_require__(4766);
-const core = __importStar(__nccwpck_require__(2186));
 function setupClaCheck() {
     return __awaiter(this, void 0, void 0, function* () {
         let committerMap = getInitialCommittersMap();
@@ -980,6 +979,7 @@ function getCLAFileContentandSHA(committers, committerMap) {
                 return createClaFileAndPRComment(committers, committerMap);
             }
             else {
+                core.info(`error status: ${error.status}`);
                 throw new Error(`Could not retrieve repository contents. Status: ${error.status || 'unknown'}`);
             }
         }
