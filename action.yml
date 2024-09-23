@@ -38,6 +38,9 @@ inputs:
   lock-pullrequest-aftermerge:
     description: "Will lock the pull request after merge so that the signature the contributors cannot revoke their signature comments after merge"
     default: "true"
+  suggest-recheck:
+    description: "Controls whether or not the action's comment should suggest that users comment `recheck`."
+    default: "true"
 runs:
   using: "node20"
   main: 'dist/index.js'
