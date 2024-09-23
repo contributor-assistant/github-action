@@ -737,7 +737,7 @@ function cla(signed, committerMap) {
         text += ' You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/>';
     }
     if (input.suggestRecheck() == 'true') {
-        text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request.</sub> ';
+        text += '<sub>You can retrigger this bot by commenting **recheck** in this Pull Request. </sub>';
     }
     text += '<sub>Posted by the **CLA Assistant Lite bot**.</sub>';
     return text;
