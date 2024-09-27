@@ -14,6 +14,9 @@ inputs:
   allowlist:
     description: "users in the allow list don't have to sign the CLA document"
     default: ""
+  exemptRepoOrgMembers:
+    description: "if `true`, members of the organization to which the repository belongs are automatically allowlisted"
+    default: false
   remote-repository-name:
     description: "provide the remote repository name where all the signatures should be stored"
   remote-organization-name:
