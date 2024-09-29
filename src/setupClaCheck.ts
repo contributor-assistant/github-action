@@ -52,7 +52,9 @@ export async function setupClaCheck() {
       )
     }
   } catch (err) {
-    core.setFailed(`Could not update the JSON file: ${err.message}`)
+    let extraInfo = '';
+    if (err.message.includes('Changes must be made through a pull request')) extraInfo = ' (The branch appears to be protected - please disable the protection)';
+    core.setFailed(`Could not update the JSON file: ${err.message}${extraInfo}`)
   }
 }
 
