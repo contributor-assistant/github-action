@@ -74,4 +74,8 @@ export default async function getCommitters(): Promise<CommittersDetails[]> {
     }
 
 }
-const extractUserFromCommit = (commit) => commit.author.user || commit.committer.user || commit.author || commit.committer
+// If a commit has a different author and committer, we check for a signature
+// only by the committer. This allows us to accept code from other
+// Apache-licensed projects and retain the original Git history without
+// requiring a signature from the original upstream author.
+const extractUserFromCommit = (commit) => commit.committer.user || commit.committer
