@@ -27,7 +27,7 @@ function isUserNotInAllowList(committer) {
 
             return new RegExp(regex).test(committer.name)
         }
-        return pattern === committer
+        return pattern === committer.name
     }).length > 0
 }
 
