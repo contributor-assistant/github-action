@@ -9,13 +9,13 @@ const usernameAllowListPatterns: string[] = input.getUsernameAllowList().split('
 const domainAllowList: string[] = input.getDomainAllowList().split(',')
 
 
-function isUserNotInAllowList(committer) {
+function isUserNotInAllowList(committer: CommittersDetails): boolean {
 
     for(let pattern of domainAllowList) {
         pattern = pattern.trim()
         if(!pattern) continue
         if(!pattern.startsWith('@')) pattern = '@' + pattern
-        if(committer.email.endsWith(pattern)) {
+       if(committer.email && committer.email.endsWith(pattern)) {
             return true
         }
     }
@@ -27,7 +27,7 @@ function isUserNotInAllowList(committer) {
 
             return new RegExp(regex).test(committer.name)
         }
-        return pattern === committer
+        return pattern === committer.name
     }).length > 0
 }
 
