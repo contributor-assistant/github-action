@@ -17,21 +17,8 @@ jobs:
       matrix:
         node-version: [18.x, 20.x]
     steps:
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - name: Initialize Energy Estimation
-      uses: green-coding-berlin/eco-ci-energy-estimation@v1
-      with:
-        task: start-measurement
     - name: "Checkout repository"
       uses: actions/checkout@v4
-    - name: Checkout Repo Measurement
-      uses: green-coding-berlin/eco-ci-energy-estimation@v1
-      with:
-        task: get-measurement
-        label: 'repository checkout'
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -40,12 +27,4 @@ jobs:
       run: npm ci
     - name: Npm build
       run: npm run build --if-present
-    - name: Checkout Repo Measurement
-      uses: green-coding-berlin/eco-ci-energy-estimation@v1
-      with:
-        task: get-measurement
-        label: 'Npm activities'
-    - name: Show Energy Results
-      uses: green-coding-berlin/eco-ci-energy-estimation@v1
-      with:
-        task: display-results
+
