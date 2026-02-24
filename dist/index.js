@@ -229,12 +229,10 @@ exports.run = void 0;
 const github_1 = __nccwpck_require__(3228);
 const setupClaCheck_1 = __nccwpck_require__(3715);
 const pullRequestLock_1 = __nccwpck_require__(6868);
-const setStatus_1 = __nccwpck_require__(1354);
 const core = __importStar(__nccwpck_require__(7484));
 const input = __importStar(__nccwpck_require__(7189));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield (0, setStatus_1.updateStatus)("pending", "Checking for signature...");
         try {
             core.info(`CLA Assistant GitHub Action bot has started the process`);
             /*
@@ -251,7 +249,6 @@ function run() {
         catch (error) {
             if (error instanceof Error) {
                 core.setFailed(error.message);
-                yield (0, setStatus_1.updateStatus)("error", error.message);
             }
         }
     });
@@ -939,82 +936,6 @@ function isCommentSignedByUser(comment, commentAuthor) {
 
 /***/ }),
 
-/***/ 1354:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var _a, _b, _c;
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.updateStatus = void 0;
-const getInputs_1 = __nccwpck_require__(7189);
-const github_1 = __nccwpck_require__(3228);
-const core = __importStar(__nccwpck_require__(7484));
-core.info(`Using token: ${process.env.GITHUB_TOKEN}`);
-const octokit = (0, github_1.getOctokit)(process.env.GITHUB_TOKEN || "");
-const pullRequest = {
-    owner: ((_a = github_1.context.payload.repository) === null || _a === void 0 ? void 0 : _a.owner.login) || "",
-    repo: ((_b = github_1.context.payload.repository) === null || _b === void 0 ? void 0 : _b.name) || "",
-    pull_number: ((_c = github_1.context.payload.issue) === null || _c === void 0 ? void 0 : _c.number) || 0,
-    sha: ""
-};
-function setupManualStatusUpdate() {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (github_1.context.eventName != 'issue_comment')
-            return;
-        // Derive pull request SHA
-        const response = yield octokit.pulls.get(pullRequest);
-        pullRequest.sha = response.data.head.sha;
-    });
-}
-function updateStatus(state, description) {
-    return __awaiter(this, void 0, void 0, function* () {
-        if (github_1.context.eventName != 'issue_comment')
-            return;
-        yield setupComplete;
-        // Update status on the pull request
-        yield octokit.repos.createCommitStatus(Object.assign(Object.assign({}, pullRequest), { context: (0, getInputs_1.getStatusContext)(), state,
-            description }));
-    });
-}
-exports.updateStatus = updateStatus;
-const setupComplete = setupManualStatusUpdate();
-
-
-/***/ }),
-
 /***/ 3715:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -1060,8 +981,8 @@ exports.setupClaCheck = void 0;
 const core = __importStar(__nccwpck_require__(7484));
 const github_1 = __nccwpck_require__(3228);
 const checkAllowList_1 = __nccwpck_require__(4715);
-const setStatus_1 = __nccwpck_require__(1354);
 const graphql_1 = __importDefault(__nccwpck_require__(5777));
+const input = __importStar(__nccwpck_require__(7189));
 const persistence_1 = __nccwpck_require__(9947);
 const pullRequestComment_1 = __importDefault(__nccwpck_require__(366));
 const pullRerunRunner_1 = __nccwpck_require__(8109);
@@ -1082,21 +1003,79 @@ function setupClaCheck() {
                 (committerMap === null || committerMap === void 0 ? void 0 : committerMap.notSigned) === undefined ||
                 committerMap.notSigned.length === 0) {
                 core.info(`All contributors have signed the CLA 📝 ✅ `);
-                yield (0, setStatus_1.updateStatus)("success", `All contributors have signed the CLA`);
+                yield createSuccessSummary(committerMap);
                 return (0, pullRerunRunner_1.reRunLastWorkFlowIfRequired)();
             }
             else {
-                core.setFailed(`Committers of Pull Request number ${github_1.context.issue.number} have to sign the CLA 📝`);
-                yield (0, setStatus_1.updateStatus)("failure", `Committers of Pull Request number ${github_1.context.issue.number} have to sign the CLA`);
+                yield createFailureSummary(committerMap);
+                core.setFailed(`${committerMap.notSigned.length} contributor(s) need to sign the CLA: ${committerMap.notSigned.map(c => `@${c.name}`).join(', ')}`);
             }
         }
         catch (err) {
             core.info(JSON.stringify(err));
-            yield (0, setStatus_1.updateStatus)("error", `Could not update the JSON file: ${err.message}`);
+            core.setFailed(`Error: ${err.message}`);
+            yield createErrorSummary(err);
         }
     });
 }
 exports.setupClaCheck = setupClaCheck;
+function createSuccessSummary(committerMap) {
+    var _a, _b, _c;
+    return __awaiter(this, void 0, void 0, function* () {
+        const totalCount = (((_a = committerMap.signed) === null || _a === void 0 ? void 0 : _a.length) || 0) + (((_b = committerMap.notSigned) === null || _b === void 0 ? void 0 : _b.length) || 0) + (((_c = committerMap.unknown) === null || _c === void 0 ? void 0 : _c.length) || 0);
+        yield core.summary
+            .addHeading('✅ All Contributors Signed')
+            .addRaw(`All ${totalCount} contributor(s) have signed the CLA.`)
+            .addBreak()
+            .addTable([
+            [{ data: 'Contributor', header: true }, { data: 'Status', header: true }],
+            ...(committerMap.signed || []).map(c => [c.name, '✅ Signed'])
+        ])
+            .write();
+    });
+}
+function createFailureSummary(committerMap) {
+    var _a, _b;
+    return __awaiter(this, void 0, void 0, function* () {
+        const totalCount = (((_a = committerMap.signed) === null || _a === void 0 ? void 0 : _a.length) || 0) + committerMap.notSigned.length + (((_b = committerMap.unknown) === null || _b === void 0 ? void 0 : _b.length) || 0);
+        const docUrl = input.getPathToDocument();
+        yield core.summary
+            .addHeading('❌ CLA Signature Required')
+            .addRaw(`<strong>${committerMap.notSigned.length}</strong> of <strong>${totalCount}</strong> contributors need to sign the CLA.`)
+            .addBreak()
+            .addHeading('Unsigned Contributors', 3)
+            .addList(committerMap.notSigned.map(c => `<strong>@${c.name}</strong>${c.email ? ` (${c.email})` : ''}`))
+            .addBreak()
+            .addRaw(`📝 <a href="${docUrl}">View CLA Document</a>`)
+            .addBreak()
+            .addRaw('<strong>To sign:</strong> Comment on this PR with "I have read the CLA Document and I hereby sign the CLA"')
+            .write();
+        // Add annotations for each unsigned contributor
+        committerMap.notSigned.forEach(c => {
+            core.warning(`@${c.name}${c.email ? ` (${c.email})` : ''} has not signed the CLA`, {
+                title: '📝 CLA Signature Required'
+            });
+        });
+        // Add info about unknown users if any
+        if (committerMap.unknown && committerMap.unknown.length > 0) {
+            committerMap.unknown.forEach(c => {
+                core.notice(`@${c.name} appears to be committing without a linked GitHub account`, {
+                    title: '⚠️ Unknown GitHub User'
+                });
+            });
+        }
+    });
+}
+function createErrorSummary(err) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield core.summary
+            .addHeading('❌ CLA Check Error')
+            .addRaw(`An error occurred while checking CLA signatures:`)
+            .addBreak()
+            .addCodeBlock(err.message || JSON.stringify(err), 'text')
+            .write();
+    });
+}
 function getCLAFileContentandSHA(committers, committerMap) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {

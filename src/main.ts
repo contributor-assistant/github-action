@@ -1,14 +1,11 @@
 import {context} from '@actions/github'
 import {setupClaCheck} from './setupClaCheck'
 import {lockPullRequest} from './pullrequest/pullRequestLock'
-import {updateStatus} from "./setStatus"
 
 import * as core from '@actions/core'
 import * as input from './shared/getInputs'
 
 export async function run() {
-  await updateStatus("pending", "Checking for signature...")
-
   try {
     core.info(`CLA Assistant GitHub Action bot has started the process`)
 
@@ -26,7 +23,6 @@ export async function run() {
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message)
-      await updateStatus("error", error.message)
     }
   }
 }

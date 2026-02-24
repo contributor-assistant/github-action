@@ -48,8 +48,9 @@ inputs:
     description: "Controls whether or not the action's comment should suggest that users comment `recheck`."
     default: "true"
   status-context:
-    description: "Provide a status context script which will be used when manually setting a PR status."
-    default: "CLA Assistant Lite"
+    description: "DEPRECATED: This input is no longer used. Status is now provided via GitHub Actions Check Runs with enhanced job summaries."
+    default: ""
+    deprecationMessage: "The status-context input is deprecated and no longer used. The action now uses GitHub Actions Check Runs which provide better feedback through job summaries and annotations. Please remove this input from your workflow."
 runs:
   using: "node20"
   main: 'dist/index.js'

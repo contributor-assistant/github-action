@@ -1,0 +1,66 @@
+name: Manual CLA Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_scenario:
+        description: 'Test scenario to run'
+        required: true
+        type: choice
+        options:
+          - 'all-signed'
+          - 'unsigned-contributors'
+          - 'unknown-user'
+      pr_number:
+        description: 'PR number to test against (from any rdkcentral repo)'
+        required: false
+        type: number
+      test_repo:
+        description: 'Repository to test (owner/repo format)'
+        required: false
+        default: 'rdkcentral/contributor-assistant_github-action'
+
+permissions:
+  actions: write
+  contents: read
+  pull-requests: write
+  statuses: write
+
+jobs:
+  manual-test:
+    name: "Manual CLA Test"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build action
+        run: npm run build
+        
+      - name: Display test scenario
+        run: |
+          echo "Testing scenario: ${{ inputs.test_scenario }}"
+          echo "PR number: ${{ inputs.pr_number || 'Using workflow context' }}"
+          echo "Test repo: ${{ inputs.test_repo }}"
+          
+      - name: Run CLA check
+        uses: ./
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.CLA_ASSISTANT }}
+        with:
+          remote-organization-name: 'rdkcentral'
+          remote-repository-name: 'cla_signatures'
+          path-to-signatures: 'signatures.json'
+          path-to-document: 'https://gist.github.com/rdkcmf-jenkins/c797df2d0f276bbae7c2b394e895c263'
+          branch: 'main'
+          allowlist: 'dependabot*, dependabot[bot], copilot, github-copilot[bot]'
+          domain-allow-list-file: 'domains.json'

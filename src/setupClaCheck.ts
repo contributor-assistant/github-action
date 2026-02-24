@@ -1,8 +1,8 @@
 import * as core from '@actions/core'
 import { context } from '@actions/github'
 import { checkAllowList } from './checkAllowList'
-import {updateStatus} from "./setStatus"
 import getCommitters from './graphql'
+import * as input from './shared/getInputs'
 import {
   ClafileContentAndSha,
   CommitterMap,
@@ -46,24 +46,75 @@ export async function setupClaCheck() {
       committerMap.notSigned.length === 0
     ) {
       core.info(`All contributors have signed the CLA 📝 ✅ `)
-      await updateStatus("success", `All contributors have signed the CLA`)
+      await createSuccessSummary(committerMap)
       return reRunLastWorkFlowIfRequired()
     } else {
+      await createFailureSummary(committerMap)
       core.setFailed(
-        `Committers of Pull Request number ${context.issue.number} have to sign the CLA 📝`
-      )
-      await updateStatus(
-        "failure",
-        `Committers of Pull Request number ${context.issue.number} have to sign the CLA`
+        `${committerMap.notSigned.length} contributor(s) need to sign the CLA: ${committerMap.notSigned.map(c => `@${c.name}`).join(', ')}`
       )
     }
   } catch (err) {
     core.info(JSON.stringify(err))
-    await updateStatus(
-      "error",
-      `Could not update the JSON file: ${err.message}`
-    )
+    core.setFailed(`Error: ${err.message}`)
+    await createErrorSummary(err)
   }
+}
+
+async function createSuccessSummary(committerMap: CommitterMap): Promise<void> {
+  const totalCount = (committerMap.signed?.length || 0) + (committerMap.notSigned?.length || 0) + (committerMap.unknown?.length || 0)
+
+  await core.summary
+    .addHeading('✅ All Contributors Signed')
+    .addRaw(`All ${totalCount} contributor(s) have signed the CLA.`)
+    .addBreak()
+    .addTable([
+      [{data: 'Contributor', header: true}, {data: 'Status', header: true}],
+      ...(committerMap.signed || []).map(c => [c.name, '✅ Signed'])
+    ])
+    .write()
+}
+
+async function createFailureSummary(committerMap: CommitterMap): Promise<void> {
+  const totalCount = (committerMap.signed?.length || 0) + committerMap.notSigned.length + (committerMap.unknown?.length || 0)
+  const docUrl = input.getPathToDocument()
+
+  await core.summary
+    .addHeading('❌ CLA Signature Required')
+    .addRaw(`<strong>${committerMap.notSigned.length}</strong> of <strong>${totalCount}</strong> contributors need to sign the CLA.`)
+    .addBreak()
+    .addHeading('Unsigned Contributors', 3)
+    .addList(committerMap.notSigned.map(c => `<strong>@${c.name}</strong>${c.email ? ` (${c.email})` : ''}`))
+    .addBreak()
+    .addRaw(`📝 <a href="${docUrl}">View CLA Document</a>`)
+    .addBreak()
+    .addRaw('<strong>To sign:</strong> Comment on this PR with "I have read the CLA Document and I hereby sign the CLA"')
+    .write()
+
+  // Add annotations for each unsigned contributor
+  committerMap.notSigned.forEach(c => {
+    core.warning(`@${c.name}${c.email ? ` (${c.email})` : ''} has not signed the CLA`, {
+      title: '📝 CLA Signature Required'
+    })
+  })
+
+  // Add info about unknown users if any
+  if (committerMap.unknown && committerMap.unknown.length > 0) {
+    committerMap.unknown.forEach(c => {
+      core.notice(`@${c.name} appears to be committing without a linked GitHub account`, {
+        title: '⚠️ Unknown GitHub User'
+      })
+    })
+  }
+}
+
+async function createErrorSummary(err: any): Promise<void> {
+  await core.summary
+    .addHeading('❌ CLA Check Error')
+    .addRaw(`An error occurred while checking CLA signatures:`)
+    .addBreak()
+    .addCodeBlock(err.message || JSON.stringify(err), 'text')
+    .write()
 }
 
 async function getCLAFileContentandSHA(

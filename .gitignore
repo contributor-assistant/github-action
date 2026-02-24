@@ -3,3 +3,5 @@ __tests__/runner/*
 node_modules
 lib
 .idea
+codeql-db*
+results.sarif
