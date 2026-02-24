@@ -52,7 +52,7 @@ function isUserNotInAllowList(committer) {
             continue;
         if (!pattern.startsWith('@'))
             pattern = '@' + pattern;
-        if (committer.email.endsWith(pattern)) {
+        if (committer.email && committer.email.endsWith(pattern)) {
             return true;
         }
     }

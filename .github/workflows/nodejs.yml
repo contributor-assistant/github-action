@@ -17,6 +17,10 @@ jobs:
       matrix:
         node-version: [18.x, 20.x]
     steps:
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
     - name: Initialize Energy Estimation
       uses: green-coding-berlin/eco-ci-energy-estimation@v1
       with:
