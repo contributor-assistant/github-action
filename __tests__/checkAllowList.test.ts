@@ -2,15 +2,14 @@ import { checkAllowList } from '../src/checkAllowList'
 import * as input from '../src/shared/getInputs'
 import { CommittersDetails } from '../src/interfaces'
 import { getFileContent } from '../src/persistence/persistence'
-import { mocked } from 'ts-jest/utils'
 
 jest.mock('../src/shared/getInputs')
 jest.mock('../src/persistence/persistence')
 
-const mockedGetUsernameAllowList = mocked(input.getUsernameAllowList)
-const mockedGetDomainAllowList = mocked(input.getDomainAllowList)
-const mockedGetDomainsFile = mocked(input.getDomainsFile)
-const mockedGetFileContent = mocked(getFileContent)
+const mockedGetUsernameAllowList = jest.mocked(input.getUsernameAllowList)
+const mockedGetDomainAllowList = jest.mocked(input.getDomainAllowList)
+const mockedGetDomainsFile = jest.mocked(input.getDomainsFile)
+const mockedGetFileContent = jest.mocked(getFileContent)
 
 describe('checkAllowList', () => {
   beforeEach(() => {

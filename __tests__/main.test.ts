@@ -4,14 +4,13 @@ import { context } from '@actions/github'
 import { getclas } from '../src/checkcla'
 import { lockPullRequest } from '../src/pullRequestLock'
 import { run } from '../src/main'
-import { mocked } from 'ts-jest/utils'
 
 jest.mock('@actions/core')
 jest.mock('@actions/github')
 jest.mock('../src/pullRequestLock')
 jest.mock('../src/checkcla')
-const mockedGetClas = mocked(getclas)
-const mockedLockPullRequest = mocked(lockPullRequest)
+const mockedGetClas = jest.mocked(getclas)
+const mockedLockPullRequest = jest.mocked(lockPullRequest)
 
 
 describe('Pull request event', () => {

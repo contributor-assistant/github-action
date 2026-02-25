@@ -589,6 +589,7 @@ function prCommentSetup(committerMap, committers) {
             else if (claBotComment === null || claBotComment === void 0 ? void 0 : claBotComment.id) {
                 if (signed) {
                     yield updateComment(signed, committerMap, claBotComment);
+                    return; // Early return - all contributors already signed, no need to check PR comment signatures
                 }
                 // reacted committers are contributors who have newly signed by posting the Pull Request comment
                 const reactedCommitters = yield (0, signatureComment_1.default)(committerMap, committers);

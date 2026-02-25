@@ -20,6 +20,7 @@ export default async function prCommentSetup(committerMap: CommitterMap, committ
     } else if (claBotComment?.id) {
       if (signed) {
         await updateComment(signed, committerMap, claBotComment)
+        return // Early return - all contributors already signed, no need to check PR comment signatures
       }
 
       // reacted committers are contributors who have newly signed by posting the Pull Request comment
