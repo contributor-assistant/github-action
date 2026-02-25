@@ -5,3 +5,4 @@ lib
 .idea
 codeql-db*
 results.sarif
+*.tsbuildinfo

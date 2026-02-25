@@ -179,10 +179,10 @@ function prepareCommiterMap(
 
   committerMap.notSigned = committers.filter(
     committer =>
-      !claFileContent?.signedContributors.some(cla => committer.id === cla.id)
+      !(claFileContent?.signedContributors || []).some(cla => committer.id === cla.id)
   )
   committerMap.signed = committers.filter(committer =>
-    claFileContent?.signedContributors.some(cla => committer.id === cla.id)
+    (claFileContent?.signedContributors || []).some(cla => committer.id === cla.id)
   )
   committers.map(committer => {
     if (!committer.id) {
