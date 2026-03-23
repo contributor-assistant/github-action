@@ -260,20 +260,27 @@ This PAT should have repo scope and is only required if you have configured to s
         </a>
     </td>
     <td align="center">
+        <a href="https://github.com/aymanbagabas">
+            <img src="https://avatars.githubusercontent.com/u/3187948?v=4" width="100;" alt="aymanbagabas"/>
+            <br />
+            <sub><b>Ayman Bagabas</b></sub>
+        </a>
+    </td>
+    <td align="center">
         <a href="https://github.com/fishcharlie">
             <img src="https://avatars.githubusercontent.com/u/860375?v=4" width="100;" alt="fishcharlie"/>
             <br />
             <sub><b>Charlie Fish</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/darrellwarde">
             <img src="https://avatars.githubusercontent.com/u/8117355?v=4" width="100;" alt="darrellwarde"/>
             <br />
             <sub><b>Darrell Warde</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Holzhaus">
             <img src="https://avatars.githubusercontent.com/u/1834516?v=4" width="100;" alt="Holzhaus"/>
@@ -308,15 +315,15 @@ This PAT should have repo scope and is only required if you have configured to s
             <br />
             <sub><b>Simon Meggle</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/t8">
             <img src="https://avatars.githubusercontent.com/u/20846869?v=4" width="100;" alt="t8"/>
             <br />
             <sub><b>Tate Berenbaum</b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/Krinkle">
             <img src="https://avatars.githubusercontent.com/u/156867?v=4" width="100;" alt="Krinkle"/>
@@ -351,15 +358,15 @@ This PAT should have repo scope and is only required if you have configured to s
             <br />
             <sub><b>Self Not Found</b></sub>
         </a>
-    </td>
+    </td></tr>
+<tr>
     <td align="center">
         <a href="https://github.com/woxiwangshunlibiye">
             <img src="https://avatars.githubusercontent.com/u/106640041?v=4" width="100;" alt="woxiwangshunlibiye"/>
             <br />
             <sub><b>Woyaoshunlibiye </b></sub>
         </a>
-    </td></tr>
-<tr>
+    </td>
     <td align="center">
         <a href="https://github.com/yahavi">
             <img src="https://avatars.githubusercontent.com/u/11367982?v=4" width="100;" alt="yahavi"/>
