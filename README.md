@@ -46,10 +46,14 @@ jobs:
         if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         uses: contributor-assistant/github-action@v2.6.1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
           # the below token should have repo scope and must be manually added by you in the repository's secret
           # This token is required only if you have configured to store the signatures in a remote repository/organization
           # PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          # Or you could look into a github app
+          # GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}
+          # GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}
+          # GITHUB_APP_INSTALLATION_ID: ${{ secrets.GITHUB_APP_INSTALLATION_ID }}
         with:
           path-to-signatures: 'signatures/version1/cla.json'
           path-to-document: 'https://github.com/cla-assistant/github-action/blob/master/SAPCLA.md' # e.g. a CLA or a DCO document
@@ -111,14 +115,26 @@ If a GitHub username is included in the allowlist, they will not be required to 
 
 ![allowlist](https://github.com/cla-assistant/github-action/blob/master/images/allowlist.gif?raw=true)
 
-#### 6. Adding Personal Access Token as a Secret
+#### 6. Option A. Adding Personal Access Token as a Secret 
 
 You have to create a [Repository Secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) with the name `PERSONAL_ACCESS_TOKEN`.
 This PAT should have repo scope and is only required if you have configured to store the signatures in a remote repository/organization.
 
-##### Demo for step 6
+##### Demo for step 6 using PAT Setup
 
 ![personal-access-token](https://github.com/cla-assistant/github-action/blob/master/images/personal-access-token.gif?raw=true)
+
+#### 6. Option B. Adding App to use as a Secret 
+
+As an alternative to using a Personal Access Token, you can use GitHub App authentication which provides better security and more granular permissions. To use GitHub App authentication, you need to:
+
+1. [Create a GitHub App](https://docs.github.com/en/developers/apps/creating-a-github-app) with repository contents and pull request permissions
+2. Generate a private key for your GitHub App
+3. Install the GitHub App on your organization or repository and note the installation ID
+4. Add the following Repository Secrets:
+   - `GITHUB_APP_ID`: Your GitHub App's ID
+   - `GITHUB_APP_PRIVATE_KEY`: The private key of your GitHub App (including the `-----BEGIN RSA PRIVATE KEY-----` and `-----END RSA PRIVATE KEY-----` lines)
+   - `GITHUB_APP_INSTALLATION_ID`: The installation ID of your GitHub App
 
 ### Environmental Variables:
 
@@ -127,6 +143,9 @@ This PAT should have repo scope and is only required if you have configured to s
 | --------------------- | ----------- | ----------- |
 | `GITHUB_TOKEN`        | _required_ | Usage: `GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}`,  CLA Action uses this in-built GitHub token to make the API calls for interacting with GitHub. It is built into Github Actions and does not need to be manually specified in your secrets store. [More Info](https://help.github.com/en/actions/configuring-and-managing-workflows/authenticating-with-the-github_token)|
 | `PERSONAL_ACCESS_TOKEN`        | _required_ | Usage: `PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN}}`, you have to create a [Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) with `repo scope` and store in the repository's [secrets](https://docs.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets). |
+| `GITHUB_APP_ID`        | _optional_ | Usage: `GITHUB_APP_ID: ${{ secrets.GITHUB_APP_ID }}`, the ID of your GitHub App. Required only if you're using GitHub App authentication and not PAT authentication. |
+| `GITHUB_APP_PRIVATE_KEY`        | _optional_ | Usage: `GITHUB_APP_PRIVATE_KEY: ${{ secrets.GITHUB_APP_PRIVATE_KEY }}`, the private key of your GitHub App. Required only if you're using GitHub App authentication and not PAT authentication. |
+| `GITHUB_APP_INSTALLATION_ID`        | _optional_ | Usage: `GITHUB_APP_INSTALLATION_ID: ${{ secrets.GITHUB_APP_INSTALLATION_ID }}`, the installation ID of your GitHub App. Required only if you're using GitHub App authentication and not PAT authentication. |
 
 ### Inputs Description:
 
