@@ -152,17 +152,10 @@ This PAT should have repo scope and is only required if you have configured to s
 <table>
 <tr>
     <td align="center">
-        <a href="https://github.com/matbos">
-            <img src="https://avatars.githubusercontent.com/u/1948188?v=4" width="100;" alt="matbos"/>
+        <a href="https://github.com/Gouravjaat07">
+            <img src="https://avatars.githubusercontent.com/u/211197569?v=4" width="100;" alt="Gouravjaat07"/>
             <br />
-            <sub><b>Mateusz Boś</b></sub>
-        </a>
-    </td>
-    <td align="center">
-        <a href="https://github.com/michael-spengler">
-            <img src="https://avatars.githubusercontent.com/u/43786652?v=4" width="100;" alt="michael-spengler"/>
-            <br />
-            <sub><b>Michael Spengler</b></sub>
+            <sub><b>Gourav Jaat</b></sub>
         </a>
     </td>
     <td align="center">
@@ -170,6 +163,13 @@ This PAT should have repo scope and is only required if you have configured to s
             <img src="https://avatars.githubusercontent.com/u/33329946?v=4" width="100;" alt="ibakshay"/>
             <br />
             <sub><b>Akshay Iyyadurai Balasundaram</b></sub>
+        </a>
+    </td>
+    <td align="center">
+        <a href="https://github.com/michael-spengler">
+            <img src="https://avatars.githubusercontent.com/u/43786652?v=4" width="100;" alt="michael-spengler"/>
+            <br />
+            <sub><b>Michael Spengler</b></sub>
         </a>
     </td>
     <td align="center">
