@@ -22,6 +22,7 @@ export interface CommittersDetails {
     comment_id?: number,
     body?: string,
     repoId?: string
+    orgLogins?: string[]
 }
 export interface LabelName {
     current_name: string,

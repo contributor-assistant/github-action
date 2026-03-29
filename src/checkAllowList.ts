@@ -1,9 +1,8 @@
+import * as core from '@actions/core'
 import { CommittersDetails } from './interfaces'
 
 import * as _ from 'lodash'
 import * as input from './shared/getInputs'
-
-
 
 function isUserNotInAllowList(committer) {
 
